@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panvelkar Estate Stanford | Society Portal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">PES</div>
+    <div><strong>Panvelkar Estate Stanford</strong><small>Co-operative Housing Society · Badlapur</small></div>
+  </div>
+  <button class="menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+  <nav>
+    <a href="#home">Home</a><a href="#notices">Notices</a><a href="#wings">Wings & Units</a>
+    <a href="#resident">Resident Details</a><a href="#shops">Shops</a><a href="#committee">Committee</a>
+    <a href="#contacts">Contacts</a>
+  </nav>
+</header>
+
+<main>
+<section id="home" class="hero">
+  <div>
+    <span class="pill">🏠 Society Portal</span>
+    <h1>Welcome to<br>Panvelkar Estate Stanford</h1>
+    <p>A central digital portal for residents, owners, tenants, shops and the managing committee.</p>
+    <a class="btn" href="#resident">Register / Update Details</a>
+  </div>
+  <div class="hero-card">
+    <div class="dummy-logo">PES</div>
+    <h3>Society at a glance</h3>
+    <p><b>4</b> residential wings</p>
+    <p><b>14</b> shops (ASH01–ASH14)</p>
+    <p><b>12 / 17</b> committee positions currently listed</p>
+  </div>
+</section>
+
+<section id="notices">
+  <div class="section-head"><h2>Latest Notices</h2><span class="muted">Demo content</span></div>
+  <div class="cards">
+    <article><span class="tag">Important</span><h3>Society meeting</h3><p>Committee meeting notice will appear here. Replace this demo notice from the admin panel when connected to a database.</p></article>
+    <article><span class="tag">Maintenance</span><h3>Monthly maintenance</h3><p>Residents can check payment instructions and due dates here.</p></article>
+    <article><span class="tag">General</span><h3>Community update</h3><p>Use this space for lift, water, security, parking and other society updates.</p></article>
+  </div>
+</section>
+
+<section id="wings">
+  <div class="section-head"><h2>Wings & Unit Structure</h2><span class="muted">Based on details supplied</span></div>
+  <div class="table-wrap">
+    <table><thead><tr><th>Wing</th><th>Floor pattern</th><th>Configuration</th><th>Special note</th></tr></thead>
+    <tbody>
+      <tr><td>R1A</td><td>01–13</td><td>9 flats/floor</td><td>2 fire flats on 6th & 9th floors; shops ASH01–ASH14</td></tr>
+      <tr><td>R1B</td><td>01–07</td><td>2 flats/floor</td><td>—</td></tr>
+      <tr><td>R2</td><td>01–12</td><td>8 flats/floor</td><td>1 fire flat on 8th floor</td></tr>
+      <tr><td>R3</td><td>01–12</td><td>8 flats/floor</td><td>1 fire flat on 8th floor</td></tr>
+      <tr><td>R4</td><td>01–12</td><td>8 flats/floor</td><td>1 fire flat on 8th floor</td></tr>
+    </tbody></table>
+  </div>
+  <div class="notice"><b>Unit-count check:</b> The ranges supplied above calculate to 515 residential flats (117 + 14 + 96 + 96 + 96), plus 14 shops. You mentioned 414 flats. Please verify the official flat master before the live database is created.</div>
+</section>
+
+<section id="resident">
+  <div class="section-head"><h2>Owner / Tenant / Vehicle Details</h2><span class="muted">Demo form — stores data only in this browser</span></div>
+  <form id="residentForm">
+    <div class="grid">
+      <label>Wing<select id="wing" required><option value="">Select wing</option><option>R1A</option><option>R1B</option><option>R2</option><option>R3</option><option>R4</option></select></label>
+      <label>Flat / Unit<select id="unit" required><option value="">Select wing first</option></select></label>
+      <label>Occupancy type<select required><option>Owner occupied</option><option>Rented</option><option>Vacant</option></select></label>
+      <label>Owner name<input required placeholder="Full name"></label>
+      <label>Tenant name (if rented)<input placeholder="Full name"></label>
+      <label>Mobile number<input type="tel" placeholder="10-digit mobile"></label>
+      <label>Email<input type="email" placeholder="name@example.com"></label>
+      <label>Vehicle 1 registration<input placeholder="e.g. MH 05 AB 1234"></label>
+      <label>Vehicle 1 type<select><option>Car</option><option>Two-wheeler</option><option>Other</option></select></label>
+      <label>Vehicle 2 registration<input placeholder="Optional"></label>
+      <label>Emergency contact<input placeholder="Name + phone"></label>
+      <label>Notes<textarea placeholder="Parking / other relevant information"></textarea></label>
+    </div>
+    <button class="btn" type="submit">Save Demo Record</button>
+    <span id="saved" class="success"></span>
+  </form>
+</section>
+
+<section id="shops">
+  <div class="section-head"><h2>Shop Directory</h2><span class="muted">ASH01–ASH14</span></div>
+  <div class="shop-grid" id="shopsGrid"></div>
+</section>
+
+<section id="committee">
+  <div class="section-head"><h2>Managing Committee</h2><span class="muted">12 of 17 positions shown as demo names</span></div>
+  <div class="committee" id="committeeGrid"></div>
+</section>
+
+<section id="contacts">
+  <div class="section-head"><h2>Important Contacts</h2></div>
+  <div class="cards">
+    <article><h3>Security</h3><p>Demo: Security Desk · 9XXXXXXXXX</p></article>
+    <article><h3>Society Office</h3><p>Demo: Office number · office@example.com</p></article>
+    <article><h3>Emergency</h3><p>Use official local emergency numbers. Do not publish residents' private numbers publicly.</p></article>
+  </div>
+</section>
+</main>
+
+<footer><p>© 2026 Panvelkar Estate Stanford Co-operative Housing Society · Badlapur</p><p class="muted">Prototype created for society use. Connect a secure database before collecting real resident information.</p></footer>
+<script src="app.js"></script>
+</body>
+</html>
