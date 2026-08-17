@@ -21,21 +21,11 @@
 </header>
 
 <main>
-<section id="home" class="hero">
-  <div>
-    <span class="pill">🏠 Society Portal</span>
-    <h1>Welcome to<br>Panvelkar Estate Stanford</h1>
-    <p>A central digital portal for residents, owners, tenants, shops and the managing committee.</p>
-    <a class="btn" href="#resident">Register / Update Details</a>
-  </div>
-  <div class="hero-card">
-    <div class="dummy-logo">PES</div>
-    <h3>Society at a glance</h3>
-    <p><b>4</b> residential wings</p>
-    <p><b>14</b> shops (ASH01–ASH14)</p>
-    <p><b>12 / 17</b> committee positions currently listed</p>
-  </div>
-</section>
+<section id="home" class="hero"><div class="hero-overlay"></div><div class="hero-content">
+<span class="pill light">🏠 Society Portal</span><h1>Panvelkar Estate<br><span>Stanford</span></h1><p>Co-operative Housing Society · Badlapur</p>
+<div class="hero-actions"><a class="btn" href="#sample-data">Resident Directory</a><button class="btn glass-btn" onclick="openAdmin()">🔐 Admin Login</button></div></div>
+<div class="hero-card glass"><div class="dummy-logo">PES</div><h3>Our Community</h3>
+<div class="stat"><b>5</b><span>Residential Wings</span></div><div class="stat"><b>14</b><span>Shops · ASH01–ASH14</span></div><div class="stat"><b>12 / 17</b><span>Committee members listed</span></div></div></section>
 
 <section id="notices">
   <div class="section-head"><h2>Latest Notices</h2><span class="muted">Demo content</span></div>
@@ -83,6 +73,16 @@
   </form>
 </section>
 
+<section id="sample-data"><div class="section-head"><h2>Sample Resident Records</h2><span>Fictional demo data</span></div>
+<p class="intro">This demonstrates owner, tenant and vehicle information. All names and vehicle numbers below are fictional.</p>
+<div class="table-wrap"><table><thead><tr><th>Flat</th><th>Owner</th><th>Occupancy</th><th>Tenant</th><th>Vehicle</th></tr></thead><tbody>
+<tr><td>R1A-0203</td><td>Rahul Patil</td><td><span class="status owner">Owner Occupied</span></td><td>—</td><td>MH05 AB 1234</td></tr>
+<tr><td>R1A-0605</td><td>Meena Kulkarni</td><td><span class="status rented">Rented</span></td><td>Priya Shah</td><td>MH05 XY 7788</td></tr>
+<tr><td>R2-0804</td><td>Amit Deshmukh</td><td><span class="status rented">Rented</span></td><td>Vikas Joshi</td><td>MH04 PQ 4567</td></tr>
+<tr><td>R3-1102</td><td>Vijay Jadhav</td><td><span class="status owner">Owner Occupied</span></td><td>—</td><td>MH05 LM 2222</td></tr>
+<tr><td>R4-0501</td><td>Anjali More</td><td><span class="status rented">Rented</span></td><td>Rohit More</td><td>MH05 CD 9087</td></tr>
+</tbody></table></div></section>
+
 <section id="shops">
   <div class="section-head"><h2>Shop Directory</h2><span class="muted">ASH01–ASH14</span></div>
   <div class="shop-grid" id="shopsGrid"></div>
@@ -102,6 +102,11 @@
   </div>
 </section>
 </main>
+
+<div id="adminModal" class="modal"><div class="modal-card"><button class="close" onclick="closeAdmin()">×</button><div class="admin-icon">🔐</div><h2>Admin Login</h2><p>Authorised society administrators only.</p>
+<form id="adminForm"><label>Admin<select id="adminName" required><option value="">Select admin</option><option>Shravan Jadhav</option><option>Shrikant Patil</option><option>Kalpesh Ghag</option></select></label>
+<label>Password<input id="adminPassword" type="password" required placeholder="Enter password"></label><button class="btn full">Sign in</button><p id="loginMsg"></p></form>
+<small>Prototype authentication only. Real resident data needs a secure backend.</small></div></div>
 
 <footer><p>© 2026 Panvelkar Estate Stanford Co-operative Housing Society · Badlapur</p><p class="muted">Prototype created for society use. Connect a secure database before collecting real resident information.</p></footer>
 <script src="app.js"></script>
