@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+<defs>
+ <linearGradient id="sky" x2="0" y2="1"><stop stop-color="#102a5c"/><stop offset="1" stop-color="#284f8d"/></linearGradient>
+ <linearGradient id="glass" x2="0" y2="1"><stop stop-color="#8eb4df" stop-opacity=".92"/><stop offset="1" stop-color="#3e689c" stop-opacity=".92"/></linearGradient>
+ <linearGradient id="ground" x2="0" y2="1"><stop stop-color="#263c55"/><stop offset="1" stop-color="#101b2d"/></linearGradient>
+</defs>
+<rect width="1600" height="900" fill="url(#sky)"/>
+<circle cx="1320" cy="150" r="92" fill="#f7e6b0" opacity=".55"/>
+<rect y="650" width="1600" height="250" fill="url(#ground)"/>
+<g opacity=".98">
+ <rect x="80" y="220" width="300" height="430" rx="8" fill="#d9e2eb"/>
+ <rect x="430" y="125" width="350" height="525" rx="8" fill="#eef2f5"/>
+ <rect x="830" y="185" width="310" height="465" rx="8" fill="#d6e0e8"/>
+ <rect x="1190" y="260" width="300" height="390" rx="8" fill="#e8edf1"/>
+</g>
+<g fill="url(#glass)">
+ <g transform="translate(105 245)">
+  <script/>
+  <path d="M0 0h250v385H0z" opacity=".18"/>
+  <g fill="#355d89">
+   <path d="M20 25h40v55H20zM90 25h40v55H90zM160 25h40v55h-40zM20 105h40v55H20zM90 105h40v55H90zM160 105h40v55h-40zM20 185h40v55H20zM90 185h40v55H90zM160 185h40v55h-40zM20 265h40v55H20zM90 265h40v55H90zM160 265h40v55h-40zM20 345h40v30H20zM90 345h40v30H90zM160 345h40v30h-40z"/>
+  </g>
+ </g>
+ <g transform="translate(460 150)">
+  <g fill="#466e99">
+   <path d="M25 25h45v62H25zM105 25h45v62h-45zM185 25h45v62h-45zM265 25h45v62h-45zM25 115h45v62H25zM105 115h45v62h-45zM185 115h45v62h-45zM265 115h45v62h-45zM25 205h45v62H25zM105 205h45v62h-45zM185 205h45v62h-45zM265 205h45v62h-45zM25 295h45v62H25zM105 295h45v62h-45zM185 295h45v62h-45zM265 295h45v62h-45zM25 385h45v62H25zM105 385h45v62h-45zM185 385h45v62h-45zM265 385h45v62h-45z"/>
+  </g>
+ </g>
+ <g transform="translate(855 210)">
+  <g fill="#3c638d">
+   <path d="M20 25h42v58H20zM95 25h42v58H95zM170 25h42v58h-42zM245 25h42v58h-42zM20 110h42v58H20zM95 110h42v58H95zM170 110h42v58h-42zM245 110h42v58h-42zM20 195h42v58H20zM95 195h42v58H95zM170 195h42v58h-42zM245 195h42v58h-42zM20 280h42v58H20zM95 280h42v58H95zM170 280h42v58h-42zM245 280h42v58h-42z"/>
+  </g>
+ </g>
+ <g transform="translate(1215 285)">
+  <g fill="#426b95">
+   <path d="M20 25h42v52H20zM95 25h42v52H95zM170 25h42v52h-42zM245 25h30v52h-30zM20 100h42v52H20zM95 100h42v52H95zM170 100h42v52h-42zM245 100h30v52h-30zM20 175h42v52H20zM95 175h42v52H95zM170 175h42v52h-42zM245 175h30v52h-30z"/>
+  </g>
+ </g>
+</g>
+<path d="M0 650h1600v70H0z" fill="#182a42"/>
+<g fill="#7ea66a"><circle cx="90" cy="690" r="35"/><circle cx="145" cy="690" r="45"/><circle cx="1510" cy="690" r="48"/><circle cx="1445" cy="690" r="32"/></g>
+</svg>
