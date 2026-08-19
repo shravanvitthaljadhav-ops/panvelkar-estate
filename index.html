@@ -28,10 +28,44 @@
 .resident-tab:hover{border-color:#1d4ed8;color:#1d4ed8}
 .resident-tab.active{background:#10234d;color:#fff;border-color:#10234d;box-shadow:0 7px 18px #10234d25}
 .resident-tab .tab-count{opacity:.75;font-size:.72rem;margin-left:5px}
-.resident-panel{max-width:1150px;margin:0 auto}
+.resident-panel{max-width:1150px;margin:0 auto}.resident-table-scroll{max-width:1150px;max-height:560px;margin:0 auto;background:#fff;border:1px solid #e4e9f0;border-radius:16px;overflow:auto;box-shadow:0 8px 28px #0f172a0b}.resident-table-scroll table{border-collapse:collapse;width:100%;min-width:650px}.resident-table-scroll thead th{position:sticky;top:0;z-index:2;background:#f8fafc;box-shadow:0 1px 0 #e4e9f0}.resident-table-scroll tbody tr:last-child td{border-bottom:0}@media(max-width:600px){.resident-table-scroll{max-height:520px;border-radius:14px}.resident-table-scroll table{min-width:650px}}
 .resident-panel-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px}
 .resident-panel-title h3{margin:0;font-size:1.05rem}
 @media(max-width:600px){.resident-tabs{margin-left:-2px;margin-right:-2px}.resident-tab{padding:9px 15px}.resident-panel-title{align-items:flex-start;flex-direction:column}}
+
+/* Compact layout pass: preserve the existing design while fitting more information on mobile screens */
+.hero{min-height:440px;padding:56px 7vw;background-position:center;background-size:cover}
+.hero>div{max-width:720px}
+.hero h1{font-size:clamp(2.45rem,5vw,4.4rem);margin:12px 0 12px}
+.hero p{font-size:1rem;margin:0}
+.eyebrow{font-size:.75rem;padding:7px 11px}
+.actions{gap:9px;margin-top:18px}
+.btn{padding:10px 15px;border-radius:10px;font-size:.82rem}
+section{padding:42px 5vw}
+.head{margin-bottom:15px}.head h2{font-size:1.65rem}
+.cards{gap:14px}.card{padding:17px;border-radius:15px}.icon{font-size:1.35rem}.card h3{margin:6px 0;font-size:1rem}.card p{font-size:.88rem;margin:6px 0 10px}.metric{font-size:1.75rem}
+.table-wrap,.resident-table-scroll{border-radius:14px}
+th,td{padding:10px 12px;font-size:.86rem}
+.resident-tabs{gap:8px;margin-bottom:12px}.resident-tab{padding:8px 14px;font-size:.78rem}
+.resident-panel-title{margin-bottom:9px}.resident-panel-title h3{font-size:1rem}
+.resident-table-scroll{max-height:440px}
+.shop{padding:12px;border-radius:13px;font-size:.85rem}
+.footer-grid{gap:20px}
+@media(max-width:600px){
+  .top{padding:8px 4vw}
+  .logo{width:38px;height:38px;border-radius:11px}
+  .brand{gap:8px}.brand b{font-size:.76rem}.brand small{font-size:.6rem}
+  .hero{min-height:410px;padding:44px 5vw}
+  .hero h1{font-size:2.45rem;line-height:1.02;margin:10px 0}
+  .hero p{font-size:.88rem}
+  .actions{margin-top:15px;gap:7px}.btn{padding:9px 12px;font-size:.76rem}
+  section{padding:34px 5vw}
+  .head h2{font-size:1.4rem}
+  .cards{gap:10px}.card{padding:14px;border-radius:13px}.card p{font-size:.82rem}.metric{font-size:1.55rem}
+  .resident-table-scroll{max-height:400px}
+  .resident-tab{padding:8px 12px;font-size:.74rem}
+  th,td{padding:9px 10px;font-size:.8rem}
+}
 </style>
 </head>
 <body>
@@ -40,7 +74,7 @@
 <section id="overview"><div class="head"><h2>Community Overview</h2><span id="dataStatus">Connecting to Supabase…</span></div><div class="cards"><div class="card"><div class="icon">🏢</div><h3>Total Flats</h3><div class="metric" id="metricFlats">—</div><p class="muted">From the official units master.</p></div><div class="card"><div class="icon">🏪</div><h3>Total Shops</h3><div class="metric" id="metricShops">—</div><p class="muted">Shop units recorded in the database.</p></div><div class="card"><div class="icon">🏙️</div><h3>Total Wings</h3><div class="metric" id="metricWings">—</div><p class="muted">R1A, R1B, R2, R3 and R4.</p></div></div></section>
 <section id="notices"><div class="head"><h2>Latest Notices</h2><span id="noticeStatus">Loading…</span></div><div id="noticeGrid" class="cards"><div class="loading">Loading notices…</div></div></section>
 <section id="wings"><div class="head"><h2>Wings & Unit Structure</h2><span>Live from Supabase</span></div><div class="table-wrap"><table><thead><tr><th>Wing</th><th>Floors</th><th>Flats / floor</th><th>Flats</th><th>Fire flats</th><th>Notes</th></tr></thead><tbody id="wingRows"><tr><td colspan="6" class="loading">Loading wings…</td></tr></tbody></table></div></section>
-<section id="residents"><div class="head"><h2>Resident Directory</h2><span>Published records only</span></div><p class="intro">Select a wing below. The resident details for that wing will appear underneath the tabs.</p><div id="residentTabs" class="resident-tabs" role="tablist" aria-label="Resident wings"></div><div class="searchbar"><input id="unitSearch" placeholder="Search flat number, e.g. R1A-0203 or 803"><button class="btn dark" onclick="renderUnits()">Search</button></div><div class="resident-panel"><div class="resident-panel-title"><h3 id="residentWingTitle">All Wings</h3><span id="residentWingCount" class="muted"></span></div><div class="table-wrap"><table><thead><tr><th>Wing</th><th>Flat</th><th>Floor</th><th>Status</th><th>Resident</th><th>Vehicle</th></tr></thead><tbody id="unitRows"><tr><td colspan="6" class="loading">Loading units…</td></tr></tbody></table></div></div></section>
+<section id="residents"><div class="head"><h2>Resident Directory</h2><span>Published records only</span></div><p class="intro">Select a wing below. The resident details for that wing will appear underneath the tabs.</p><div id="residentTabs" class="resident-tabs" role="tablist" aria-label="Resident wings"></div><div class="searchbar"><input id="unitSearch" placeholder="Search flat number, e.g. R1A-0203 or 803"><button class="btn dark" onclick="renderUnits()">Search</button></div><div class="resident-panel"><div class="resident-panel-title"><h3 id="residentWingTitle">All Wings</h3><span id="residentWingCount" class="muted"></span></div><div class="resident-table-scroll"><table><thead><tr><th>Wing</th><th>Flat</th><th>Floor</th><th>Status</th><th>Resident</th><th>Vehicle</th></tr></thead><tbody id="unitRows"><tr><td colspan="6" class="loading">Loading units…</td></tr></tbody></table></div></div></section>
 <section id="shops"><div class="head"><h2>Shop Directory</h2><span id="shopStatus">Loading…</span></div><div class="shops" id="shopGrid"><div class="loading">Loading shops…</div></div></section>
 <section id="documents"><div class="head"><h2>Documents</h2><span>Database-backed</span></div><div id="documentGrid" class="cards"><div class="loading">Loading documents…</div></div></section>
 <section id="committee"><div class="head"><h2>Managing Committee</h2><span>Database-backed</span></div><div class="cards"><div class="card"><div class="icon">👥</div><h3>Committee records</h3><p>Committee roles are not stored in the current profiles table, so no names or roles are being invented on the public site.</p></div></div></section>
