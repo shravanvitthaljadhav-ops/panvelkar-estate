@@ -58,9 +58,11 @@ let state={society:null,wings:[],units:[],profiles:[],tenants:[],vehicles:[],not
 const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
 function statusLabel(v){return v==='owner_occupied'?'Owner occupied':v==='rented'?'Rented':'Vacant'}
 function statusClass(v){return v==='owner_occupied'?'owner':v==='rented'?'rent':'vacant'}
-function setError(msg){const e=document.getElementById('dbError');e.textContent=msg;e.style.display='block'}
+function setError(msg){const e=document.getElementById('dbError');if(!e)return;e.textContent=msg;e.style.display='block'}
+function setText(id,value){const e=document.getElementById(id);if(e)e.textContent=value}
 async function loadData(){
- document.getElementById('dataStatus').textContent='Loading live data…';
+ const oldError=document.getElementById('dbError');if(oldError){oldError.textContent='';oldError.style.display='none'}
+ setText('dataStatus','Loading live data…');
  try{
   const results=await Promise.all([
    db.from('society').select('*').limit(1).maybeSingle(),
@@ -75,18 +77,18 @@ async function loadData(){
   const labels=['society','wings','units','profiles','tenants','vehicles','notices','documents'];
   results.forEach((r,i)=>{if(r.error)throw new Error(labels[i]+': '+r.error.message)});
   state.society=results[0].data;state.wings=results[1].data||[];state.units=results[2].data||[];state.profiles=results[3].data||[];state.tenants=results[4].data||[];state.vehicles=results[5].data||[];state.notices=results[6].data||[];state.documents=results[7].data||[];
-  renderAll();document.getElementById('dataStatus').textContent='Live · Supabase connected';
- }catch(err){console.error(err);document.getElementById('dataStatus').textContent='Connection error';setError('The webpage could not read the Supabase data. Check the project URL/key and the public SELECT policies. Details: '+err.message)}
+  renderAll();setText('dataStatus','Live · Supabase connected');
+ }catch(err){console.error(err);setText('dataStatus','Connection error');setError('The webpage could not read the Supabase data. Check the project URL/key and the public SELECT policies. Details: '+err.message)}
 }
 function renderAll(){
  const s=state.society;
  if(s){document.getElementById('brandName').textContent=s.name;document.getElementById('brandType').textContent=(s.society_type||'Society')+' · '+(s.city||'');document.getElementById('heroSub').textContent=(s.society_type||'Co-operative Housing Society')+' · '+(s.city||'');const name=String(s.name||'Panvelkar Estate Stanford');if(name.includes('Stanford'))document.getElementById('heroName').innerHTML=esc(name).replace(' Stanford','<br><span>Stanford</span>');else document.getElementById('heroName').textContent=name;}
  const flats=state.units.filter(u=>u.unit_type==='flat'),shops=state.units.filter(u=>u.unit_type==='shop');
  const occupied=flats.filter(u=>u.occupied_status!=='vacant').length;
- ['wingCount','metricWings'].forEach(id=>document.getElementById(id).textContent=state.wings.length);
- ['flatCount','metricFlats'].forEach(id=>document.getElementById(id).textContent=flats.length);
- ['shopCount','metricShops'].forEach(id=>document.getElementById(id).textContent=shops.length);
- document.getElementById('occupiedCount').textContent=occupied;
+ ['wingCount','metricWings'].forEach(id=>setText(id,state.wings.length));
+ ['flatCount','metricFlats'].forEach(id=>setText(id,flats.length));
+ ['shopCount','metricShops'].forEach(id=>setText(id,shops.length));
+ setText('occupiedCount',occupied);
  renderWings();renderShops();renderNotices();renderDocuments();renderResidentTabs();renderUnits();
 }
 function renderWings(){document.getElementById('wingRows').innerHTML=state.wings.map(w=>{const us=state.units.filter(u=>u.wing_id===w.id&&u.unit_type==='flat');const fires=us.filter(u=>u.is_fire_flat).length;return `<tr><td><b>${esc(w.code)}</b></td><td>G + ${esc(w.total_floors)}</td><td>${esc(w.flats_per_floor)}</td><td>${us.length}</td><td>${fires}</td><td>${esc(w.notes||'')}</td></tr>`}).join('')||'<tr><td colspan="6" class="empty">No wing records found.</td></tr>'}
@@ -113,8 +115,8 @@ function renderUnits(){
     || String(a.unit_number||'').localeCompare(String(b.unit_number||''),undefined,{numeric:true,sensitivity:'base'});
 });
  const selectedWing=state.wings.find(w=>w.id===state.selectedWing);
- document.getElementById('residentWingTitle').textContent=selectedWing?`${selectedWing.code} Residents`:'All Wings';
- document.getElementById('residentWingCount').textContent=`${units.length} flat${units.length===1?'':'s'}`;
+ setText('residentWingTitle',selectedWing?`${selectedWing.code} Residents`:'All Wings');
+ setText('residentWingCount',`${units.length} flat${units.length===1?'':'s'}`);
  const rows=units.map(u=>{const wing=state.wings.find(w=>w.id===u.wing_id);const profile=state.profiles.find(p=>p.unit_id===u.id&&p.active!==false);const tenant=state.tenants.find(t=>t.unit_id===u.id&&t.active!==false);const vehicle=state.vehicles.find(v=>v.unit_id===u.id&&v.active!==false);let resident='—';if(u.occupied_status==='owner_occupied')resident=profile?.full_name||'Owner record not published';else if(u.occupied_status==='rented')resident=tenant?.full_name||'Tenant record not published';return `<tr><td><b>${esc(wing?.code||'—')}</b></td><td>${esc(u.unit_number)}</td><td>${esc(u.floor_number??'—')}</td><td><span class="pill ${statusClass(u.occupied_status)}">${esc(statusLabel(u.occupied_status))}</span></td><td>${esc(resident)}</td><td>${esc(vehicle?.vehicle_number||'—')}</td></tr>`}).join('');
  document.getElementById('unitRows').innerHTML=rows||'<tr><td colspan="6" class="empty">No matching flats found in this wing.</td></tr>';
 }
