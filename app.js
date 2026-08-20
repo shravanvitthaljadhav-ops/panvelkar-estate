@@ -1,2 +1,29 @@
+// Panvelkar Estate Stanford
+// Public-site JavaScript
+//
+// IMPORTANT:
+// No administrator password, user list, or privileged credential is stored here.
+// Admin/Super Admin authentication must be handled by Supabase Auth + RLS.
 
-function openAdmin(){document.getElementById("adminModal").classList.add("show")}function closeAdmin(){document.getElementById("adminModal").classList.remove("show")}document.getElementById("adminModal").addEventListener("click",e=>{if(e.target.id==="adminModal")closeAdmin()});document.getElementById("adminForm").addEventListener("submit",e=>{e.preventDefault();const n=document.getElementById("adminName").value,p=document.getElementById("adminPassword").value,m=document.getElementById("loginMsg");if(["Shravan Jadhav","Shrikant Patil","Kalpesh Ghag"].includes(n)&&p==="PES2026"){sessionStorage.setItem("pes_admin",n);m.textContent="Demo login successful.";m.style.color="#16734a"}else{m.textContent="Incorrect admin name or password.";m.style.color="#b42318"}});
+function openAdmin() {
+  window.location.href = "portal.html";
+}
+
+function closeAdmin() {
+  const modal = document.getElementById("adminModal");
+  if (modal) {
+    modal.classList.remove("show");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const modal = document.getElementById("adminModal");
+
+  if (modal) {
+    modal.addEventListener("click", function (event) {
+      if (event.target === modal) {
+        closeAdmin();
+      }
+    });
+  }
+});
