@@ -4,244 +4,83 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#10234d">
-<meta name="description" content="Panvelkar Estate Stanford Co-operative Housing Society, Badlapur — official public website and secure member/admin portal entry point.">
-<title>Panvelkar Estate Stanford | Society Website</title>
+<meta name="description" content="Panvelkar Estate Stanford Co-operative Housing Society, Badlapur — official public website.">
+<title>Panvelkar Estate Stanford | Official Society Website</title>
 <style>
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
 body{margin:0;font-family:Inter,Arial,sans-serif;color:#172033;background:#f5f7fb;line-height:1.55}
 .top{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #e6eaf0;box-shadow:0 5px 20px #0f172a12;padding:12px 5vw;display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:11px}
-.logo{width:44px;height:44px;border-radius:13px;background:#10234d;color:#fff;display:grid;place-items:center;font-weight:900}
-.brand b{display:block;font-size:.95rem}
-.brand small{color:#64748b;font-size:.72rem}
-nav{display:flex;gap:16px;align-items:center}
-nav a{font-size:.82rem;font-weight:800;color:#334155;text-decoration:none}
+.brand{display:flex;align-items:center;gap:11px}.logo{width:44px;height:44px;border-radius:13px;background:#10234d;color:#fff;display:grid;place-items:center;font-weight:900}
+.brand b{display:block;font-size:.95rem}.brand small{color:#64748b;font-size:.72rem}
+nav{display:flex;gap:16px;align-items:center}nav a{font-size:.82rem;font-weight:800;color:#334155;text-decoration:none}
 .menu{display:none;border:0;background:none;font-size:1.6rem;cursor:pointer}
-.hero{min-height:610px;position:relative;background:
-linear-gradient(90deg,#061a3de8 0%,#071d3db8 52%,#071d3d55 100%),
-url('hero-building.svg') center/cover no-repeat,
-linear-gradient(135deg,#163b72,#2c6e9e 55%,#91b9c8);
-display:grid;grid-template-columns:1.2fr .8fr;gap:45px;align-items:center;padding:80px 7vw;overflow:hidden}
-.hero>*{position:relative;z-index:1}
-.eyebrow{display:inline-block;background:#ffffff20;border:1px solid #ffffff45;color:#fff;border-radius:99px;padding:7px 12px;font-weight:800;font-size:.8rem}
-.hero h1{font-size:clamp(2.8rem,6vw,5rem);line-height:.98;letter-spacing:-.045em;color:#fff;margin:18px 0 16px}
-.hero h1 span{font-weight:500}
-.hero p{color:#e8eef8;font-size:1.1rem;max-width:680px}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}
-.btn{display:inline-block;padding:12px 18px;border-radius:11px;background:#fff;color:#10234d;border:0;font-weight:900;text-decoration:none;cursor:pointer}
-.btn.dark{background:#10234d;color:#fff}
-.btn.outline{background:#ffffff18;color:#fff;border:1px solid #ffffff70}
+.hero{min-height:600px;position:relative;overflow:hidden;display:grid;grid-template-columns:1.2fr .8fr;gap:45px;align-items:center;padding:80px 7vw;background:linear-gradient(135deg,#10234d,#2c6e9e 55%,#91b9c8)}
+.hero>*{position:relative;z-index:2}.eyebrow{display:inline-block;background:#ffffff20;border:1px solid #ffffff45;color:#fff;border-radius:99px;padding:7px 12px;font-weight:800;font-size:.8rem}
+.hero h1{font-size:clamp(2.8rem,6vw,5rem);line-height:.98;letter-spacing:-.045em;color:#fff;margin:18px 0 16px}.hero h1 span{font-weight:500}.hero p{color:#e8eef8;font-size:1.1rem;max-width:680px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.btn{display:inline-block;padding:12px 18px;border-radius:11px;background:#fff;color:#10234d;font-weight:900;text-decoration:none}.btn.dark{background:#10234d;color:#fff}
 .glass{padding:28px;border-radius:24px;background:#ffffff20;border:1px solid #ffffff55;backdrop-filter:blur(13px);color:#fff;box-shadow:0 25px 70px #0004;max-width:440px;margin-left:auto}
 .dummy{width:82px;height:82px;border-radius:14px;background:#10234d;display:grid;place-items:center;font-size:1.6rem;font-weight:900;margin-bottom:18px}
-.glass h3{margin:0 0 12px}
-.stat{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #ffffff30}
-.stat:last-child{border:0}
-.stat b{font-size:1.25rem}
-.stat span{text-align:right;color:#e7eef8}
-section{padding:68px 7vw}
-.head{max-width:1150px;margin:0 auto 20px;display:flex;justify-content:space-between;align-items:end;gap:15px}
-.head h2{font-size:2rem;margin:0}
-.head span,.intro{color:#64748b}
-.intro{max-width:900px;margin:-8px auto 22px}
-.cards{max-width:1150px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card{background:#fff;border:1px solid #e4e9f0;border-radius:18px;padding:22px;box-shadow:0 8px 28px #0f172a0b}
-.card h3{margin:8px 0}
-.icon{font-size:1.6rem}
-.metric{font-size:2.1rem;font-weight:900;color:#10234d;margin-top:2px}
-.notice{background:#fff8f4;border-color:#f3ddd2}
-.notice:nth-child(2n){background:#f7f9ff;border-color:#dfe5f5}
-.contact{background:#f5f9ff;border-color:#dbe7f5}
-.contact:nth-child(2){background:#f7fbf7;border-color:#dcecdf}
-.contact:nth-child(3){background:#fff8f5;border-color:#f1ddd6}
-footer{background:#111827;color:#dbe4f0;padding:45px 7vw 20px}
-.footer-grid{max-width:1150px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}
-.footer-grid h3{color:#f5c84c}
-.footer-grid a{color:#dbe4f0;text-decoration:none;display:block;margin:5px 0}
-.copyright{border-top:1px solid #334155;margin-top:30px;padding-top:15px;text-align:center;color:#94a3b8;font-size:.85rem}
-@media(max-width:900px){
- nav{display:none}
- .menu{display:block}
- nav.open{display:flex;position:absolute;top:68px;left:0;right:0;background:#fff;padding:16px 5vw;flex-wrap:wrap;box-shadow:0 12px 25px #0f172a18}
- .hero{grid-template-columns:1fr;min-height:700px}
- .glass{margin:0;max-width:520px}
- .cards{grid-template-columns:1fr 1fr}
-}
-@media(max-width:600px){
- .top{padding:10px 4vw}
- .brand b{font-size:.82rem}
- .brand small{font-size:.65rem}
- .hero{padding:55px 5vw;min-height:680px}
- .hero h1{font-size:3rem}
- .hero p{font-size:.92rem}
- section{padding:48px 5vw}
- .cards{grid-template-columns:1fr}
- .head{align-items:flex-start;flex-direction:column}
- .footer-grid{grid-template-columns:1fr}
-}
+.stat{display:flex;justify-content:space-between;gap:15px;padding:12px 0;border-bottom:1px solid #ffffff30}.stat:last-child{border:0}.stat b{font-size:1.2rem}.stat span{text-align:right;color:#e7eef8}
+section{padding:68px 7vw}.head{max-width:1150px;margin:0 auto 20px;display:flex;justify-content:space-between;align-items:end;gap:15px}.head h2{font-size:2rem;margin:0}.head span,.intro{color:#64748b}.intro{max-width:950px;margin:-8px auto 25px}
+.cards{max-width:1150px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:#fff;border:1px solid #e4e9f0;border-radius:18px;padding:22px;box-shadow:0 8px 28px #0f172a0b}.card h3{margin:8px 0}.icon{font-size:1.6rem}.metric{font-size:2.1rem;font-weight:900;color:#10234d}
+.table-wrap{max-width:1150px;margin:auto;overflow:auto;background:#fff;border-radius:18px;border:1px solid #e4e9f0;box-shadow:0 8px 28px #0f172a0b}
+table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:14px 16px;text-align:left;border-bottom:1px solid #e9edf2}th{background:#10234d;color:#fff}tr:last-child td{border-bottom:0}
+.shop{background:#fffaf2;border-color:#f0dfbd}.shop-no{font-size:1.5rem;font-weight:900;color:#10234d}.committee{background:#f8faff}.role{color:#64748b;font-size:.85rem;font-weight:700}.notice{background:#fff8f4;border-color:#f3ddd2}.contact{background:#f5f9ff;border-color:#dbe7f5}
+footer{background:#111827;color:#dbe4f0;padding:45px 7vw 20px}.footer-grid{max-width:1150px;margin:auto;display:grid;grid-template-columns:2fr 1fr 1fr;gap:30px}.footer-grid h3{color:#f5c84c}.footer-grid a{color:#dbe4f0;text-decoration:none;display:block;margin:5px 0}.copyright{border-top:1px solid #334155;margin-top:30px;padding-top:15px;text-align:center;color:#94a3b8;font-size:.85rem}
+@media(max-width:900px){nav{display:none}.menu{display:block}nav.open{display:flex;position:absolute;top:68px;left:0;right:0;background:#fff;padding:16px 5vw;flex-wrap:wrap;box-shadow:0 12px 25px #0f172a18}.hero{grid-template-columns:1fr;min-height:720px}.glass{margin:0;max-width:520px}.cards{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.top{padding:10px 4vw}.brand b{font-size:.82rem}.brand small{font-size:.65rem}.hero{padding:55px 5vw;min-height:700px}.hero h1{font-size:3rem}.hero p{font-size:.92rem}section{padding:48px 5vw}.cards{grid-template-columns:1fr}.head{align-items:flex-start;flex-direction:column}.footer-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-
 <header class="top">
-  <div class="brand">
-    <div class="logo">PES</div>
-    <div>
-      <b>Panvelkar Estate Stanford</b>
-      <small>Co-operative Housing Society · Badlapur</small>
-    </div>
-  </div>
-  <button class="menu" aria-label="Open menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
-  <nav id="nav">
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#services">Services</a>
-    <a href="#notices">Notices</a>
-    <a href="#contacts">Contacts</a>
-  </nav>
+<div class="brand"><div class="logo">PES</div><div><b>Panvelkar Estate Stanford</b><small>Co-operative Housing Society · Badlapur</small></div></div>
+<button class="menu" aria-label="Open menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
+<nav id="nav"><a href="#home">Home</a><a href="#about">About</a><a href="#wings">Wings</a><a href="#shops">Shops</a><a href="#committee">Committee</a><a href="#notices">Notices</a></nav>
 </header>
 
 <section id="home" class="hero">
-  <div>
-    <span class="eyebrow">🏠 Official Society Website</span>
-    <h1>Panvelkar Estate<br><span>Stanford</span></h1>
-    <p>Welcome to the official public website of Panvelkar Estate Stanford Co-operative Housing Society, Badlapur.</p>
-
-    <div class="actions">
-      <a class="btn dark" href="portal.html">👤 Members Login</a>
-      <a class="btn" href="portal.html">🛡️ Admin Login</a>
-    </div>
-  </div>
-
-  <div class="glass">
-    <div class="dummy">PES</div>
-    <h3>Secure Society Portal</h3>
-    <p>Members and authorised administrators can access the private portal using their registered authentication.</p>
-    <div class="stat"><b>Members</b><span>Secure login</span></div>
-    <div class="stat"><b>Administrators</b><span>Secure login</span></div>
-    <div class="stat"><b>Resident data</b><span>Private portal only</span></div>
-  </div>
+<div><span class="eyebrow">🏠 Official Society Website</span><h1>Panvelkar Estate<br><span>Stanford</span></h1><p>Welcome to the official public website of Panvelkar Estate Stanford Co-operative Housing Society, Badlapur.</p>
+<div class="actions"><a class="btn dark" href="portal.html">👤 Members Login</a><a class="btn" href="portal.html">🛡️ Admin Login</a></div></div>
+<div class="glass"><div class="dummy">PES</div><h3>Our Society at a Glance</h3>
+<div class="stat"><b>5</b><span>Residential wings</span></div><div class="stat"><b>419</b><span>Flats including fire flats</span></div><div class="stat"><b>14</b><span>Shops</span></div><div class="stat"><b>3</b><span>Society offices</span></div></div>
 </section>
 
-<section id="about">
-  <div class="head">
-    <h2>About Our Society</h2>
-    <span>Public information</span>
-  </div>
-  <div class="cards">
-    <div class="card">
-      <div class="icon">🏢</div>
-      <h3>Community</h3>
-      <p>Panvelkar Estate Stanford is a co-operative housing society serving its residential community in Badlapur.</p>
-    </div>
-    <div class="card">
-      <div class="icon">🏠</div>
-      <h3>Society Portal</h3>
-      <p>The secure portal provides authenticated access to member services and authorised administration functions.</p>
-    </div>
-    <div class="card">
-      <div class="icon">🔒</div>
-      <h3>Privacy First</h3>
-      <p>Resident-specific information is deliberately kept out of this public website.</p>
-    </div>
-  </div>
-</section>
+<section id="about"><div class="head"><h2>About Our Society</h2><span>Public information</span></div>
+<div class="cards"><div class="card"><div class="icon">🏢</div><h3>Co-operative Community</h3><p>Panvelkar Estate Stanford is a co-operative housing society serving its residential community in Badlapur.</p></div>
+<div class="card"><div class="icon">🏠</div><h3>Residential Community</h3><div class="metric">419</div><p>Residential flats including designated fire flats.</p></div>
+<div class="card"><div class="icon">🏪</div><h3>Commercial Spaces</h3><div class="metric">14</div><p>Society shops are listed in the public directory below.</p></div></div></section>
 
-<section id="services">
-  <div class="head">
-    <h2>Society Services</h2>
-    <span>Access through secure portal</span>
-  </div>
-  <div class="cards">
-    <div class="card">
-      <div class="icon">👤</div>
-      <h3>Member Services</h3>
-      <p>Access your private member dashboard after authentication.</p>
-      <a class="btn dark" href="portal.html">Members Login</a>
-    </div>
-    <div class="card">
-      <div class="icon">🛡️</div>
-      <h3>Administration</h3>
-      <p>Authorised administrators can access administration features after authentication.</p>
-      <a class="btn dark" href="portal.html">Admin Login</a>
-    </div>
-    <div class="card">
-      <div class="icon">📢</div>
-      <h3>Society Communication</h3>
-      <p>Official member notices and private society information are available inside the authenticated portal.</p>
-    </div>
-  </div>
-</section>
+<section id="wings"><div class="head"><h2>Wing & Flat Details</h2><span>Society-level information</span></div><p class="intro">These are building and unit counts only. Individual owner, resident, tenant and member records are not published on the public website.</p>
+<div class="table-wrap"><table><thead><tr><th>Wing</th><th>Regular Flats</th><th>Fire Flats</th><th>Total Flats</th><th>Shops</th><th>Offices</th></tr></thead>
+<tbody><tr><td><b>R1A</b></td><td>115</td><td>2</td><td>117</td><td>0</td><td>0</td></tr><tr><td><b>R1B</b></td><td>14</td><td>0</td><td>14</td><td>0</td><td>0</td></tr><tr><td><b>R2</b></td><td>95</td><td>1</td><td>96</td><td>0</td><td>0</td></tr><tr><td><b>R3</b></td><td>95</td><td>1</td><td>96</td><td>0</td><td>0</td></tr><tr><td><b>R4</b></td><td>95</td><td>1</td><td>96</td><td>0</td><td>0</td></tr></tbody></table></div></section>
 
-<section id="notices">
-  <div class="head">
-    <h2>Public Notices</h2>
-    <span>Official website</span>
-  </div>
-  <div class="cards">
-    <div class="card notice">
-      <div class="icon">📢</div>
-      <h3>Society Portal</h3>
-      <p>Members and administrators should use the secure portal for society-specific information and services.</p>
-    </div>
-    <div class="card notice">
-      <div class="icon">🔐</div>
-      <h3>Privacy</h3>
-      <p>Resident, owner, tenant and vehicle information is not displayed on this public page.</p>
-    </div>
-    <div class="card notice">
-      <div class="icon">🏠</div>
-      <h3>Welcome</h3>
-      <p>Welcome to the official public website of Panvelkar Estate Stanford.</p>
-    </div>
-  </div>
-</section>
+<section id="shops"><div class="head"><h2>Society Shops</h2><span>14 commercial units</span></div><p class="intro">All 14 shop units are represented here. Exact approved shop details can be inserted once confirmed.</p>
+<div class="cards">
+<div class="card shop"><div class="shop-no">Shop 01</div><h3>Shop Unit 01</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 02</div><h3>Shop Unit 02</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 03</div><h3>Shop Unit 03</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 04</div><h3>Shop Unit 04</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 05</div><h3>Shop Unit 05</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 06</div><h3>Shop Unit 06</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 07</div><h3>Shop Unit 07</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 08</div><h3>Shop Unit 08</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 09</div><h3>Shop Unit 09</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 10</div><h3>Shop Unit 10</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 11</div><h3>Shop Unit 11</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 12</div><h3>Shop Unit 12</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 13</div><h3>Shop Unit 13</h3><p>Approved shop details to be displayed here.</p></div><div class="card shop"><div class="shop-no">Shop 14</div><h3>Shop Unit 14</h3><p>Approved shop details to be displayed here.</p></div>
+</div></section>
 
-<section id="contacts">
-  <div class="head">
-    <h2>Important Information</h2>
-    <span>Public-facing content</span>
-  </div>
-  <div class="cards">
-    <div class="card contact">
-      <div class="icon">🛡️</div>
-      <h3>Security</h3>
-      <p>Security and resident-specific operational details are kept inside the authorised portal.</p>
-    </div>
-    <div class="card contact">
-      <div class="icon">🏢</div>
-      <h3>Society Office</h3>
-      <p>Official society office information can be published here when approved for public release.</p>
-    </div>
-    <div class="card contact">
-      <div class="icon">🚨</div>
-      <h3>Emergency</h3>
-      <p>Emergency information can be added here when the society approves the public content.</p>
-    </div>
-  </div>
-</section>
+<section id="committee"><div class="head"><h2>Management Committee</h2><span>Public committee information</span></div><p class="intro">Demo committee names are used for now and can be replaced with the approved current committee list.</p>
+<div class="cards">
+<div class="card committee"><div class="icon">👤</div><h3>Committee Member 01</h3><div class="role">Chairman</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 02</h3><div class="role">Secretary</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 03</h3><div class="role">Treasurer</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 04</h3><div class="role">Committee Member</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 05</h3><div class="role">Committee Member</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 06</h3><div class="role">Committee Member</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 07</h3><div class="role">Committee Member</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 08</h3><div class="role">Committee Member</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 09</h3><div class="role">Committee Member</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 10</h3><div class="role">Committee Member</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 11</h3><div class="role">Committee Member</div></div><div class="card committee"><div class="icon">👤</div><h3>Committee Member 12</h3><div class="role">Committee Member</div></div>
+</div></section>
 
-<footer>
-  <div class="footer-grid">
-    <div>
-      <h3>Panvelkar Estate Stanford</h3>
-      <p>Co-operative Housing Society · Badlapur</p>
-      <p>This public website is intentionally limited to non-resident information.</p>
-    </div>
-    <div>
-      <h3>Quick Links</h3>
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#services">Services</a>
-    </div>
-    <div>
-      <h3>Secure Portal</h3>
-      <a href="portal.html">Members Login</a>
-      <a href="portal.html">Admin Login</a>
-    </div>
-  </div>
-  <div class="copyright">© 2026 Panvelkar Estate Stanford Co-operative Housing Society · Badlapur</div>
-</footer>
+<section id="services"><div class="head"><h2>Secure Society Portal</h2><span>Authenticated access</span></div>
+<div class="cards"><div class="card"><div class="icon">👤</div><h3>Member Services</h3><p>Access your private member dashboard after authentication.</p><a class="btn dark" href="portal.html">Members Login</a></div>
+<div class="card"><div class="icon">🛡️</div><h3>Administration</h3><p>Authorised administrators can access administration features after authentication.</p><a class="btn dark" href="portal.html">Admin Login</a></div>
+<div class="card"><div class="icon">🔒</div><h3>Privacy</h3><p>Owner, resident, tenant, vehicle and other member-specific records are kept out of this public page.</p></div></div></section>
 
-</body>
-</html>
+<section id="notices"><div class="head"><h2>Public Notices</h2><span>Official website</span></div><div class="cards">
+<div class="card notice"><div class="icon">📢</div><h3>Society Portal</h3><p>Members and administrators should use the secure portal for society-specific information and services.</p></div>
+<div class="card notice"><div class="icon">🔐</div><h3>Privacy</h3><p>Individual resident/member information is not published on this public website.</p></div>
+<div class="card notice"><div class="icon">🏠</div><h3>Welcome</h3><p>Welcome to the official public website of Panvelkar Estate Stanford.</p></div></div></section>
+
+<section id="contacts"><div class="head"><h2>Society Information</h2><span>Public-facing content</span></div><div class="cards">
+<div class="card contact"><div class="icon">🏢</div><h3>Society Offices</h3><div class="metric">3</div><p>Society office spaces over and above the residential units.</p></div>
+<div class="card contact"><div class="icon">📋</div><h3>Society Information</h3><p>Society-level information is available publicly; member-specific records remain protected.</p></div>
+<div class="card contact"><div class="icon">🔒</div><h3>Private Records</h3><p>Detailed owner, tenant, vehicle and member information is available only through authorised portal access.</p></div></div></section>
+
+<footer><div class="footer-grid"><div><h3>Panvelkar Estate Stanford</h3><p>Co-operative Housing Society · Badlapur</p><p>Public information only. Member-specific information is available through authorised access.</p></div>
+<div><h3>Quick Links</h3><a href="#home">Home</a><a href="#wings">Wings</a><a href="#shops">Shops</a><a href="#committee">Committee</a></div>
+<div><h3>Secure Portal</h3><a href="portal.html">Members Login</a><a href="portal.html">Admin Login</a></div></div>
+<div class="copyright">© 2026 Panvelkar Estate Stanford Co-operative Housing Society · Badlapur</div></footer>
+</body></html>
