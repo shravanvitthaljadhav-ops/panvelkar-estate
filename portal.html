@@ -16,7 +16,61 @@ body{margin:0;font-family:system-ui;background:#f5f7fb;color:#172033}header{back
 <main>
 <section id="login" class="login"><h1>Secure Login</h1><p class="muted">Owners / authorised members and committee administrators.</p><label>Email<input id="email" type="email" autocomplete="username"></label><label>Password<input id="password" type="password" autocomplete="new-password"></label><button class="dark" onclick="login()">Sign in</button><div id="msg" class="msg"></div></section>
 <section id="dash" class="hidden"><div class="top"><div><h1 id="welcome">Dashboard</h1><span id="role" class="role"></span></div><span id="userEmail" class="muted"></span></div>
-<div id="member" class="hidden"><div class="grid"><div class="metric"><b id="flat">—</b><span>My Flat</span></div><div class="metric"><b id="people">—</b><span>Household People</span></div><div class="metric"><b id="pets">—</b><span>Pets</span></div><div class="metric"><b id="vehicles">—</b><span>Vehicles</span></div></div><div class="section"><h2>Member Services</h2><div class="tiles"><div class="tile">👤 My Profile</div><div class="tile">🏠 My Flat</div><div class="tile">👥 Co-Owners</div><div class="tile">🐾 Pets</div><div class="tile">🚗 Vehicles</div><div class="tile">📄 Documents</div><div class="tile">💰 Maintenance</div><div class="tile">🛠 Complaints</div></div></div><div id="memberNote" class="section muted"></div></div>
+<div id="member" class="hidden">
+  <div class="grid">
+    <div class="metric"><b id="flat">—</b><span>My Flat</span></div>
+    <div class="metric"><b id="people">—</b><span>Household People</span></div>
+    <div class="metric"><b id="pets">—</b><span>Pets</span></div>
+    <div class="metric"><b id="vehicles">—</b><span>Vehicles</span></div>
+  </div>
+
+  <div class="section">
+    <div class="sectionHead">
+      <div>
+        <h2>🏠 My Property</h2>
+        <p class="muted">Your property and household information.</p>
+      </div>
+    </div>
+    <div class="tiles">
+      <div class="tile">👤 <b>My Profile</b><div class="smallNote">Personal and contact details</div></div>
+      <div class="tile">🏢 <b>My Flat</b><div class="smallNote">Flat and wing information</div></div>
+      <div class="tile">👥 <b>Co-Owners</b><div class="smallNote">Registered co-owners</div></div>
+      <div class="tile">🐾 <b>Pets</b><div class="smallNote">Registered pets</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sectionHead">
+      <div>
+        <h2>🛠 My Services</h2>
+        <p class="muted">Manage the services and records related to your home.</p>
+      </div>
+    </div>
+    <div class="tiles">
+      <div class="tile">🚗 <b>Vehicles</b><div class="smallNote">Registered vehicles</div></div>
+      <div class="tile">📄 <b>Documents</b><div class="smallNote">Society and property documents</div></div>
+      <div class="tile">💰 <b>Maintenance</b><div class="smallNote">Maintenance information</div></div>
+      <div class="tile">🛠 <b>Complaints</b><div class="smallNote">Raise and track complaints</div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="sectionHead">
+      <div>
+        <h2>🏘️ Society</h2>
+        <p class="muted">Important society-wide information.</p>
+      </div>
+    </div>
+    <div class="tiles">
+      <div class="tile">💰 <b>Funds &amp; Collections</b><div class="smallNote">Society collections and contributions</div></div>
+      <div class="tile">📢 <b>Notices</b><div class="smallNote">Important society announcements</div></div>
+      <div class="tile">📋 <b>Projects</b><div class="smallNote">Society projects and updates</div></div>
+      <div class="tile">🏢 <b>Wing Details</b><div class="smallNote">Society wing information</div></div>
+    </div>
+  </div>
+
+  <div id="memberNote" class="section muted"></div>
+</div>
 <div id="admin" class="hidden">
   <div class="grid">
     <div class="metric"><b id="houses">—</b><span>Homes</span></div>
