@@ -1,26 +1,22 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900" role="img" aria-labelledby="title desc">
 <title>Panvelkar Estate Stanford Co-operative Housing Society Ltd logo</title>
-<desc>Stylised Panvelkar Estate Stanford society logo with a central blue tower, orange and red side towers, and society name.</desc>
+<desc>Stylised Panvelkar Estate Stanford society logo with a central blue tower, orange and red side towers, and a centred multicolour O in Stanford.</desc>
 <rect width="900" height="900" fill="#fff"/>
 <rect x="80" y="80" width="740" height="740" rx="52" fill="#fff" stroke="#e9e9e9" stroke-width="18"/>
-<!-- buildings -->
 <path d="M290 470V235L450 90V470Z" fill="#087f98"/>
 <path d="M450 90L570 205V470H450Z" fill="#062c3d"/>
 <path d="M210 500V370L290 430V500Z" fill="#0b7f96"/>
 <path d="M215 505V350L330 440V505Z" fill="#f04a2d"/>
 <path d="M570 500V330L670 425V500Z" fill="#f59a19"/>
 <path d="M670 500V400L720 445V500Z" fill="#0b7f96"/>
-<!-- central tower windows -->
-<g stroke="#062c3d" stroke-width="9">
- <path d="M320 245h72"/><path d="M320 285h72"/><path d="M320 325h72"/><path d="M320 365h72"/><path d="M320 405h72"/>
-</g>
-<!-- name -->
+<g stroke="#062c3d" stroke-width="9"><path d="M320 245h72"/><path d="M320 285h72"/><path d="M320 325h72"/><path d="M320 365h72"/><path d="M320 405h72"/></g>
 <text x="450" y="565" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-size="58" font-weight="700" fill="#062c3d">PANVELKAR ESTATE</text>
 <path d="M155 582H745" stroke="#062c3d" stroke-width="3"/>
-<text x="450" y="655" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-size="82" font-weight="700" fill="#062c3d">STANF<tspan fill="#ef3e2f">O</tspan>RD</text>
-<!-- multicolour emblem -->
+<!-- STANFORD: the multicolour emblem replaces and stays exactly centred on the O -->
+<text x="424" y="655" text-anchor="end" font-family="Georgia,Times New Roman,serif" font-size="82" font-weight="700" fill="#062c3d">STANF</text>
+<text x="476" y="655" text-anchor="start" font-family="Georgia,Times New Roman,serif" font-size="82" font-weight="700" fill="#062c3d">RD</text>
 <g transform="translate(450 625)">
- <circle r="31" fill="#fff"/>
+ <circle r="34" fill="#fff"/>
  <path d="M0 0L0 -28A28 28 0 0 1 24 -14Z" fill="#00a0b5"/>
  <path d="M0 0L24 -14A28 28 0 0 1 24 14Z" fill="#f59a19"/>
  <path d="M0 0L24 14A28 28 0 0 1 0 28Z" fill="#ef3e2f"/>
@@ -31,6 +27,5 @@
 </g>
 <path d="M155 680H745" stroke="#062c3d" stroke-width="3"/>
 <text x="450" y="730" text-anchor="middle" font-family="Georgia,Times New Roman,serif" font-size="39" font-weight="700" fill="#062c3d">CO. HOUSING SOCIETY LTD</text>
-<!-- lower building accents -->
 <rect x="230" y="755" width="70" height="55" fill="#ef3e2f"/><rect x="305" y="755" width="20" height="55" fill="#f59a19"/><rect x="330" y="755" width="100" height="55" fill="#087f98"/><rect x="435" y="755" width="70" height="55" fill="#062c3d"/><rect x="510" y="755" width="100" height="55" fill="#f59a19"/><rect x="615" y="755" width="20" height="55" fill="#087f98"/>
 </svg>
