@@ -1,0 +1,66 @@
+name: Apply Stanford Portal Admin Theme
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  theme:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'Apply Stanford Portal Admin Theme') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Backup portal and inject theme
+        shell: python
+        run: |
+          from pathlib import Path
+
+          portal = Path('portal.html')
+          if not portal.exists():
+              raise SystemExit('portal.html not found')
+
+          original = portal.read_text(encoding='utf-8')
+          backup = Path('portal.html.pre-theme-backup')
+          if not backup.exists():
+              backup.write_text(original, encoding='utf-8')
+
+          marker = '/* STANFORD ADMIN PORTAL THEME v1 */'
+          if marker in original:
+              print('Theme already present; no changes needed.')
+              raise SystemExit(0)
+
+          css = r'''<style>
+          /* STANFORD ADMIN PORTAL THEME v1 */
+          :root{--stan-teal:#1f4b43;--stan-teal2:#2e6b5e;--stan-sand:#f2e8d5;--stan-cream:#fbf7ef;--stan-brick:#c1502e;--stan-gold:#c9a227;--stan-ink:#25231e;--stan-muted:#686256;--stan-line:#e3d8bd}
+          body{background:var(--stan-sand);color:var(--stan-ink)}
+          header{background:linear-gradient(135deg,var(--stan-teal),var(--stan-teal2));border-bottom:4px solid var(--stan-gold)}
+          header b{letter-spacing:.01em}
+          main{max-width:1280px;padding:28px 4% 55px}
+          #admin .metric,#admin .section,#admin .serviceTile,#admin #opPanel{box-shadow:none;border-color:var(--stan-line)}
+          #admin .metric{background:var(--stan-cream);border-radius:14px;padding:18px}
+          #admin .metric b{color:var(--stan-teal);font-size:27px}
+          #admin .metric span{color:var(--stan-muted)}
+          #admin>.section{background:transparent;border:0;box-shadow:none;padding:0;margin-top:18px;display:grid;grid-template-columns:255px minmax(0,1fr);gap:18px;align-items:start}
+          #admin>.section>h2{grid-column:1/-1;color:var(--stan-teal);margin:0 0 2px;font-size:23px}
+          #admin>.section>.serviceGrid{grid-column:1;display:flex;flex-direction:column;gap:7px;background:var(--stan-teal);border-radius:16px;padding:12px;position:sticky;top:18px}
+          #admin>.section>.serviceGrid .serviceTile{width:100%;min-height:52px;border:1px solid transparent;border-radius:10px;background:transparent;color:#fff;padding:12px 13px;text-align:left;display:flex;align-items:center;gap:8px}
+          #admin>.section>.serviceGrid .serviceTile:hover,#admin>.section>.serviceGrid .serviceTile.active{background:var(--stan-gold);color:var(--stan-teal);border-color:var(--stan-gold);box-shadow:none}
+          #admin>.section>#opPanel{grid-column:2;grid-row:2;background:var(--stan-cream);border:1px solid var(--stan-line);border-radius:16px;padding:20px;margin:0;min-width:0}
+          #admin>.section>#opPanel h2,#admin>.section>#opPanel h3{color:var(--stan-teal)}
+          #admin>.section>#opPanel table th{background:var(--stan-teal);color:#fff}
+          #admin>.section>#opPanel .serviceTile{background:var(--stan-cream);border-color:var(--stan-line)}
+          #admin .role{background:var(--stan-gold);color:var(--stan-teal)}
+          @media(max-width:850px){#admin>.section{grid-template-columns:1fr}#admin>.section>.serviceGrid{grid-column:1;position:static;display:grid;grid-template-columns:1fr 1fr}#admin>.section>#opPanel{grid-column:1;grid-row:auto}}
+          @media(max-width:520px){#admin>.section>.serviceGrid{grid-template-columns:1fr}main{padding-left:4%;padding-right:4%}}
+          </style>'''
+
+          if '</head>' not in original:
+              raise SystemExit('portal.html head tag not found')
+          updated = original.replace('</head>', css + '</head>', 1)
+          portal.write_text(updated, encoding='utf-8')
+          print('Stanford admin/super-admin theme injected. JavaScript mechanism untouched.')
