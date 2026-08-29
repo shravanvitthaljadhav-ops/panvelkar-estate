@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   add-info:
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'Stanford Society Information') }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -89,13 +89,10 @@ jobs:
 </section>
 '''
 
-          # Remove the malformed v1 injection if present.
+          # Remove malformed v1/v2 CSS blocks and previously injected sections.
           html = re.sub(r'\\n<style>\\n/\\* STANFORD SOCIETY INFORMATION v1 \\*/.*?</style>\\n</style>', '', html, flags=re.S)
           html = re.sub(r'<style>\s*/\\* STANFORD SOCIETY INFORMATION v1 \\*/.*?</style>\s*</style>', '', html, flags=re.S)
-          # Remove any prior v2 CSS block before inserting a clean one.
           html = re.sub(r'/\\* STANFORD SOCIETY INFORMATION v2 \\*/.*?(?=</style>)', '', html, flags=re.S)
-
-          # Replace the two inserted sections with a clean version.
           html = re.sub(r'\\n<section id="amenities".*?</section>\\n\\n<section id="rules-contacts".*?</section>\\n', '', html, flags=re.S)
           html = re.sub(r'<section id="amenities".*?</section>\s*<section id="rules-contacts".*?</section>\s*', '', html, flags=re.S)
 
@@ -103,14 +100,11 @@ jobs:
               raise SystemExit('Expected style/footer markers not found')
           html = html.replace('</style>', css + '</style>', 1)
           html = html.replace('<footer', section + '\n<footer', 1)
-
-          # Keep the navigation links exactly once.
           html = html.replace('<a href="#amenities">सुविधा</a>', '')
           html = html.replace('<a href="#rules-contacts">नियम व संपर्क</a>', '')
           nav_marker = '<a href="#notices" data-i18n="navNotices">Notices</a>'
           if nav_marker in html:
               html = html.replace(nav_marker, nav_marker + '<a href="#amenities">सुविधा</a><a href="#rules-contacts">नियम व संपर्क</a>', 1)
-
           page.write_text(html, encoding='utf-8')
           print('Clean Stanford society information applied.')
 
@@ -119,5 +113,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Fix Stanford society information [skip ci]"
+          git diff --cached --quiet || git commit -m "Apply Stanford society information [skip ci]"
           git push
