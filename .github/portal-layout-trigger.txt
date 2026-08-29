@@ -1,1 +1,0 @@
-Apply Stanford left navigation and right information layout.
