@@ -1,0 +1,35 @@
+name: Fix Public Page Number Localization
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch index.html
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          html=p.read_text(encoding='utf-8')
+          marker='STANFORD_NUMBER_LOCALIZATION_FINAL_V2'
+          if marker not in html:
+              script='''<script>\n/* STANFORD_NUMBER_LOCALIZATION_FINAL_V2 */\n(function(){\n  const sets={mr:'०१२३४५६७८९',en:'0123456789',hi:'०१२३४५६७८९'};\n  const latin='0123456789',dev='०१२३४५६७८९';\n  function toLatin(s){return s.replace(/[०१२३४५६७८९]/g,c=>latin[dev.indexOf(c)]);}\n  function apply(lang){\n    const target=sets[lang]||sets.mr;\n    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);\n    const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);\n    nodes.forEach(n=>{\n      const p=n.parentElement;\n      if(!p || ['SCRIPT','STYLE','SELECT','OPTION'].includes(p.tagName)) return;\n      const normalized=toLatin(n.nodeValue);\n      n.nodeValue=target===latin ? normalized : normalized.replace(/[0-9]/g,c=>target[Number(c)]);\n    });\n  }\n  function init(){\n    const sel=document.getElementById('languageSelect'); if(!sel) return;\n    sel.addEventListener('change',()=>setTimeout(()=>apply(sel.value),50));\n    setTimeout(()=>apply(sel.value),100);\n  }\n  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();\n})();\n</script>'''
+              if '</body>' in html:
+                  html=html.replace('</body>',script+'\n</body>',1)
+                  p.write_text(html,encoding='utf-8')
+          PY
+      - name: Commit patch and remove temporary workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git rm .github/workflows/fix-number-localization-once.yml
+          git commit -m "Fix number localization and remove temporary workflow [skip ci]"
+          git push
