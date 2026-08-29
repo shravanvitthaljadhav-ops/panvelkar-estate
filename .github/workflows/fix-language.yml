@@ -1,0 +1,64 @@
+name: Fix public language selector
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add working Marathi English Hindi switcher
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          h = p.read_text(encoding='utf-8')
+          marker = '/* STANFORD_LANGUAGE_SWITCHER_V2 */'
+          if marker not in h:
+              script = r'''<script>
+/* STANFORD_LANGUAGE_SWITCHER_V2 */
+(function(){
+  const translations={
+    en:{
+      'आमच्याबद्दल':'About','सुविधा':'Facilities','गॅलरी':'Gallery','सूचना':'Notices','कमिटी':'Committee','दुकाने':'Shops','सदस्य लॉगिन':'Member Login',
+      'आपलं घर,':'Our Home,','आपली सोसायटी':'Our Society','विश्वास, पारदर्शकता आणि काळजी यांच्या माध्यमातून एक मजबूत समुदाय घडवत आहोत.':'Building a strong community through trust, transparency and care.',
+      'आपली संस्था...':'Our Society...','आपली जबाबदारी.!':'Our Responsibility.!','आपला सहभाग...':'Our Participation...','संस्थेचा विकास.!':'Society Development.!','एकत्र येऊया.....':'Let us come together.....','भविष्य घडवूया..!':'Let us build the future..!','आपला विश्वास....':'Our Trust....','संस्थेची ताकद..!':'The strength of our society..!',
+      'सोसायटीची थोडक्यात माहिती / About Our Society':'About Our Society','आपली सोसायटी':'Our Society','फ्लॅट्स':'Flats','विंग्स':'Wings','दुकाने':'Shops',
+      'सोसायटीमध्ये उपलब्ध सुविधा':'Society Facilities','Residents facilities':'Residents Facilities','पार्किंग':'Parking','सिक्युरिटी':'Security','लिफ्ट':'Lift','गार्डन':'Garden','जनरेटर':'Generator','पाणी पुरवठा':'Water Supply','जिम':'Gym','प्ले एरिया':'Play Area',
+      'फोटो गॅलरी':'Photo Gallery','Photo Gallery':'Photo Gallery','सूचना बोर्ड':'Notice Board','Managing Committee':'Managing Committee','Shops':'Shops','नियम व अटी':'Rules & Regulations','आणीबाणी संपर्क':'Emergency Contacts','संपर्क':'Contact','सर्व कमिटी सदस्य':'All Committee Members','सर्व दुकाने':'All Shops','सदस्य लॉगिन':'Member Login',
+      'कव्हर्ड व ओपन पार्किंग सुविधा':'Covered and open parking facility','२४x७ वॉचमन व सीसीटीव्ही':'24x7 security and CCTV','प्रत्येक विंगमध्ये लिफ्ट सुविधा':'Lift facility in every wing','मुलांसाठी हिरवळ व बागा':'Green spaces and gardens for children','लोडशेडिंगसाठी बॅकअप वीज':'Backup power during load shedding','अखंडित पाणी पुरवठा व्यवस्था':'Continuous water supply','बेसिक फिटनेस उपकरणे':'Basic fitness equipment','लहान मुलांसाठी खेळण्याची जागा':'Play area for children',
+      'फक्त नियुक्त स्लॉटमध्ये':'Only in designated slots','नोंदणी आवश्यक':'Registration required','रात्री १२ नंतर बंद':'Closed after 12 midnight','ओला/सुका बंधनकारक':'Wet/dry segregation mandatory','रात्री ११ नंतर':'After 11 PM','वॉचमन केबिन':'Watchman Cabin','प्लंबर':'Plumber','इलेक्ट्रिशियन':'Electrician','जवळचे हॉस्पिटल':'Nearest Hospital','पोलीस स्टेशन':'Police Station'
+    },
+    hi:{
+      'आमच्याबद्दल':'हमारे बारे में','सुविधा':'सुविधाएँ','गॅलरी':'गैलरी','सूचना':'सूचना','कमिटी':'कमेटी','दुकाने':'दुकानें','सदस्य लॉगिन':'सदस्य लॉगिन',
+      'आपलं घर,':'हमारा घर,','आपली सोसायटी':'हमारी सोसायटी','विश्वास, पारदर्शकता आणि काळजी यांच्या माध्यमातून एक मजबूत समुदाय घडवत आहोत.':'विश्वास, पारदर्शिता और देखभाल के माध्यम से एक मजबूत समुदाय का निर्माण कर रहे हैं।',
+      'आपली संस्था...':'हमारी संस्था...','आपली जबाबदारी.!':'हमारी जिम्मेदारी.!','आपला सहभाग...':'हमारी भागीदारी...','संस्थेचा विकास.!':'संस्था का विकास.!','एकत्र येऊया.....':'आइए साथ आएँ.....','भविष्य घडवूया..!':'भविष्य बनाएँ..!','आपला विश्वास....':'हमारा विश्वास....','संस्थेची ताकद..!':'संस्था की ताकत..!',
+      'सोसायटीची थोडक्यात माहिती / About Our Society':'हमारी सोसायटी के बारे में','आपली सोसायटी':'हमारी सोसायटी','फ्लॅट्स':'फ्लैट्स','विंग्स':'विंग्स','दुकाने':'दुकानें',
+      'सोसायटीमध्ये उपलब्ध सुविधा':'सोसायटी में उपलब्ध सुविधाएँ','Residents facilities':'निवासी सुविधाएँ','पार्किंग':'पार्किंग','सिक्युरिटी':'सुरक्षा','लिफ्ट':'लिफ्ट','गार्डन':'गार्डन','जनरेटर':'जनरेटर','पाणी पुरवठा':'जल आपूर्ति','जिम':'जिम','प्ले एरिया':'प्ले एरिया',
+      'फोटो गॅलरी':'फोटो गैलरी','Photo Gallery':'फोटो गैलरी','सूचना बोर्ड':'सूचना बोर्ड','Managing Committee':'प्रबंध समिति','Shops':'दुकानें','नियम व अटी':'नियम एवं शर्तें','आणीबाणी संपर्क':'आपातकालीन संपर्क','संपर्क':'संपर्क','सर्व कमिटी सदस्य':'सभी समिति सदस्य','सर्व दुकाने':'सभी दुकानें','सदस्य लॉगिन':'सदस्य लॉगिन',
+      'कव्हर्ड व ओपन पार्किंग सुविधा':'कवर्ड और ओपन पार्किंग सुविधा','२४x७ वॉचमन व सीसीटीव्ही':'24x7 सुरक्षा और सीसीटीवी','प्रत्येक विंगमध्ये लिफ्ट सुविधा':'हर विंग में लिफ्ट सुविधा','मुलांसाठी हिरवळ व बागा':'बच्चों के लिए हरियाली और बगीचे','लोडशेडिंगसाठी बॅकअप वीज':'लोडशेडिंग के लिए बैकअप बिजली','अखंडित पाणी पुरवठा व्यवस्था':'निरंतर जल आपूर्ति व्यवस्था','बेसिक फिटनेस उपकरणे':'बेसिक फिटनेस उपकरण','लहान मुलांसाठी खेळण्याची जागा':'बच्चों के लिए खेल क्षेत्र',
+      'फक्त नियुक्त स्लॉटमध्ये':'केवल निर्धारित स्लॉट में','नोंदणी आवश्यक':'पंजीकरण आवश्यक','रात्री १२ नंतर बंद':'रात 12 बजे के बाद बंद','ओला/सुका बंधनकारक':'गीला/सूखा कचरा अलग करना अनिवार्य','रात्री ११ नंतर':'रात 11 बजे के बाद','वॉचमन केबिन':'वॉचमैन केबिन','प्लंबर':'प्लंबर','इलेक्ट्रिशियन':'इलेक्ट्रीशियन','जवळचे हॉस्पिटल':'निकटतम अस्पताल','पोलीस स्टेशन':'पुलिस स्टेशन'
+    }
+  };
+  const originals=new WeakMap();
+  function remember(){document.querySelectorAll('body *').forEach(el=>{if(el.children.length===0){const t=el.textContent.trim();if(t) originals.set(el,t);}})}
+  function apply(lang){document.documentElement.lang=lang;document.querySelectorAll('body *').forEach(el=>{if(el.children.length===0){const o=originals.get(el);if(o){el.textContent=(translations[lang]&&translations[lang][o])||o;}}});localStorage.setItem('stanfordLang',lang);}
+  document.addEventListener('DOMContentLoaded',function(){remember();const s=document.getElementById('languageSelect');if(!s)return;s.addEventListener('change',()=>apply(s.value));const saved=localStorage.getItem('stanfordLang')||'mr';s.value=saved;apply(saved);});
+})();
+</script>'''
+              h = h.replace('</body>', script + '\n</body>', 1)
+              p.write_text(h, encoding='utf-8')
+      - name: Commit language fix
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet || git commit -m "Fix Marathi English Hindi language selector [skip ci]"
+          git push
