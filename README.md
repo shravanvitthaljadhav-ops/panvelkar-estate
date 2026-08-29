@@ -1,6 +1,5 @@
 Panvelkar Estate Stanford – Version 2
 
 Admin names: Shravan Jadhav, Shrikant Patil, Kalpesh Ghag.
-Demo password: PES2026.
 
-This login is a front-end prototype only. GitHub Pages is public/static; do not enter real resident data or real passwords. Production authentication requires a secure backend/database.
+Authentication is handled by Supabase Auth and protected by Row Level Security (RLS). GitHub Pages is public/static, so do not store real passwords, secret keys, service-role keys, or other privileged credentials in this repository.
