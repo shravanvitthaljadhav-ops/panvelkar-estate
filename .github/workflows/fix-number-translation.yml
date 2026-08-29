@@ -1,0 +1,38 @@
+name: Fix English Number Translation
+
+on:
+  push:
+    paths:
+      - ".github/workflows/fix-number-translation.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  fix-numbers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Patch number localization
+        run: |
+          python - <<'PY2'
+          from pathlib import Path
+          p = Path("index.html")
+          s = p.read_text(encoding="utf-8")
+          old = "const select=document.getElementById('languageSelect');select.value=localStorage.getItem('societyLanguage')||'mr';select.addEventListener('change',e=>applyLanguage(e.target.value));applyLanguage(select.value);"
+          new = """const digitSets={mr:'०१२३४५६७८९',en:'0123456789',hi:'०१२३४५६७८९'};
+function localizeDigits(lang){const to=digitSets[lang]||digitSets.mr;const from=lang==='en'?digitSets.mr:digitSets.en;const map={};for(let i=0;i<10;i++)map[from[i]]=to[i];const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(node){const p=node.parentElement;if(!p||['SCRIPT','STYLE','SELECT','OPTION'].includes(p.tagName))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(node=>{node.nodeValue=node.nodeValue.replace(/[०१२३४५६७८९0-9]/g,ch=>map[ch]??ch)});}
+const select=document.getElementById('languageSelect');select.value=localStorage.getItem('societyLanguage')||'mr';select.addEventListener('change',e=>{applyLanguage(e.target.value);localizeDigits(e.target.value)});applyLanguage(select.value);localizeDigits(select.value);"""
+          if old not in s:
+              raise SystemExit("target script block not found")
+          p.write_text(s.replace(old,new),encoding="utf-8")
+          PY2
+      - name: Commit patch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix English number localization"
+          git push
