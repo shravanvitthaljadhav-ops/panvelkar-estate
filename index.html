@@ -32,5 +32,30 @@ const shops=Array.from({length:14},(_,i)=>({title:`Shop ${String(i+1).padStart(2
 function openModal(type){window.currentModal=type;const lang=localStorage.getItem('societyLanguage')||'mr';const mt=modalText[lang]||modalText.mr;const items=type==='shops'?shops:committee;document.getElementById('modalTitle').textContent=type==='shops'?mt.shopTitle:mt.committeeTitle;document.getElementById('modalContent').innerHTML=items.map((x,i)=>`<div class="modal-item"><b>${x.title}</b><span>${type==='shops'?mt.shopText:(i===0&&lang==='mr'?'अध्यक्ष':i===1&&lang==='mr'?'सचिव':i===2&&lang==='mr'?'खजिनदार':mt.committeeText)}</span></div>`).join('');document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show');window.currentModal=null}document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
+<script>
+/* STANFORD_NUMBER_LOCALIZATION_FINAL_V2 */
+(function(){
+  const sets={mr:'०१२३४५६७८९',en:'0123456789',hi:'०१२३४५६७८९'};
+  const latin='0123456789',dev='०१२३४५६७८९';
+  function toLatin(s){return s.replace(/[०१२३४५६७८९]/g,c=>latin[dev.indexOf(c)]);}
+  function apply(lang){
+    const target=sets[lang]||sets.mr;
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+    const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(n=>{
+      const p=n.parentElement;
+      if(!p || ['SCRIPT','STYLE','SELECT','OPTION'].includes(p.tagName)) return;
+      const normalized=toLatin(n.nodeValue);
+      n.nodeValue=target===latin ? normalized : normalized.replace(/[0-9]/g,c=>target[Number(c)]);
+    });
+  }
+  function init(){
+    const sel=document.getElementById('languageSelect'); if(!sel) return;
+    sel.addEventListener('change',()=>setTimeout(()=>apply(sel.value),50));
+    setTimeout(()=>apply(sel.value),100);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+</script>
 </body>
 </html>
