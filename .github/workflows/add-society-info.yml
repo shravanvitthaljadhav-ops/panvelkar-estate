@@ -9,43 +9,115 @@ permissions:
 
 jobs:
   add-info:
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'Add Stanford Society Information') }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'Stanford Society Information') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Add amenities, rules and emergency contacts
+      - name: Fix and apply amenities, rules and emergency contacts
         shell: python
         run: |
           from pathlib import Path
+          import re
           page = Path('index.html')
-          if not page.exists():
-              raise SystemExit('index.html not found')
           html = page.read_text(encoding='utf-8')
-          marker = 'STANFORD SOCIETY INFORMATION v1'
-          if marker in html:
-              print('Society information already present.')
-              raise SystemExit(0)
 
-          css = r'''\n<style>\n/* STANFORD SOCIETY INFORMATION v1 */\n.amenities-section{padding:54px 6vw;background:#fffaf0}\n.amenities-section .amenities-grid{max-width:1180px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}\n.amenities-section .amenity-card{background:#fff;border:1px solid #e5d8bd;border-radius:16px;padding:20px;box-shadow:0 8px 24px #06283d0b;transition:.2s}\n.amenities-section .amenity-card:hover{transform:translateY(-2px);border-color:#0097a7}\n.amenities-section .amenity-icon{width:54px;height:54px;border-radius:12px;background:#1f4b43;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.55rem;margin-bottom:13px}\n.amenities-section .amenity-card h3{margin:0 0 5px;color:#1f4b43}\n.amenities-section .amenity-card p{margin:0;color:#64748b;font-size:.9rem}\n.rules-contact-section{padding:18px 6vw 54px;background:#fffaf0}\n.rules-contact-grid{max-width:1180px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:22px}\n.rules-contact-card{background:#fff;border:1px solid #e5d8bd;border-radius:16px;padding:24px 28px}\n.rules-contact-card h2{margin:0 0 18px;color:#1f4b43;font-size:1.7rem}\n.rules-list{margin:0;padding:0;list-style:none}\n.rules-list li{display:flex;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px dashed #e5d8bd}\n.rules-list li:last-child{border-bottom:0}\n.rules-list span{color:#64748b}\n.rules-list strong{color:#172533;text-align:right}\n@media(max-width:900px){.amenities-section .amenities-grid{grid-template-columns:1fr 1fr}.rules-contact-grid{grid-template-columns:1fr}}\n@media(max-width:560px){.amenities-section .amenities-grid{grid-template-columns:1fr}.rules-list li{flex-direction:column;gap:3px}.rules-list strong{text-align:left}}\n</style>\n'''
+          css = '''
+/* STANFORD SOCIETY INFORMATION v2 */
+.amenities-section{padding:54px 6vw;background:#fffaf0}
+.amenities-section .amenities-grid{max-width:1180px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.amenities-section .amenity-card{background:#fff;border:1px solid #e5d8bd;border-radius:16px;padding:20px;box-shadow:0 8px 24px #06283d0b;transition:.2s}
+.amenities-section .amenity-card:hover{transform:translateY(-2px);border-color:#0097a7}
+.amenities-section .amenity-icon{width:54px;height:54px;border-radius:12px;background:#1f4b43;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.55rem;margin-bottom:13px}
+.amenities-section .amenity-card h3{margin:0 0 5px;color:#1f4b43}
+.amenities-section .amenity-card p{margin:0;color:#64748b;font-size:.9rem}
+.rules-contact-section{padding:18px 6vw 54px;background:#fffaf0}
+.rules-contact-grid{max-width:1180px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.rules-contact-card{background:#fff;border:1px solid #e5d8bd;border-radius:16px;padding:24px 28px}
+.rules-contact-card h2{margin:0 0 18px;color:#1f4b43;font-size:1.7rem}
+.rules-list{margin:0;padding:0;list-style:none}
+.rules-list li{display:flex;justify-content:space-between;gap:18px;padding:12px 0;border-bottom:1px dashed #e5d8bd}
+.rules-list li:last-child{border-bottom:0}
+.rules-list span{color:#64748b}
+.rules-list strong{color:#172533;text-align:right}
+@media(max-width:900px){.amenities-section .amenities-grid{grid-template-columns:1fr 1fr}.rules-contact-grid{grid-template-columns:1fr}}
+@media(max-width:560px){.amenities-section .amenities-grid{grid-template-columns:1fr}.rules-list li{flex-direction:column;gap:3px}.rules-list strong{text-align:left}}
+'''
 
-          section = r'''\n<section id="amenities" class="amenities-section">\n  <div class="section-head">\n    <h2>सोसायटीमध्ये उपलब्ध सुविधा</h2>\n    <span>Residents facilities</span>\n  </div>\n  <div class="amenities-grid">\n    <div class="amenity-card"><div class="amenity-icon">🅿️</div><h3>पार्किंग</h3><p>कव्हर्ड व ओपन पार्किंग सुविधा</p></div>\n    <div class="amenity-card"><div class="amenity-icon">🛡️</div><h3>सिक्युरिटी</h3><p>२४x७ वॉचमन व सीसीटीव्ही</p></div>\n    <div class="amenity-card"><div class="amenity-icon">🛗</div><h3>लिफ्ट</h3><p>प्रत्येक विंगमध्ये लिफ्ट सुविधा</p></div>\n    <div class="amenity-card"><div class="amenity-icon">🌳</div><h3>गार्डन</h3><p>मुलांसाठी हिरवळ व बागेची सुविधा</p></div>\n    <div class="amenity-card"><div class="amenity-icon">⚡</div><h3>जनरेटर</h3><p>लोडशेडिंगसाठी बॅकअप वीज</p></div>\n    <div class="amenity-card"><div class="amenity-icon">💧</div><h3>पाणी पुरवठा</h3><p>अखंडित पाणी पुरवठा व्यवस्था</p></div>\n    <div class="amenity-card"><div class="amenity-icon">🏋️</div><h3>जिम</h3><p>बेसिक फिटनेस उपकरणे</p></div>\n    <div class="amenity-card"><div class="amenity-icon">🧒</div><h3>प्ले एरिया</h3><p>लहान मुलांसाठी खेळण्याची जागा</p></div>\n  </div>\n</section>\n\n<section id="rules-contacts" class="rules-contact-section">\n  <div class="rules-contact-grid">\n    <div class="rules-contact-card">\n      <h2>नियम व अटी</h2>\n      <ul class="rules-list">\n        <li><span>पार्किंग</span><strong>फक्त नियुक्त स्लॉटमध्ये</strong></li>\n        <li><span>पाळीव प्राणी</span><strong>नोंदणी आवश्यक</strong></li>\n        <li><span>व्हिजिटर एंट्री</span><strong>रात्री १२ नंतर बंद</strong></li>\n        <li><span>कचरा वर्गीकरण</span><strong>ओला/सुका बंधनकारक</strong></li>\n        <li><span>ध्वनी मर्यादा</span><strong>रात्री ११ नंतर</strong></li>\n      </ul>\n    </div>\n    <div class="rules-contact-card">\n      <h2>आणीबाणी संपर्क</h2>\n      <ul class="rules-list">\n        <li><span>वॉचमन केबिन</span><strong>९८२XXXXXXX</strong></li>\n        <li><span>प्लंबर</span><strong>९८७XXXXXXX</strong></li>\n        <li><span>इलेक्ट्रिशियन</span><strong>९७६XXXXXXX</strong></li>\n        <li><span>जवळचे हॉस्पिटल</span><strong>०२०-XXXXXXX</strong></li>\n        <li><span>पोलीस स्टेशन</span><strong>१००</strong></li>\n      </ul>\n    </div>\n  </div>\n</section>\n'''
+          section = '''
+<section id="amenities" class="amenities-section">
+  <div class="section-head">
+    <h2>सोसायटीमध्ये उपलब्ध सुविधा</h2>
+    <span>Residents facilities</span>
+  </div>
+  <div class="amenities-grid">
+    <div class="amenity-card"><div class="amenity-icon">🅿️</div><h3>पार्किंग</h3><p>कव्हर्ड व ओपन पार्किंग सुविधा</p></div>
+    <div class="amenity-card"><div class="amenity-icon">🛡️</div><h3>सिक्युरिटी</h3><p>२४x७ वॉचमन व सीसीटीव्ही</p></div>
+    <div class="amenity-card"><div class="amenity-icon">🛗</div><h3>लिफ्ट</h3><p>प्रत्येक विंगमध्ये लिफ्ट सुविधा</p></div>
+    <div class="amenity-card"><div class="amenity-icon">🌳</div><h3>गार्डन</h3><p>मुलांसाठी हिरवळ व बागेची सुविधा</p></div>
+    <div class="amenity-card"><div class="amenity-icon">⚡</div><h3>जनरेटर</h3><p>लोडशेडिंगसाठी बॅकअप वीज</p></div>
+    <div class="amenity-card"><div class="amenity-icon">💧</div><h3>पाणी पुरवठा</h3><p>अखंडित पाणी पुरवठा व्यवस्था</p></div>
+    <div class="amenity-card"><div class="amenity-icon">🏋️</div><h3>जिम</h3><p>बेसिक फिटनेस उपकरणे</p></div>
+    <div class="amenity-card"><div class="amenity-icon">🧒</div><h3>प्ले एरिया</h3><p>लहान मुलांसाठी खेळण्याची जागा</p></div>
+  </div>
+</section>
+
+<section id="rules-contacts" class="rules-contact-section">
+  <div class="rules-contact-grid">
+    <div class="rules-contact-card">
+      <h2>नियम व अटी</h2>
+      <ul class="rules-list">
+        <li><span>पार्किंग</span><strong>फक्त नियुक्त स्लॉटमध्ये</strong></li>
+        <li><span>पाळीव प्राणी</span><strong>नोंदणी आवश्यक</strong></li>
+        <li><span>व्हिजिटर एंट्री</span><strong>रात्री १२ नंतर बंद</strong></li>
+        <li><span>कचरा वर्गीकरण</span><strong>ओला/सुका बंधनकारक</strong></li>
+        <li><span>ध्वनी मर्यादा</span><strong>रात्री ११ नंतर</strong></li>
+      </ul>
+    </div>
+    <div class="rules-contact-card">
+      <h2>आणीबाणी संपर्क</h2>
+      <ul class="rules-list">
+        <li><span>वॉचमन केबिन</span><strong>९८२XXXXXXX</strong></li>
+        <li><span>प्लंबर</span><strong>९८७XXXXXXX</strong></li>
+        <li><span>इलेक्ट्रिशियन</span><strong>९७६XXXXXXX</strong></li>
+        <li><span>जवळचे हॉस्पिटल</span><strong>०२०-XXXXXXX</strong></li>
+        <li><span>पोलीस स्टेशन</span><strong>१००</strong></li>
+      </ul>
+    </div>
+  </div>
+</section>
+'''
+
+          # Remove the malformed v1 injection if present.
+          html = re.sub(r'\\n<style>\\n/\\* STANFORD SOCIETY INFORMATION v1 \\*/.*?</style>\\n</style>', '', html, flags=re.S)
+          html = re.sub(r'<style>\s*/\\* STANFORD SOCIETY INFORMATION v1 \\*/.*?</style>\s*</style>', '', html, flags=re.S)
+          # Remove any prior v2 CSS block before inserting a clean one.
+          html = re.sub(r'/\\* STANFORD SOCIETY INFORMATION v2 \\*/.*?(?=</style>)', '', html, flags=re.S)
+
+          # Replace the two inserted sections with a clean version.
+          html = re.sub(r'\\n<section id="amenities".*?</section>\\n\\n<section id="rules-contacts".*?</section>\\n', '', html, flags=re.S)
+          html = re.sub(r'<section id="amenities".*?</section>\s*<section id="rules-contacts".*?</section>\s*', '', html, flags=re.S)
 
           if '</style>' not in html or '<footer' not in html:
               raise SystemExit('Expected style/footer markers not found')
           html = html.replace('</style>', css + '</style>', 1)
           html = html.replace('<footer', section + '\n<footer', 1)
+
+          # Keep the navigation links exactly once.
+          html = html.replace('<a href="#amenities">सुविधा</a>', '')
+          html = html.replace('<a href="#rules-contacts">नियम व संपर्क</a>', '')
           nav_marker = '<a href="#notices" data-i18n="navNotices">Notices</a>'
-          if nav_marker in html and '#amenities' not in html:
+          if nav_marker in html:
               html = html.replace(nav_marker, nav_marker + '<a href="#amenities">सुविधा</a><a href="#rules-contacts">नियम व संपर्क</a>', 1)
+
           page.write_text(html, encoding='utf-8')
-          print('Amenities, rules and emergency contact sections added.')
+          print('Clean Stanford society information applied.')
 
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet || git commit -m "Add Stanford society information [skip ci]"
+          git diff --cached --quiet || git commit -m "Fix Stanford society information [skip ci]"
           git push
