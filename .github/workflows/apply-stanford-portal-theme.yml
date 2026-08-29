@@ -64,3 +64,15 @@ jobs:
           updated = original.replace('</head>', css + '</head>', 1)
           portal.write_text(updated, encoding='utf-8')
           print('Stanford admin/super-admin theme injected. JavaScript mechanism untouched.')
+
+      - name: Commit portal theme
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add portal.html portal.html.pre-theme-backup
+          if git diff --cached --quiet; then
+            echo "No portal changes to commit."
+            exit 0
+          fi
+          git commit -m "Apply Stanford admin portal theme [skip ci]"
+          git push
