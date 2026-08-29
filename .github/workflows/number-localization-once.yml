@@ -40,14 +40,18 @@ jobs:
               p.write_text(html.replace('</body>', script + '\n</body>', 1), encoding='utf-8')
           PY
 
-      - name: Commit number localization
+      - name: Commit number localization through GitHub API
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          if git diff --cached --quiet; then
+          if grep -q 'STANFORD_DIGIT_LOCALIZATION_V1' index.html; then
             echo "Number localization already present."
-          else
-            git commit -m "Add permanent Marathi Hindi English number localization [skip ci]"
-            git push
+            exit 0
           fi
+          CONTENT=$(base64 -w 0 index.html)
+          SHA=$(gh api repos/${{ github.repository }}/contents/index.html --jq .sha)
+          gh api repos/${{ github.repository }}/contents/index.html \
+            --method PUT \
+            -f message='Add permanent Marathi Hindi English number localization [skip ci]' \
+            -f content="$CONTENT" \
+            -f sha="$SHA"
