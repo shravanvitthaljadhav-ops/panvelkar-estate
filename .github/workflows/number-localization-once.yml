@@ -1,0 +1,53 @@
+name: Apply Number Localization Once
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix-numbers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add permanent digit localization
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+          marker = 'STANFORD_DIGIT_LOCALIZATION_V1'
+          if marker not in html:
+              script = '''<script>
+          /* STANFORD_DIGIT_LOCALIZATION_V1 */
+          (function(){
+            const digitSets={mr:'०१२३४५६७८९',en:'0123456789',hi:'०१२३४५६७८९'};
+            function localizeDigits(lang){
+              const target=digitSets[lang]||digitSets.mr;
+              const latin='0123456789',dev='०१२३४५६७८९';
+              const map={};for(let i=0;i<10;i++){map[latin[i]]=latin[i];map[dev[i]]=latin[i];}
+              const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(node){const p=node.parentElement;if(!p||['SCRIPT','STYLE','SELECT','OPTION'].includes(p.tagName))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});
+              const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+              nodes.forEach(node=>{const normalized=node.nodeValue.replace(/[०१२३४५६७८९0-9]/g,ch=>map[ch]);node.nodeValue=target===latin?normalized:normalized.replace(/[0-9]/g,ch=>target[Number(ch)]);});
+            }
+            document.addEventListener('DOMContentLoaded',function(){const select=document.getElementById('languageSelect');if(!select)return;const apply=()=>localizeDigits(select.value);select.addEventListener('change',()=>setTimeout(apply,0));setTimeout(apply,0);});
+          })();
+          </script>'''
+              p.write_text(html.replace('</body>', script + '\n</body>', 1), encoding='utf-8')
+          PY
+
+      - name: Commit number localization
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "Number localization already present."
+          else
+            git commit -m "Add permanent Marathi Hindi English number localization [skip ci]"
+            git push
+          fi
