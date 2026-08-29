@@ -1,0 +1,47 @@
+name: Apply Portal Left Right Layout
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  layout:
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, 'Apply Portal Left Right Layout') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply member left-right layout
+        shell: python
+        run: |
+          from pathlib import Path
+          portal = Path('portal.html')
+          if not portal.exists():
+              raise SystemExit('portal.html not found')
+          original = portal.read_text(encoding='utf-8')
+          marker = '/* STANFORD LEFT RIGHT MEMBER LAYOUT v1 */'
+          if marker in original:
+              print('Layout already present; no changes needed.')
+              raise SystemExit(0)
+          css = r'''<style>
+          /* STANFORD LEFT RIGHT MEMBER LAYOUT v1 */
+          #member>.section{background:transparent;border:0;box-shadow:none;padding:0;margin-top:18px;display:grid;grid-template-columns:255px minmax(0,1fr);gap:18px;align-items:start}
+          #member>.section>h2{grid-column:1/-1;color:var(--stan-teal,#1f4b43);margin:0 0 2px;font-size:23px}
+          #member>.section>.serviceGrid{grid-column:1;display:flex;flex-direction:column;gap:7px;background:var(--stan-teal,#1f4b43);border-radius:16px;padding:12px;position:sticky;top:18px}
+          #member>.section>.serviceGrid .serviceTile{width:100%;min-height:52px;border:1px solid transparent;border-radius:10px;background:transparent;color:#fff;padding:12px 13px;text-align:left;display:flex;align-items:center;gap:8px}
+          #member>.section>.serviceGrid .serviceTile:hover,#member>.section>.serviceGrid .serviceTile.active{background:var(--stan-gold,#c9a227);color:var(--stan-teal,#1f4b43);border-color:var(--stan-gold,#c9a227);box-shadow:none}
+          #member>.section~#memberPanel{background:var(--stan-cream,#fbf7ef);border:1px solid var(--stan-line,#e3d8bd);border-radius:16px;padding:20px}
+          #memberPanel{background:var(--stan-cream,#fbf7ef);border-color:var(--stan-line,#e3d8bd)}
+          #memberPanel table th{background:var(--stan-teal,#1f4b43);color:#fff}
+          #memberPanel h2,#memberPanel h3{color:var(--stan-teal,#1f4b43)}
+          @media(max-width:850px){#member>.section{grid-template-columns:1fr}#member>.section>.serviceGrid{grid-column:1;position:static;display:grid;grid-template-columns:1fr 1fr}#member>.section~#memberPanel{grid-column:1}}
+          @media(max-width:520px){#member>.section>.serviceGrid{grid-template-columns:1fr}}
+          </style>'''
+          if '</head>' not in original:
+              raise SystemExit('head tag not found')
+          portal.write_text(original.replace('</head>', css + '</head>', 1), encoding='utf-8')
+          print('Member left navigation and right information layout applied. Application mechanisms untouched.')
