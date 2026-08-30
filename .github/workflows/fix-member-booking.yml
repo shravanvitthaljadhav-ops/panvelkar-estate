@@ -1,0 +1,32 @@
+name: Fix member booking integration
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch member booking to canonical table
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('member-dashboard.html')
+          s = p.read_text(encoding='utf-8')
+          pattern = r'async function submitBooking\(e\)\{.*?\}\nasync function signout\(\)'
+          replacement = '''async function submitBooking(e){e.preventDefault();const form=e.currentTarget,statusEl=form.parentElement.querySelector('.msg');if(!profile?.unit_id){statusEl.textContent='Member property not linked.';statusEl.className='msg error';statusEl.style.display='block';return}const eventName=$('pageEventName'),eventDate=$('pageEventDate'),start=$('pageStart'),end=$('pageEnd'),guests=$('pageGuests'),notes=$('pageNotes');if(end.value<=start.value){statusEl.textContent='End time must be after start time.';statusEl.className='msg error';statusEl.style.display='block';return}const payload={requested_by:profile.id,unit_id:profile.unit_id,event_name:eventName.value.trim(),booking_date:eventDate.value,start_time:start.value,end_time:end.value,expected_attendance:Number(guests.value),additional_info:notes.value.trim(),status:'pending'};if(!payload.event_name||!payload.booking_date||!payload.start_time||!payload.end_time||payload.expected_attendance<1){statusEl.textContent='Please complete event, date, time and attendance.';statusEl.className='msg error';statusEl.style.display='block';return}try{const r=await db.from('garden_area_booking_requests').insert(payload);if(r.error)throw r.error;statusEl.textContent=tr('sent');statusEl.className='msg success';statusEl.style.display='block';form.reset()}catch(err){statusEl.textContent=err.message||'Unable to submit request.';statusEl.className='msg error';statusEl.style.display='block'}}
+async function signout()'''
+          ns, n = re.subn(pattern, replacement, s, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit('Expected submitBooking function not found')
+          p.write_text(ns, encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add member-dashboard.html
+          git diff --cached --quiet || git commit -m 'Fix member garden booking integration'
+          git push
