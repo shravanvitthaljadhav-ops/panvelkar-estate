@@ -1,0 +1,58 @@
+name: Route Member Login to V2 Dashboard
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  route-member:
+    if: ${{ !contains(github.event.head_commit.message, '[member-route]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Patch member routing
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('portal.html')
+          html = p.read_text(encoding='utf-8')
+          marker = 'id="stanford-member-route-v2"'
+          if marker in html:
+              print('Member routing already patched.')
+              raise SystemExit(0)
+          patch = r'''<script id="stanford-member-route-v2">
+          (function(){
+            const originalRoute = window.route;
+            window.route = async function(user){
+              const r = await db.from('profiles')
+                .select('id,full_name,email,mobile,unit_id,role,is_approver,active')
+                .eq('id', user.id).maybeSingle();
+              if(r.error || !r.data) throw Error(r.error?.message || 'Profile not found');
+              if(!r.data.active) throw Error('Account inactive');
+              if(String(r.data.role || '').toLowerCase() === 'member'){
+                window.location.replace('member-dashboard.html');
+                return;
+              }
+              return originalRoute(user);
+            };
+          })();
+          </script>'''
+          html = html.replace('</body>', patch + '\n</body>')
+          p.write_text(html, encoding='utf-8')
+          print('Member routing patch applied.')
+
+      - name: Commit routing patch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add portal.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Route members to V2 dashboard [member-route]"
+          git push
