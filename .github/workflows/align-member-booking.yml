@@ -1,0 +1,43 @@
+name: Align Member Garden Booking
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  align-booking:
+    if: ${{ !contains(github.event.head_commit.message, '[booking-align]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Align booking insert with admin workflow
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('member-dashboard.html')
+          html = p.read_text(encoding='utf-8')
+          old = "db.from('garden_area_bookings').insert({requested_by:profile.id,unit_id:profile.unit_id,event_name:ename.value.trim(),event_date:edate.value,start_time:estart.value,end_time:eend.value,expected_attendance:Number(eguests.value),notes:enotes.value.trim()||null,status:'pending'})"
+          new = "db.from('garden_area_booking_requests').insert({user_id:profile.id,unit_id:profile.unit_id,event_name:ename.value.trim(),booking_date:edate.value,start_time:estart.value,end_time:eend.value,expected_attendance:Number(eguests.value),additional_info:enotes.value.trim()||null,status:'pending'})"
+          if old not in html:
+              if 'garden_area_booking_requests' in html:
+                  print('Member booking already aligned.')
+                  raise SystemExit(0)
+              raise SystemExit('Expected member booking insert was not found; no change made.')
+          p.write_text(html.replace(old, new), encoding='utf-8')
+          print('Member booking aligned with garden_area_booking_requests.')
+
+      - name: Commit alignment
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add member-dashboard.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Align member garden booking with admin approval [booking-align]"
+          git push
