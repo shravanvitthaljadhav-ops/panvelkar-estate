@@ -81,3 +81,5 @@ document.addEventListener("DOMContentLoaded", function () {
     if (event.key === "Escape") closeModal();
   });
 });
+
+// Popup integration trigger.
