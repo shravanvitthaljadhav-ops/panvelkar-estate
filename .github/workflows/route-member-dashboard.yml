@@ -16,6 +16,60 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Fix language and number translation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          start_marker = '<script>\n/* STANFORD_NUMBER_LOCALIZATION_FINAL_V2 */'
+          start = s.find(start_marker)
+          if start >= 0:
+              end = s.find('</script>', start)
+              if end < 0:
+                  raise SystemExit('Translation script end not found')
+              end += len('</script>')
+              new_script = r'''<script>
+          /* STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3 */
+          (function(){
+            const DIGITS={mr:'०१२३४५६७८९',hi:'०१२३४५६७८९',en:'0123456789'};
+            const LATIN='0123456789', DEV='०१२३४५६७८९';
+            function toLatin(v){return String(v).replace(/[०१२३४५६७८९]/g,c=>LATIN[DEV.indexOf(c)]);}
+            function applyNumbers(lang){
+              const target=DIGITS[lang]||DIGITS.mr;
+              const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+              const nodes=[];
+              while(walker.nextNode()) nodes.push(walker.currentNode);
+              nodes.forEach(n=>{
+                const p=n.parentElement;
+                if(!p||['SCRIPT','STYLE','SELECT','OPTION'].includes(p.tagName)) return;
+                const latin=toLatin(n.nodeValue);
+                n.nodeValue=target===LATIN?latin:latin.replace(/[0-9]/g,d=>target[Number(d)]);
+              });
+            }
+            window.applyNumberLanguage=applyNumbers;
+            const select=document.getElementById('languageSelect');
+            if(select){
+              select.addEventListener('change',()=>setTimeout(()=>applyNumbers(select.value||'mr'),0));
+              setTimeout(()=>applyNumbers(select.value||'mr'),0);
+            }
+            const originalOpenModal=window.openModal;
+            if(typeof originalOpenModal==='function'){
+              window.openModal=function(type){
+                originalOpenModal(type);
+                applyNumbers(document.getElementById('languageSelect')?.value||'mr');
+              };
+            }
+          })();
+          </script>'''
+              s = s[:start] + new_script + s[end:]
+              p.write_text(s, encoding='utf-8')
+              print('Language/number translation patch applied.')
+          elif 'STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3' in s:
+              print('Language/number translation patch already applied.')
+          else:
+              raise SystemExit('Translation engine marker not found')
+
       - name: Patch member routing
         shell: python
         run: |
@@ -47,12 +101,12 @@ jobs:
           p.write_text(html, encoding='utf-8')
           print('Member routing patch applied.')
 
-      - name: Commit routing patch
+      - name: Commit all patches
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add portal.html
+          git add index.html portal.html
           git diff --cached --quiet && exit 0
-          git commit -m "Route members to V2 dashboard [member-route]"
+          git commit -m "Fix language and member routing [member-route]"
           git push
