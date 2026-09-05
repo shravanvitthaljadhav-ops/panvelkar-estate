@@ -1,0 +1,77 @@
+name: Final Marathi Wording Polish
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/marathi-polish-trigger.txt
+permissions:
+  contents: write
+jobs:
+  polish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Polish Marathi wording
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import subprocess,time
+          replacements={
+            'प्ले एरिया':'बालकांसाठी खेळण्याची जागा',
+            'नियमित नियमित पाणी पुरवठा':'नियमित पाणी पुरवठा',
+            'व्हिजिटर एंट्री':'अभ्यागत प्रवेश',
+            'जवळचे हॉस्पिटल':'जवळचे रुग्णालय',
+            'वॉचमन केबिन':'सुरक्षा कक्ष',
+            'इलेक्ट्रिशियन':'वीज दुरुस्तीकार',
+            'प्लंबर':'नळ दुरुस्तीकार',
+            'लिफ्ट':'उद्वाहन यंत्र',
+            'सुरक्षित पोर्टलमध्ये लॉगिन करा':'सुरक्षित पोर्टलमध्ये प्रवेश करा',
+            'सदस्य लॉगिन':'सदस्य प्रवेश',
+            'कमिटी':'समिती',
+            'वेबसाईट':'संकेतस्थळ',
+            'वेबसाइट':'संकेतस्थळ',
+            'Portal':'सदस्य पोर्टल',
+            'Co-operative Housing Society':'सहकारी गृहनिर्माण संस्था',
+            'Badlapur':'बदलापूर',
+            'logo':'चिन्ह',
+            'hero banner':'मुखपृष्ठ चित्र',
+            'society building':'सोसायटी इमारत',
+            'society grounds':'सोसायटी परिसर',
+            'पब्लिक':'सार्वजनिक',
+            'पॉप-अप':'स्वतंत्र चौकट',
+          }
+          for attempt in range(1,6):
+            subprocess.run(['git','fetch','origin','main'],check=True)
+            subprocess.run(['git','reset','--hard','origin/main'],check=True)
+            p=Path('index.html');s=p.read_text(encoding='utf-8')
+            for a,b in replacements.items(): s=s.replace(a,b)
+            # Keep only genuine Marathi/public-facing text; brand and wing codes remain unchanged.
+            p.write_text(s,encoding='utf-8')
+            subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+            subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+            subprocess.run(['git','add','index.html'],check=True)
+            if subprocess.run(['git','diff','--cached','--quiet']).returncode==0:
+              print('No wording changes needed');break
+            subprocess.run(['git','commit','-m','Polish Marathi website wording [marathi-polish]'],check=True)
+            r=subprocess.run(['git','push','origin','HEAD:main'])
+            if r.returncode==0:
+              print('Marathi wording polish committed');break
+            print(f'Push race on attempt {attempt}; retrying')
+            time.sleep(2)
+          else: raise SystemExit('Could not push after retries')
+          PY
+      - name: Validate
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          forbidden=['id="languageSelect"','const translations=','STANFORD_LOCALIZATION_V3','About Our Society','Quick Links','Admin Login','Garden','Gym','Regular flats','Fire flats','8th Floor','12th Floor','Society Portal','Member Login','Portal','Co-operative Housing Society','Badlapur']
+          for x in forbidden: assert x not in s, f'Leftover: {x}'
+          assert 'सोसायटीची थोडक्यात माहिती' in s
+          assert 'विंग व सदनिका तपशील' in s
+          assert 'नियमित पाणी पुरवठा' in s
+          assert 'ओपन पाणी सुविधा' in s
+          print('Final Marathi validation passed')
+          PY
