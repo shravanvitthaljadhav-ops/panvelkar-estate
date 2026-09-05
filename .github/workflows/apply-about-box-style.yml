@@ -2,6 +2,9 @@ name: Apply About Society Box Style
 
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/apply-about-box-style.yml
 
 permissions:
   contents: write
@@ -37,6 +40,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No changes to commit'
           else
-            git commit -m 'Style आपली सोसायटी panel'
+            git commit -m 'Apply approved आपली सोसायटी box style'
             git push origin HEAD:main
           fi
