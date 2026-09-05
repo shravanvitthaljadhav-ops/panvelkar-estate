@@ -40,9 +40,9 @@ function openModal(type){window.currentModal=type;const lang=localStorage.getIte
 function closeModal(){document.getElementById('modal').classList.remove('show');window.currentModal=null}document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
 <script>
-/* STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3 */
+/* STANFORD_LOCALIZATION_V3 */
 (function(){
-  const DIGITS={mr:'०१२३४५६७८९',hi:'०१२३४५६७८९',en:'0123456789'};
+  const DIGITS={mr:'०१२३४५६७८९',hi:'0123456789',en:'0123456789'};
   const LATIN='0123456789', DEV='०१२३४५६७८९';
   function toLatin(v){return String(v).replace(/[०१२३४५६७८९]/g,c=>LATIN[DEV.indexOf(c)]);}
   function applyNumbers(lang){
@@ -58,18 +58,20 @@ function closeModal(){document.getElementById('modal').classList.remove('show');
     });
   }
   window.applyNumberLanguage=applyNumbers;
+  function currentLang(){return document.getElementById('languageSelect')?.value||'mr';}
   const select=document.getElementById('languageSelect');
   if(select){
-    select.addEventListener('change',()=>setTimeout(()=>applyNumbers(select.value||'mr'),0));
-    setTimeout(()=>applyNumbers(select.value||'mr'),0);
+    select.addEventListener('change',()=>setTimeout(()=>applyNumbers(currentLang()),0));
+    setTimeout(()=>applyNumbers(currentLang()),0);
   }
   const originalOpenModal=window.openModal;
   if(typeof originalOpenModal==='function'){
     window.openModal=function(type){
       originalOpenModal(type);
-      applyNumbers(document.getElementById('languageSelect')?.value||'mr');
+      setTimeout(()=>applyNumbers(currentLang()),0);
     };
   }
+  setTimeout(()=>applyNumbers(currentLang()),100);
 })();
 </script>
 </body>
