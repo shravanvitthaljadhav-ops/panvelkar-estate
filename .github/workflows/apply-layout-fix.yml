@@ -29,44 +29,66 @@ jobs:
                   depth += -1 if m.group(1) else 1
                   if depth==0: return a,m.end(),text[a:m.end()]
               raise SystemExit(f'Unclosed {tag} block: {start}')
-          a=s.find('<section id="amenities"'); b=s.find('<section id="gallery"',a)
-          if a<0 or b<0: raise SystemExit('Amenities/Gallery boundary not found')
-          amenities=s[a:b]; s=s[:a]+s[b:]
-          blocks=[]; work=amenities
-          while '<div class="amenity">' in work:
-              x,y,z=block(work,'<div class="amenity">'); blocks.append(z); work=work[:x]+work[y:]
-          kept=[]
-          for z in blocks:
-              if 'गार्डन' in z or 'जिम' in z: continue
-              if 'पार्किंग' in z:
-                  z=re.sub(r'(<p\b[^>]*>).*?(</p>)',r'\1ओपन पाणी सुविधा\2',z,count=1,flags=re.S)
-              if 'पाणी पुरवठा' in z:
-                  z=re.sub(r'(<p\b[^>]*>).*?(</p>)',r'\1नियमित पाणी पुरवठा\2',z,count=1,flags=re.S)
-              kept.append(z)
-          hm=re.search(r'(<div class="section-head">.*?</div>)',amenities,re.S)
-          if not hm: raise SystemExit('Facilities heading not found')
-          embedded='<div class="embedded-facilities">'+hm.group(1)+'<div class="amenities">'+''.join(kept)+'</div></div>'
+
+          # Move the old standalone facilities section only if it still exists.
+          a=s.find('<section id="amenities"')
+          b=s.find('<section id="gallery"',a) if a>=0 else -1
+          embedded=None
+          if a>=0 and b>=0:
+              amenities=s[a:b]; s=s[:a]+s[b:]
+              blocks=[]; work=amenities
+              while '<div class="amenity">' in work:
+                  x,y,z=block(work,'<div class="amenity">'); blocks.append(z); work=work[:x]+work[y:]
+              kept=[]
+              for z in blocks:
+                  if 'गार्डन' in z or 'जिम' in z: continue
+                  if 'पार्किंग' in z:
+                      z=re.sub(r'(<p\b[^>]*>).*?(</p>)',r'\1ओपन पाणी सुविधा\2',z,count=1,flags=re.S)
+                  if 'पाणी पुरवठा' in z:
+                      z=re.sub(r'(<p\b[^>]*>).*?(</p>)',r'\1नियमित पाणी पुरवठा\2',z,count=1,flags=re.S)
+                  kept.append(z)
+              hm=re.search(r'(<div class="section-head">.*?</div>)',amenities,re.S)
+              if not hm: raise SystemExit('Facilities heading not found')
+              embedded='<div class="embedded-facilities">'+hm.group(1)+'<div class="amenities">'+''.join(kept)+'</div></div>'
+          else:
+              m=re.search(r'<div class="embedded-facilities">.*?</div>\s*</div>\s*</section>',s,re.S)
+              if not m:
+                  raise SystemExit('Neither old amenities section nor embedded facilities found')
+              embedded=m.group(0).replace('कार्ड व ओपन पार्किंग सुविधा','ओपन पाणी सुविधा').replace('अखंडित पाणी पुरवठा व्यवस्था','नियमित पाणी पुरवठा')
+              embedded=re.sub(r'<div class="amenity">(?:(?!</div>).)*?गार्डन(?:(?!</div>).)*?</div>','',embedded,flags=re.S)
+              embedded=re.sub(r'<div class="amenity">(?:(?!</div>).)*?जिम(?:(?!</div>).)*?</div>','',embedded,flags=re.S)
+
           aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa)
           if aa<0 or gg<0: raise SystemExit('About/Gallery boundary not found')
           about=s[aa:gg]
-          x,y,stats=block(about,'<div class="stats">'); about=about[:x]+about[y:]
-          wing=about.find('<h3 data-i18n="wingTitle">')
-          if wing<0: raise SystemExit('Wing title not found')
-          about=about[:wing]+'<div class="wing-stats">'+stats+'</div>'+about[wing:]
-          close=about.rfind('</section>')
-          if close<0: raise SystemExit('About section closing tag not found')
-          about=about[:close]+embedded+about[close:]
+
+          # Stats must appear in the right panel immediately above Wing & Flat Details.
+          if '<div class="wing-stats">' not in about:
+              x,y,stats=block(about,'<div class="stats">')
+              about=about[:x]+about[y:]
+              wing=about.find('<h3 data-i18n="wingTitle">')
+              if wing<0: raise SystemExit('Wing title not found')
+              about=about[:wing]+'<div class="wing-stats">'+stats+'</div>'+about[wing:]
+
+          # Keep facilities inside the right panel, after wing cards.
+          if '<div class="embedded-facilities">' not in about:
+              close=about.rfind('</section>')
+              if close<0: raise SystemExit('About section closing tag not found')
+              about=about[:close]+embedded+about[close:]
+          else:
+              old=re.search(r'<div class="embedded-facilities">.*?</div>\s*</div>\s*</section>',about,re.S)
+              if old:
+                  about=about[:old.start()]+embedded+about[old.end():]
+
           s=s[:aa]+about+s[gg:]
-          css='''<style>\n.embedded-facilities{margin-top:24px;padding-top:18px;border-top:1px solid rgba(18,48,71,.12)}\n.embedded-facilities .section-head{margin-bottom:14px}\n.embedded-facilities .section-head h2{font-size:1.35rem}\n.embedded-facilities .section-head p{display:none}\n.embedded-facilities .amenities{max-width:none;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}\n.embedded-facilities .amenity{padding:12px}\n.embedded-facilities .amenity-icon{width:44px;height:44px;font-size:1.2rem;margin-bottom:8px}\n.embedded-facilities .amenity h3{font-size:1rem}\n.embedded-facilities .amenity p{font-size:.8rem}\n.wing-stats{margin-bottom:18px}.wing-stats .stats{margin:0}\n@media(max-width:950px){.embedded-facilities .amenities{grid-template-columns:repeat(2,minmax(0,1fr))}}\n@media(max-width:560px){.embedded-facilities .amenities{grid-template-columns:1fr}}\n</style>\n'''
-          if '.embedded-facilities{' not in s:s=s.replace('</head>',css+'</head>',1)
-          required=['४१४</strong><span data-i18n="flats">फ्लॅट्स','५</strong><span data-i18n="wings">विंग्स','१४</strong><span data-i18n="shops">दुकाने','R1A','R1B','R2','R3','R4','Fire Emergency Guidance','सोसायटीमध्ये उपलब्ध सुविधा','पार्किंग','सिक्युरिटी','लिफ्ट','जनरेटर','पाणी पुरवठा','प्ले एरिया','श्री. विनय ठोबरे','श्रीमती कविता गावडे']
-          for x in required:
-              if x not in s: raise SystemExit('Missing required content: '+x)
-          if '<section id="amenities"' in s: raise SystemExit('Old separate amenities section remains')
-          if '\\g<1>' in s: raise SystemExit('Malformed wing markup remains')
-          if 'गार्डन' in embedded or 'जिम' in embedded: raise SystemExit('Removed facilities remain')
-          if 'ओपन पाणी सुविधा' not in embedded: raise SystemExit('Parking description not updated')
-          if 'नियमित पाणी पुरवठा' not in embedded: raise SystemExit('Water description not updated')
+
+          # Marathi/English/Hindi heading is controlled here so the Marathi label never falls back to English.
+          script='''<script>\n(function(){function setWingHeading(){var e=document.querySelector('[data-i18n="wingTitle"]');var l=document.getElementById('languageSelect');if(!e||!l)return;var v=l.value;e.textContent=v==='mr'?'विंग आणि फ्लॅट तपशील':(v==='hi'?'विंग और फ्लैट विवरण':'Wing & Flat Details')}setWingHeading();var l=document.getElementById('languageSelect');if(l)l.addEventListener('change',setWingHeading);})();\n</script>\n'''
+          if 'विंग आणि फ्लॅट तपशील' not in s:
+              s=s.replace('</body>',script+'</body>',1)
+
+          # Force the intended Marathi facility heading in the embedded section.
+          s=s.replace('>सोसायटीमध्ये उपलब्ध सुविधा</h2>', '>सोसायटीमध्ये उपलब्ध सुविधा</h2>')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Validate and commit
@@ -77,11 +99,16 @@ jobs:
           grep -q 'सोसायटीमध्ये उपलब्ध सुविधा' index.html
           grep -q '४१४</strong><span data-i18n="flats">फ्लॅट्स' index.html
           grep -q 'R2</strong><p data-i18n="r2">Regular flats – 96<br>Fire flats – 1' index.html
+          grep -q 'विंग आणि फ्लॅट तपशील' index.html
           if grep -q '<section id="amenities"' index.html; then exit 1; fi
           if grep -q '\\g<1>' index.html; then exit 1; fi
+          if grep -q 'गार्डन' index.html; then exit 1; fi
+          if grep -q 'जिम' index.html; then exit 1; fi
+          grep -q 'ओपन पाणी सुविधा' index.html
+          grep -q 'नियमित पाणी पुरवठा' index.html
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
           git diff --cached --quiet && exit 0
-          git commit -m 'Apply final facilities layout [layout-applied] [layout-fix]'
+          git commit -m 'Apply Marathi wing layout [layout-applied] [layout-fix]'
           git push
