@@ -83,5 +83,6 @@ document.querySelectorAll('[data-view-link]').forEach(b=>b.addEventListener('cli
 document.querySelector('.language-select')?.addEventListener('change',e=>{lang=e.target.value;applyLang();if(profile){applyIdentity();loadDashboard();loadNotices();}});
 applyLang();init().catch(e=>showError(e.message));
 </script>
+<script src="member-content-v2.js"></script>
 </body>
 </html>
