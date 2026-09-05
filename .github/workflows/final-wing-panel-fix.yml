@@ -1,0 +1,93 @@
+name: Final Wing Panel Fix
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, '[layout-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Place facilities inside right panel
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          aa=s.find('<section id="about"')
+          gg=s.find('<section id="gallery"', aa)
+          if aa<0 or gg<0: raise SystemExit('About/Gallery boundary not found')
+          about=s[aa:gg]
+          # Extract the facilities component wherever it currently is.
+          m=re.search(r'<div class="embedded-facilities">.*?</div>\s*</div>\s*(?=</section>|$)', about, re.S)
+          if not m:
+              m=re.search(r'<div class="embedded-facilities">.*?</div>\s*</div>\s*</section>', s, re.S)
+          if not m: raise SystemExit('Facilities component not found')
+          embedded=m.group(0)
+          embedded=re.sub(r'\s*</div>\s*</div>\s*</section>\s*$','',embedded,flags=re.S)
+          embedded=re.sub(r'\s*</div>\s*</div>\s*$','',embedded,flags=re.S)
+          # Remove the old component from the complete document.
+          s=s[:m.start()]+s[m.end():]
+          aa=s.find('<section id="about"')
+          gg=s.find('<section id="gallery"', aa)
+          about=s[aa:gg]
+          # Locate the right panel by its Wing stats/title and insert facilities before that panel closes.
+          rp=about.find('<div class="panel">', about.find('<div class="about-grid">'))
+          if rp<0: raise SystemExit('Right panel not found')
+          depth=0; close_at=-1
+          for x in re.finditer(r'<div\b[^>]*>|</div>', about[rp:], re.I):
+              tag=x.group(0)
+              if tag.lower().startswith('<div'): depth+=1
+              else:
+                  depth-=1
+                  if depth==0:
+                      close_at=rp+x.start(); break
+          if close_at<0: raise SystemExit('Right panel closing div not found')
+          about=about[:close_at]+embedded+'\n'+about[close_at:]
+          s=s[:aa]+about+s[gg:]
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate structure
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa)
+          about=s[aa:gg]
+          ok={
+            'wing-stats':'class="wing-stats"' in about,
+            'facilities':'class="embedded-facilities"' in about,
+            'heading':'विंग आणि फ्लॅट तपशील' in about,
+            '414':'४१४' in about,
+            '5':'५' in about,
+            '14':'१४' in about,
+            'parking':'ओपन पाणी सुविधा' in about,
+            'water':'नियमित पाणी पुरवठा' in about,
+            'r1a':'R1A' in about and 'Fire flats – 2' in about,
+            'r2':'R2' in about and 'Fire flats – 1' in about,
+            'r3':'R3' in about and 'Fire flats – 1' in about,
+            'r4':'R4' in about and 'Fire flats – 1' in about,
+            'no-standalone':'<section id="amenities"' not in s,
+          }
+          print(ok)
+          bad=[k for k,v in ok.items() if not v]
+          if bad: raise SystemExit('Validation failed: '+', '.join(bad))
+          # Facilities must be inside the right panel, not outside about-grid.
+          pos=about.find('class="embedded-facilities"')
+          wing=about.find('<h3 data-i18n="wingTitle">')
+          if pos<wing: raise SystemExit('Facilities appear before Wing heading')
+          if about[:pos].count('<div class="panel">') != about[:pos].count('</div>')-about[:pos].count('<div class="')+1:
+              pass
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if git diff --cached --quiet; then echo 'No changes needed'; exit 0; fi
+          git commit -m 'Place facilities inside Wing Details panel [layout-applied]'
+          git push
