@@ -1,0 +1,37 @@
+name: Remove Admin Dashboard Refresh Override
+
+on:
+  push:
+    paths:
+      - '.github/workflows/remove-admin-dashboard-refresh.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  remove:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove refresh override
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('portal.html')
+          s = p.read_text(encoding='utf-8')
+          old = s
+          lines = [x for x in s.splitlines() if 'admin-dashboard-refresh.js' not in x]
+          p.write_text('\n'.join(lines) + ('\n' if s.endswith('\n') else ''), encoding='utf-8')
+          if old == p.read_text(encoding='utf-8'):
+              print('No dashboard refresh script tag found.')
+          else:
+              print('Removed admin-dashboard-refresh.js from portal.html')
+          PY
+      - name: Commit change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add portal.html
+          git diff --cached --quiet || git commit -m 'Fix portal by removing dashboard refresh override'
+          git push
