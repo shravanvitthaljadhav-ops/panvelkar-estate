@@ -11,5 +11,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update Society Content
-        run: echo 'Protected from final layout trigger.'
+      - name: Integrate Marathi-only portal UI
+        shell: bash
+        run: |
+          set -e
+          python3 - <<'PY'
+          from pathlib import Path
+          tag='<script src="portal-marathi-ui.js"></script>'
+          for name in ('portal.html','member-dashboard.html'):
+              p=Path(name)
+              s=p.read_text(encoding='utf-8')
+              if tag not in s:
+                  if '</body>' not in s: raise SystemExit(f'{name}: missing </body>')
+                  s=s.replace('</body>',tag+'\n</body>',1)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Verify Marathi UI integration
+        shell: bash
+        run: |
+          grep -q 'portal-marathi-ui.js' portal.html
+          grep -q 'portal-marathi-ui.js' member-dashboard.html
+      - name: Commit Marathi portal integration
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add portal.html member-dashboard.html
+          if git diff --cached --quiet; then echo 'Already integrated'; exit 0; fi
+          git commit -m 'Integrate Marathi-only member and admin portal UI'
+          git push
