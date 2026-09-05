@@ -1,0 +1,42 @@
+name: Apply About Society Box Style
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Apply isolated style
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '/* ABOUT SOCIETY BOX STYLE */'
+          css = '''\n/* ABOUT SOCIETY BOX STYLE */\n.about-grid > .panel:first-child{background:#EAF4F1;border-color:#C8DED8;box-shadow:0 8px 24px rgba(31,75,67,.10)}\n'''
+          if marker not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+              p.write_text(s, encoding='utf-8')
+          else:
+              print('Style already applied; no change needed')
+          PY
+
+      - name: Commit change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if git diff --cached --quiet; then
+            echo 'No changes to commit'
+          else
+            git commit -m 'Style आपली सोसायटी panel'
+            git push origin HEAD:main
+          fi
