@@ -19,10 +19,9 @@ jobs:
           p=Path('index.html'); s=p.read_text(encoding='utf-8')
           def enddiv(t,st):
             d=0
-            sub=t[st:]
-            for m in re.finditer(r'<div\b[^>]*>|</div>',sub,re.I|re.S):
+            for m in re.finditer(r'<div\b[^>]*>|</div>',t[st:],re.I|re.S):
               d += 1 if m.group(0).lower().startswith('<div') else -1
-              if d==0: return st+m.end()
+              if d==0:return st+m.end()
             return -1
           fs=s.find('<div class="embedded-facilities">')
           if fs<0: raise SystemExit('embedded facilities not found')
@@ -37,10 +36,8 @@ jobs:
           aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa)
           about=s[aa:gg]
           ag=about.find('<div class="about-grid">')
-          p1=about.find('<div class="panel">',ag)
-          p1e=enddiv(about,p1)
-          p2=about.find('<div class="panel">',p1e)
-          p2e=enddiv(about,p2)
+          p1=about.find('<div class="panel">',ag); p1e=enddiv(about,p1)
+          p2=about.find('<div class="panel">',p1e); p2e=enddiv(about,p2)
           if min(ag,p1,p1e,p2,p2e)<0: raise SystemExit('about panel structure not found')
           about=about[:p2e-6]+block+'\n'+about[p2e-6:]
           s=s[:aa]+about+s[gg:]
@@ -55,13 +52,12 @@ jobs:
           aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa); about=s[aa:gg]
           def enddiv(t,st):
             d=0
-            sub=t[st:]
-            for m in re.finditer(r'<div\b[^>]*>|</div>',sub,re.I|re.S):
+            for m in re.finditer(r'<div\b[^>]*>|</div>',t[st:],re.I|re.S):
               d += 1 if m.group(0).lower().startswith('<div') else -1
               if d==0:return st+m.end()
             return -1
           ag=about.find('<div class="about-grid">'); p1=about.find('<div class="panel">',ag); p1e=enddiv(about,p1); p2=about.find('<div class="panel">',p1e); p2e=enddiv(about,p2); fs=about.find('<div class="embedded-facilities">')
-          required=['class="wing-stats"','class="embedded-facilities"','विंग आणि फ्लॅट तपशील','४१४','५','१४','ओपन पाणी सुविधा','नियमित पाणी पुरवठा','R1A','R1B','R2','R3','R4']
+          required=['class="wing-stats"','class="embedded-facilities"','data-i18n="wingTitle"','४१४','५','१४','ओपन पाणी सुविधा','नियमित पाणी पुरवठा','R1A','R1B','R2','R3','R4']
           missing=[x for x in required if x not in about]
           if missing: raise SystemExit('Missing: '+', '.join(missing))
           if not (p2<fs<p2e): raise SystemExit('Facilities are outside right panel')
@@ -72,5 +68,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
           if git diff --cached --quiet; then echo 'Already fixed'; exit 0; fi
-          git commit -m 'Apply final Wing layout [wing-fix-applied]'
+          git commit -m 'Apply final Wing layout [wing-fix-applied] [layout-applied] [layout-fix]'
           git push
