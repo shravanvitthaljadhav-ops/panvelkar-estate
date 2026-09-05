@@ -7,45 +7,9 @@ permissions:
   contents: write
 jobs:
   update:
-    if: ${{ !contains(github.event.head_commit.message, '[society-content]') && !contains(github.event.head_commit.message, '[about-committee-fix]') && !contains(github.event.head_commit.message, '[layout-fix]') && !contains(github.event.head_commit.message, 'Fix final facilities layout workflow') }}
+    if: ${{ !contains(github.event.head_commit.message, '[society-content]') && !contains(github.event.head_commit.message, '[about-committee-fix]') && !contains(github.event.head_commit.message, '[layout-fix]') && !contains(github.event.head_commit.message, 'Fix final facilities layout workflow') && !contains(github.event.head_commit.message, 'Trigger final layout') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Update index content
-        shell: bash
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          old='पनवेलकर इस्टेट स्टॅनफोर्ड ही बदलापूर येथील सहकारी गृहनिर्माण संस्था आहे. सोसायटी-स्तरीय माहिती सार्वजनिक ठेवली आहे, तर रहिवासी-विशिष्ट माहिती सुरक्षित पोर्टलमध्ये संरक्षित आहे.'
-          new='''पनवेलकर इस्टेट स्टॅनफोर्ड सहकारी गृहनिर्माण संस्था मर्यादित — बदलापूरमधील एक प्रगतिशील आणि सभासदकेंद्रित सहकारी गृहनिर्माण संस्था आहे.<br><br>पनवेलकर इस्टेट स्टॅनफोर्ड सहकारी गृहनिर्माण संस्था मर्यादित ही केवळ एक सोसायटी नसून, सहभाग, पारदर्शकता आणि प्रगतीवर विश्वास ठेवणारे एक तरुण कुटुंब आहे, असे आम्ही मानतो.<br><br>पारदर्शक कारभार, सभासदांचा सक्रिय सहभाग, आधुनिक तंत्रज्ञानाचा वापर आणि सतत प्रगतीच्या दिशेने वाटचाल, हे आमचे प्रमुख ध्येय आहे. सोबतच आपल्या पुढल्या पिढीला आपला सांस्कृतिक वारसा सोपवण्याचा, त्यांना आपल्या परंपरांबरोबरच त्यांच्या कलागुणांना वाव देण्याचा आणि पुढे चांगली पिढी घडवण्याचा आमचा मानस आहे.<br><br>बदलापूरमध्ये स्वतःची अधिकृत वेबसाईट सुरू करणाऱ्या अग्रगण्य सहकारी गृहनिर्माण संस्थांपैकी एक म्हणून आम्ही आपल्या संस्थेचा कारभार अधिक पारदर्शक, सुलभ आणि डिजिटल करण्याच्या दिशेने एक महत्त्वाचे पाऊल टाकत आहोत.<br><br>बदलापूरच्या सहकारी गृहनिर्माण क्षेत्रात डिजिटल माध्यमाचा स्वीकार करून एक नवा आदर्श निर्माण करण्याचा आमचा प्रयत्न आहे.<br><br>कारण आमचा विश्वास आहे— “जिथे माहिती सर्वांसाठी खुली असते, तिथे विश्वास अधिक मजबूत होतो.”<br><br><strong>“आपली संस्था… आपली जबाबदारी… आपली प्रगती!”</strong>'''
-          if old in s: s=s.replace(old,new,1)
-          s=s.replace('<strong>४१९</strong><span data-i18n="flats">फ्लॅट्स</span>','<strong>४१४</strong><span data-i18n="flats">फ्लॅट्स</span>',1)
-          for wing in ('R2','R3','R4'):
-              pattern=r'(<strong>'+re.escape(wing)+r'</strong>.*?Fire flats – )0'
-              s=re.sub(pattern,r'\g<1>1',s,count=1,flags=re.S)
-          names=[('श्री. विनय ठोबरे','अध्यक्ष'),('श्री. श्रीकांत पाटील','सचिव'),('श्री. कल्पेश घाग','खजिनदार'),('श्री. राकेश इंगळे','सदस्य'),('श्री. तुषार कुंभार','सदस्य'),('श्री. संदीप कांबळे','सदस्य'),('श्री. कविराज मालंडकर','सदस्य'),('श्री. प्रकाश लोखंडे','सदस्य'),('श्री. तुकाराम पाटील','सदस्य'),('श्री. प्रविण पाटील','सदस्य'),('श्रीमती तेजस्वी कदम','सदस्य'),('श्रीमती कविता गावडे','सदस्य')]
-          m=re.search(r'(<section id="committee".*?<div class="people-grid">)(.*?)(</div>\s*</section>)',s,re.S)
-          if m:
-              cards=[]
-              for name,role in names:
-                  initials=''.join(x[0] for x in re.findall(r'[\u0900-\u097F]+',name)[-2:])
-                  cards.append(f'<div class="person"><div class="avatar">{initials}</div><h3>{name}</h3><p>{role}</p></div>')
-              s=s[:m.start(2)]+'\n'.join(cards)+s[m.end(2):]
-          p.write_text(s,encoding='utf-8')
-          PY
-      - name: Validate and commit
-        shell: bash
-        run: |
-          grep -q '४१४</strong><span data-i18n="flats">फ्लॅट्स' index.html
-          grep -q 'श्री. विनय ठोबरे' index.html
-          grep -q 'श्रीमती कविता गावडे' index.html
-          grep -q 'जिथे माहिती सर्वांसाठी खुली असते' index.html
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git diff --cached --quiet && exit 0
-          git commit -m "Update society content and committee [society-content]"
-          git push
+      - name: Update Society Content
+        run: echo 'Protected from final layout trigger.'
