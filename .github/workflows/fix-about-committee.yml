@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Restore about text and committee popup
+      - name: Repair about and committee
         shell: bash
         run: |
           python3 - <<'PY'
@@ -20,32 +20,29 @@ jobs:
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
 
-          # Keep the full supplied Marathi society introduction from being overwritten
-          # by the old short translation string when applyLanguage() runs.
+          # The supplied long Marathi introduction must not be overwritten by the
+          # old short aboutText translation during applyLanguage().
           s=s.replace('<p data-i18n="aboutText">','<p id="aboutText">',1)
 
-          # Homepage should show only the first three committee members; all 12 stay in popup.
+          # Show only 3 committee members on the homepage; keep all 12 in the modal.
           committee_html='''<section id="committee" class="section"><div class="section-head"><h2 data-i18n="committeeTitle">मॅनेजिंग कमिटी</h2></div><div class="people-grid"><div class="person"><div class="avatar">वठ</div><h3>श्री. विनय ठोबरे</h3><p>अध्यक्ष</p></div><div class="person"><div class="avatar">शप</div><h3>श्री. श्रीकांत पाटील</h3><p>सचिव</p></div><div class="person"><div class="avatar">कघ</div><h3>श्री. कल्पेश घाग</h3><p>खजिनदार</p></div></div><div class="action"><button class="btn" onclick="openModal('committee')" data-i18n="allCommittee">सर्व १२ कमिटी सदस्य पहा →</button></div></section>'''
           s,n=re.subn(r'<section id="committee".*?</section>',committee_html,s,count=1,flags=re.S)
-          if n!=1: raise SystemExit('committee section not found')
+          if n!=1: raise SystemExit('Committee section not found')
 
-          # Replace generic popup committee data with the actual 12 supplied names.
-          old='const shops=Array.from({length:14},(_,i)=>({title:`Shop ${String(i+1).padStart(2,\'0\')}`}));const committee=Array.from({length:12},(_,i)=>({title:`Committee Member ${String(i+1).padStart(2,\'0\')}`}));'
-          new="const shops=Array.from({length:14},(_,i)=>({title:`Shop ${String(i+1).padStart(2,'0')}`}));const committee=[{title:'श्री. विनय ठोबरे',role:'अध्यक्ष'},{title:'श्री. श्रीकांत पाटील',role:'सचिव'},{title:'श्री. कल्पेश घाग',role:'खजिनदार'},{title:'श्री. राकेश इंगळे',role:'सदस्य'},{title:'श्री. तुषार कुंभार',role:'सदस्य'},{title:'श्री. संदीप कांबळे',role:'सदस्य'},{title:'श्री. कविराज मालंडकर',role:'सदस्य'},{title:'श्री. प्रकाश लोखंडे',role:'सदस्य'},{title:'श्री. तुकाराम पाटील',role:'सदस्य'},{title:'श्री. प्रविण पाटील',role:'सदस्य'},{title:'श्रीमती तेजस्वी कदम',role:'सदस्य'},{title:'श्रीमती कविता गावडे',role:'सदस्य'}];"
-          if old not in s: raise SystemExit('generic committee array not found')
-          s=s.replace(old,new,1)
+          # Replace generic popup data with the actual 12 supplied committee names.
+          s,n=re.subn(r"const committee=Array\.from\(.*?\);", "const committee=[{title:'श्री. विनय ठोबरे',role:'अध्यक्ष'},{title:'श्री. श्रीकांत पाटील',role:'सचिव'},{title:'श्री. कल्पेश घाग',role:'खजिनदार'},{title:'श्री. राकेश इंगळे',role:'सदस्य'},{title:'श्री. तुषार कुंभार',role:'सदस्य'},{title:'श्री. संदीप कांबळे',role:'सदस्य'},{title:'श्री. कविराज मालंडकर',role:'सदस्य'},{title:'श्री. प्रकाश लोखंडे',role:'सदस्य'},{title:'श्री. तुकाराम पाटील',role:'सदस्य'},{title:'श्री. प्रविण पाटील',role:'सदस्य'},{title:'श्रीमती तेजस्वी कदम',role:'सदस्य'},{title:'श्रीमती कविता गावडे',role:'सदस्य'}];",s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('Generic committee array not found')
 
-          # Make the popup use the supplied role instead of generic labels.
-          old_open="function openModal(type){window.currentModal=type;const lang=localStorage.getItem('societyLanguage')||'mr';const mt=modalText[lang]||modalText.mr;const items=type==='shops'?shops:committee;document.getElementById('modalTitle').textContent=type==='shops'?mt.shopTitle:mt.committeeTitle;document.getElementById('modalContent').innerHTML=items.map((x,i)=>`<div class=\"modal-item\"><b>${x.title}</b><span>${type==='shops'?mt.shopText:(i===0&&lang==='mr'?'अध्यक्ष':i===1&&lang==='mr'?'सचिव':i===2&&lang==='mr'?'खजिनदार':mt.committeeText)}</span></div>`).join('');document.getElementById('modal').classList.add('show')}"
-          new_open="function openModal(type){window.currentModal=type;const lang=localStorage.getItem('societyLanguage')||'mr';const mt=modalText[lang]||modalText.mr;const items=type==='shops'?shops:committee;document.getElementById('modalTitle').textContent=type==='shops'?mt.shopTitle:mt.committeeTitle;document.getElementById('modalContent').innerHTML=items.map(x=>`<div class=\"modal-item\"><b>${x.title}</b><span>${type==='shops'?mt.shopText:x.role}</span></div>`).join('');document.getElementById('modal').classList.add('show')}"
-          if old_open not in s: raise SystemExit('openModal function not found')
-          s=s.replace(old_open,new_open,1)
+          # Make popup render the actual role from each committee record.
+          open_re=r"function openModal\(type\)\{.*?\}\n(?=function closeModal)"
+          open_new="function openModal(type){window.currentModal=type;const lang=localStorage.getItem('societyLanguage')||'mr';const mt=modalText[lang]||modalText.mr;const items=type==='shops'?shops:committee;document.getElementById('modalTitle').textContent=type==='shops'?mt.shopTitle:mt.committeeTitle;document.getElementById('modalContent').innerHTML=items.map(x=>`<div class=\"modal-item\"><b>${x.title}</b><span>${type==='shops'?mt.shopText:x.role}</span></div>`).join('');document.getElementById('modal').classList.add('show')}\n"
+          s,n=re.subn(open_re,open_new,s,count=1,flags=re.S)
+          if n!=1: raise SystemExit('openModal function not found')
 
-          # Safety checks.
-          required=['४१४</strong><span data-i18n="flats">फ्लॅट्स','R2</strong><p data-i18n="r2">Regular flats – 96<br>Fire flats – 1','R3</strong><p data-i18n="r3">Regular flats – 96<br>Fire flats – 1','R4</strong><p data-i18n="r4">Regular flats – 96<br>Fire flats – 1','श्री. विनय ठोबरे','श्रीमती कविता गावडे','जिथे माहिती सर्वांसाठी खुली असते','onclick="openModal(\'committee\')"','const committee=[{title:']
+          required=['id="aboutText"','४१४</strong><span data-i18n="flats">फ्लॅट्स','R2</strong><p data-i18n="r2">Regular flats – 96<br>Fire flats – 1','R3</strong><p data-i18n="r3">Regular flats – 96<br>Fire flats – 1','R4</strong><p data-i18n="r4">Regular flats – 96<br>Fire flats – 1','श्री. विनय ठोबरे','श्री. श्रीकांत पाटील','श्री. कल्पेश घाग','श्री. राकेश इंगळे','श्री. तुषार कुंभार','श्री. संदीप कांबळे','श्री. कविराज मालंडकर','श्री. प्रकाश लोखंडे','श्री. तुकाराम पाटील','श्री. प्रविण पाटील','श्रीमती तेजस्वी कदम','श्रीमती कविता गावडे','onclick="openModal(\'committee\')"','const committee=[{title:']
           for x in required:
               if x not in s: raise SystemExit('Missing required content: '+x)
-          if '\\g<1>' in s: raise SystemExit('Malformed wing content still present')
+          if '\\g<1>' in s: raise SystemExit('Malformed wing markup still present')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Validate and commit
