@@ -1,0 +1,58 @@
+name: Final Marathi Text Fix
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/marathi-final-fix-trigger.txt
+permissions:
+  contents: write
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Fix final Marathi wording and asset references
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import subprocess,time
+          for attempt in range(5):
+            subprocess.run(['git','fetch','origin','main'],check=True)
+            subprocess.run(['git','reset','--hard','origin/main'],check=True)
+            p=Path('index.html');s=p.read_text(encoding='utf-8')
+            r={
+              'panvelkar-stanford-चिन्ह.svg':'panvelkar-stanford-logo.svg',
+              'उद्वाहन यंत्रचा':'उद्वाहन यंत्राचा',
+              'संकेतस्थळवर':'संकेतस्थळावर',
+              'सोसायटीमध्ये उपलब्ध सुविधा':'सोसायटीमध्ये उपलब्ध सुविधा',
+              'ओपन पाणी सुविधा':'ओपन पाणी सुविधा',
+              'नियमित नियमित पाणी पुरवठा':'नियमित पाणी पुरवठा'
+            }
+            for a,b in r.items():s=s.replace(a,b)
+            p.write_text(s,encoding='utf-8')
+            subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+            subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+            subprocess.run(['git','add','index.html'],check=True)
+            if subprocess.run(['git','diff','--cached','--quiet']).returncode==0: break
+            subprocess.run(['git','commit','-m','Finalize Marathi website wording [marathi-final]'],check=True)
+            if subprocess.run(['git','push','origin','HEAD:main']).returncode==0: break
+            time.sleep(2)
+          else: raise SystemExit('Push failed')
+          PY
+      - name: Validate final homepage
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          assert 'id="languageSelect"' not in s
+          assert 'const translations=' not in s
+          assert 'STANFORD_LOCALIZATION_V3' not in s
+          assert 'panvelkar-stanford-logo.svg' in s
+          for x in ['Garden','Gym','About Our Society','Quick Links','Admin Login','Portal','Co-operative Housing Society','Badlapur','Regular flats','Fire flats','8th Floor','12th Floor']:
+            assert x not in s, f'Leftover English: {x}'
+          for x in ['सोसायटीची थोडक्यात माहिती','विंग व सदनिका तपशील','सोसायटीमध्ये उपलब्ध सुविधा','ओपन पाणी सुविधा','नियमित पाणी पुरवठा','व्यवस्थापन समिती']:
+            assert x in s, f'Missing Marathi: {x}'
+          print('Final Marathi homepage validation passed')
+          PY
