@@ -1,0 +1,41 @@
+name: Apply Hero Banner
+on:
+  push:
+    branches: [hero-banner-fix]
+permissions:
+  contents: write
+jobs:
+  patch-hero:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace hero with exact banner image
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          start = s.index('<section id="home" class="hero">')
+          end = s.index('</section>\n<section id="about"', start)
+          new_hero = '''<section id="home" class="hero"><div class="hero-image-wrap"><img class="hero-image" src="hero-banner.jpg" alt="Panvelkar Estate Stanford hero banner"></div></section>'''
+          s = s[:start] + new_hero + s[end:]
+
+          marker = '/* EXACT HERO BANNER OVERRIDE */'
+          css = '''\n/* EXACT HERO BANNER OVERRIDE */\n.hero{min-height:0;height:auto;padding:0;display:block;background:none;color:initial;position:relative;overflow:hidden}\n.hero:before,.hero:after{display:none}\n.hero-content{display:none}\n.hero-image-wrap{width:100%;margin:0;padding:0;line-height:0}\n.hero-image{display:block;width:100%;height:auto;max-width:none;object-fit:contain}\n'''
+          if marker not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Commit hero patch
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Use exact hero banner image"
+          git push
