@@ -1,3 +1,4 @@
+# FINAL LAYOUT TRIGGER
 name: Apply Final About Layout
 on:
   push:
@@ -28,10 +29,8 @@ jobs:
                   depth += -1 if m.group(1) else 1
                   if depth==0: return a,m.end(),text[a:m.end()]
               raise SystemExit(f'Unclosed {tag} block: {start}')
-          a=s.find('<section id="amenities"')
-          if a<0: raise SystemExit('Amenities section not found')
-          b=s.find('<section id="gallery"',a)
-          if b<0: raise SystemExit('Gallery section boundary not found')
+          a=s.find('<section id="amenities"'); b=s.find('<section id="gallery"',a)
+          if a<0 or b<0: raise SystemExit('Amenities/Gallery boundary not found')
           amenities=s[a:b]; s=s[:a]+s[b:]
           blocks=[]; work=amenities
           while '<div class="amenity">' in work:
@@ -39,25 +38,25 @@ jobs:
           kept=[]
           for z in blocks:
               if 'गार्डन' in z or 'जिम' in z: continue
-              if 'पार्किंग' in z: z=re.sub(r'(<p>).*?(</p>)',r'\1ओपन पाणी सुविधा\2',z,count=1,flags=re.S)
-              if 'पाणी पुरवठा' in z: z=re.sub(r'(<p>).*?(</p>)',r'\1नियमित पाणी पुरवठा\2',z,count=1,flags=re.S)
+              if 'पार्किंग' in z:z=re.sub(r'(<p>).*?(</p>)',r'\1ओपन पाणी सुविधा\2',z,count=1,flags=re.S)
+              if 'पाणी पुरवठा' in z:z=re.sub(r'(<p>).*?(</p>)',r'\1नियमित पाणी पुरवठा\2',z,count=1,flags=re.S)
               kept.append(z)
           hm=re.search(r'(<div class="section-head">.*?</div>)',amenities,re.S)
           if not hm: raise SystemExit('Facilities heading not found')
           embedded='<div class="embedded-facilities">'+hm.group(1)+'<div class="amenities">'+''.join(kept)+'</div></div>'
-          about_start=s.find('<section id="about"'); gallery_start=s.find('<section id="gallery"',about_start)
-          if about_start<0 or gallery_start<0: raise SystemExit('About/Gallery section boundaries not found')
-          about=s[about_start:gallery_start]
-          sa,sb,stats_html=block(about,'<div class="stats">'); about=about[:sa]+about[sb:]
+          aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa)
+          if aa<0 or gg<0: raise SystemExit('About/Gallery boundary not found')
+          about=s[aa:gg]
+          x,y,stats=block(about,'<div class="stats">'); about=about[:x]+about[y:]
           wing=about.find('<h3 data-i18n="wingTitle">')
           if wing<0: raise SystemExit('Wing title not found')
-          about=about[:wing]+'<div class="wing-stats">'+stats_html+'</div>'+about[wing:]
+          about=about[:wing]+'<div class="wing-stats">'+stats+'</div>'+about[wing:]
           close=about.rfind('</section>')
           if close<0: raise SystemExit('About section closing tag not found')
           about=about[:close]+embedded+about[close:]
-          s=s[:about_start]+about+s[gallery_start:]
-          css='''<style>\n.embedded-facilities{margin-top:24px;padding-top:18px;border-top:1px solid rgba(18,48,71,.12)}\n.embedded-facilities .section-head{margin-bottom:14px}\n.embedded-facilities .section-head h2{font-size:1.35rem}\n.embedded-facilities .section-head p{display:none}\n.embedded-facilities .amenities{max-width:none;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}\n.embedded-facilities .amenity{padding:12px}\n.embedded-facilities .amenity-icon{width:44px;height:44px;font-size:1.2rem;margin-bottom:8px}\n.embedded-facilities .amenity h3{font-size:1rem}\n.embedded-facilities .amenity p{font-size:.8rem}\n.wing-stats{margin-bottom:18px}\n.wing-stats .stats{margin:0}\n@media(max-width:950px){.embedded-facilities .amenities{grid-template-columns:repeat(2,minmax(0,1fr))}}\n@media(max-width:560px){.embedded-facilities .amenities{grid-template-columns:1fr}}\n</style>\n'''
-          if '.embedded-facilities{' not in s: s=s.replace('</head>',css+'</head>',1)
+          s=s[:aa]+about+s[gg:]
+          css='''<style>\n.embedded-facilities{margin-top:24px;padding-top:18px;border-top:1px solid rgba(18,48,71,.12)}\n.embedded-facilities .section-head{margin-bottom:14px}\n.embedded-facilities .section-head h2{font-size:1.35rem}\n.embedded-facilities .section-head p{display:none}\n.embedded-facilities .amenities{max-width:none;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}\n.embedded-facilities .amenity{padding:12px}\n.embedded-facilities .amenity-icon{width:44px;height:44px;font-size:1.2rem;margin-bottom:8px}\n.embedded-facilities .amenity h3{font-size:1rem}\n.embedded-facilities .amenity p{font-size:.8rem}\n.wing-stats{margin-bottom:18px}.wing-stats .stats{margin:0}\n@media(max-width:950px){.embedded-facilities .amenities{grid-template-columns:repeat(2,minmax(0,1fr))}}\n@media(max-width:560px){.embedded-facilities .amenities{grid-template-columns:1fr}}\n</style>\n'''
+          if '.embedded-facilities{' not in s:s=s.replace('</head>',css+'</head>',1)
           required=['४१४</strong><span data-i18n="flats">फ्लॅट्स','५</strong><span data-i18n="wings">विंग्स','१४</strong><span data-i18n="shops">दुकाने','R1A','R1B','R2','R3','R4','Fire Emergency Guidance','सोसायटीमध्ये उपलब्ध सुविधा','पार्किंग','सिक्युरिटी','लिफ्ट','जनरेटर','पाणी पुरवठा','प्ले एरिया','श्री. विनय ठोबरे','श्रीमती कविता गावडे']
           for x in required:
               if x not in s: raise SystemExit('Missing required content: '+x)
