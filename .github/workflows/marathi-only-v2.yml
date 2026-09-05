@@ -1,0 +1,101 @@
+name: Marathi Only Website Cleanup V2
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/marathi-only-v2-trigger.txt
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Apply Marathi-only cleanup with retry
+        run: |
+          python3 <<'PY'
+          from pathlib import Path
+          import re, subprocess, time
+
+          def transform():
+              p=Path('index.html')
+              s=p.read_text(encoding='utf-8')
+              s=re.sub(r'<select id="languageSelect".*?</select>','',s,flags=re.S)
+              s=re.sub(r'<script>\s*const translations=.*?</script>\s*<script>\s*/\* STANFORD_LOCALIZATION_V3 \*/.*?</script>','',s,flags=re.S)
+              reps={
+              'Panvelkar Estate Stanford | Official Society Website':'पनवेलकर इस्टेट स्टॅनफोर्ड | अधिकृत संकेतस्थळ',
+              'Panvelkar Estate Stanford</span>':'पनवेलकर इस्टेट स्टॅनफोर्ड</span>',
+              'सोसायटीची थोडक्यात माहिती / About Our Society':'सोसायटीची थोडक्यात माहिती',
+              'Panvelkar Estate Stanford Co-operative Housing Society, Badlapur':'पनवेलकर इस्टेट स्टॅनफोर्ड सहकारी गृहनिर्माण संस्था, बदलापूर',
+              'फ्लॅट्स':'सदनिका','विंग्स':'विंग','Wing & Flat Details':'विंग व सदनिका तपशील',
+              'Regular flats – 115<br>Fire flats – 2<br>8th Floor – R1A-809<br>12th Floor – R1A-1209':'नियमित सदनिका – ११५<br>अग्निसुरक्षा सदनिका – २<br>८वा मजला – R1A-809<br>१२वा मजला – R1A-1209',
+              'Regular flats – 14<br>Fire flats – 0<br>14 flats total':'नियमित सदनिका – १४<br>अग्निसुरक्षा सदनिका – ०<br>एकूण सदनिका – १४',
+              'Regular flats – 14<br>Fire flats – 1<br>14 flats total':'नियमित सदनिका – १४<br>अग्निसुरक्षा सदनिका – ०<br>एकूण सदनिका – १४',
+              'Regular flats – 96<br>Fire flats – 0<br>8th Floor – R2-808':'नियमित सदनिका – ९६<br>अग्निसुरक्षा सदनिका – १<br>८वा मजला – R2-808',
+              'Regular flats – 96<br>Fire flats – 1<br>8th Floor – R2-808':'नियमित सदनिका – ९६<br>अग्निसुरक्षा सदनिका – १<br>८वा मजला – R2-808',
+              'Regular flats – 96<br>Fire flats – 0<br>8th Floor – R3-808':'नियमित सदनिका – ९६<br>अग्निसुरक्षा सदनिका – १<br>८वा मजला – R3-808',
+              'Regular flats – 96<br>Fire flats – 1<br>8th Floor – R3-808':'नियमित सदनिका – ९६<br>अग्निसुरक्षा सदनिका – १<br>८वा मजला – R3-808',
+              'Regular flats – 96<br>Fire flats – 0<br>8th Floor – R4-808':'नियमित सदनिका – ९६<br>अग्निसुरक्षा सदनिका – १<br>८वा मजला – R4-808',
+              'Regular flats – 96<br>Fire flats – 1<br>8th Floor – R4-808':'नियमित सदनिका – ९६<br>अग्निसुरक्षा सदनिका – १<br>८वा मजला – R4-808',
+              'Fire Emergency Guidance':'अग्निसुरक्षा मार्गदर्शन','designated fire flats':'अग्निसुरक्षा सदनिका',
+              'Society परिसर व Garden Area':'सोसायटी परिसर व बागेचा परिसर','Society Premises':'सोसायटी परिसर',
+              'सिक्युरिटी':'सुरक्षा व्यवस्था','२४x७ वॉचमन व सीसीटीव्ही':'२४x७ सुरक्षा कर्मचारी व सीसीटीव्ही',
+              'प्रत्येक विंगमध्ये लिफ्ट सुविधा':'प्रत्येक विंगमध्ये उद्वाहन यंत्राची सुविधा','जनरेटर':'वीज जनित्र',
+              'लोडशेडिंगसाठी बॅकअप वीज':'वीज खंडित झाल्यास पर्यायी वीज व्यवस्था','नियमित नियमित पाणी पुरवठा':'नियमित पाणी पुरवठा',
+              'प्ले एरिया':'बालकांसाठी खेळण्याची जागा','Panvelkar Estate Stanford – Society Premises':'पनवेलकर इस्टेट स्टॅनफोर्ड – सोसायटी परिसर',
+              'Society Portal':'सोसायटी सदस्य पोर्टल','Society-level information':'सोसायटीस्तरीय माहिती','Member Login':'सदस्य प्रवेश',
+              'Privacy':'गोपनीयता','Emergency Guidance':'अग्निसुरक्षा मार्गदर्शन','फायर सेफ्टी':'अग्निसुरक्षा','मॅनेजिंग कमिटी':'व्यवस्थापन समिती',
+              'Shop 01':'दुकान क्र. ०१','Shop 02':'दुकान क्र. ०२','Shop 03':'दुकान क्र. ०३',
+              'दुकानांची संपूर्ण माहिती फक्त पॉप-अपमध्ये पहा.':'दुकानांची संपूर्ण माहिती स्वतंत्र चौकटीत पहा.',
+              'दुकानाची माहिती पॉप-अपमध्ये':'दुकानाची माहिती स्वतंत्र चौकटीत','Quick Links':'महत्त्वाचे दुवे','Admin Login':'प्रशासकीय प्रवेश',
+              'Our Society':'आपली सोसायटी','About Our Society':'आपल्या सोसायटीविषयी','Facilities':'सुविधा','Gallery':'गॅलरी','Notices':'सूचना','Committee':'समिती','Shops':'दुकाने',
+              'Official Website':'अधिकृत संकेतस्थळ','View all 12 committee members':'सर्व १२ समिती सदस्य पहा','View all 14 shops':'सर्व १४ दुकाने पहा',
+              'Rules & Regulations':'नियम व अटी','Emergency Contacts':'आणीबाणी संपर्क','Contact Us':'आमच्याशी संपर्क साधा','Your name':'तुमचे नाव','Mobile number':'मोबाईल क्रमांक','Your message':'तुमचा संदेश','Send Message':'संदेश पाठवा',
+              'Garden Area':'बागेचा परिसर','Fire Safety':'अग्निसुरक्षा','Pets':'पाळीव प्राणी','Visitor Entry':'अभ्यागत प्रवेश','Waste Segregation':'कचरा वर्गीकरण','Noise Limit':'ध्वनी मर्यादा','Watchman Cabin':'सुरक्षा कक्ष','Plumber':'नळ दुरुस्तीकार','Electrician':'वीज दुरुस्तीकार','Nearest Hospital':'जवळचे रुग्णालय','Police Station':'पोलीस ठाणे',
+              'Society Grounds & Garden Area':'सोसायटी परिसर व बागेचा परिसर','Panvelkar Estate Stanford':'पनवेलकर इस्टेट स्टॅनफोर्ड'
+              }
+              for a,b in reps.items(): s=s.replace(a,b)
+              s=re.sub(r'\sdata-i18n(?:-placeholder)?="[^"]*"','',s)
+              s=re.sub(r'const shops=Array\.from\(\{length:14\}.*?function closeModal\(\)\{document\.getElementById\(\'modal\'\)\.classList\.remove\(\'show\'\);window\.currentModal=null\}document\.addEventListener\(\'keydown\',e=>\{if\(e\.key===\'Escape\'\)closeModal\(\)\}\);', '''const shops=Array.from({length:14},(_,i)=>({title:`दुकान क्र. ${String(i+1).padStart(2,'0')}`}));
+          const committee=[{title:'श्री. विनय ठोबरे',role:'अध्यक्ष'},{title:'श्री. श्रीकांत पाटील',role:'सचिव'},{title:'श्री. कल्पेश घाग',role:'खजिनदार'},{title:'श्री. राकेश इंगळे',role:'सदस्य'},{title:'श्री. तुषार कुंभार',role:'सदस्य'},{title:'श्री. संदीप कांबळे',role:'सदस्य'},{title:'श्री. कविराज मालंडकर',role:'सदस्य'},{title:'श्री. प्रकाश लोखंडे',role:'सदस्य'},{title:'श्री. तुकाराम पाटील',role:'सदस्य'},{title:'श्री. प्रविण पाटील',role:'सदस्य'},{title:'श्रीमती तेजस्वी कदम',role:'सदस्य'},{title:'श्रीमती कविता गावडे',role:'सदस्य'}];
+          function openModal(type){window.currentModal=type;const items=type==='shops'?shops:committee;document.getElementById('modalTitle').textContent=type==='shops'?'सोसायटीतील १४ दुकाने':'व्यवस्थापन समितीचे १२ सदस्य';document.getElementById('modalContent').innerHTML=items.map(x=>`<div class="modal-item"><b>${x.title}</b><span>${type==='shops'?'दुकानाची माहिती':x.role}</span></div>`).join('');document.getElementById('modal').classList.add('show')}
+          function closeModal(){document.getElementById('modal').classList.remove('show');window.currentModal=null}document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});''',s,flags=re.S)
+              s=re.sub(r'function contactAlert\(\).*?\n',"function contactAlert(){return 'आपला संदेश प्राप्त झाला.'}\n",s)
+              s=re.sub(r'<script>\s*/\* STANFORD_LOCALIZATION_V3 \*/.*?</script>','',s,flags=re.S)
+              s=s.replace('.lang{border:1px solid #ffffff66;background:#ffffff14;color:#fff;border-radius:9px;padding:8px 9px;font:inherit;font-weight:800}','.lang{display:none}')
+              p.write_text(s,encoding='utf-8')
+
+          def validate():
+              s=Path('index.html').read_text(encoding='utf-8')
+              required=['सोसायटीची थोडक्यात माहिती','विंग व सदनिका तपशील','सोसायटीमध्ये उपलब्ध सुविधा','नियमित पाणी पुरवठा','ओपन पाणी सुविधा','व्यवस्थापन समिती','सर्व १२ कमिटी सदस्य पहा','सर्व १४ दुकाने पहा']
+              for x in required: assert x in s, f'Missing: {x}'
+              for x in ['id="languageSelect"','const translations=','STANFORD_LOCALIZATION_V3','aGarden','aGym','Garden','Gym','About Our Society','Quick Links','Admin Login','Society Portal','Member Login']:
+                  assert x not in s, f'Leftover: {x}'
+              assert 'data-i18n' not in s and 'data-i18n-placeholder' not in s
+
+          for attempt in range(1,6):
+              subprocess.run(['git','fetch','origin','main'],check=True)
+              subprocess.run(['git','reset','--hard','origin/main'],check=True)
+              transform(); validate()
+              subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
+              subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
+              subprocess.run(['git','add','index.html'],check=True)
+              if subprocess.run(['git','diff','--cached','--quiet']).returncode==0:
+                  print('Homepage already clean')
+                  break
+              subprocess.run(['git','commit','-m','Set homepage to Marathi-only [marathi-only]'],check=True)
+              r=subprocess.run(['git','push','origin','HEAD:main'])
+              if r.returncode==0:
+                  print('Marathi-only homepage committed successfully')
+                  break
+              print(f'Push race on attempt {attempt}; retrying from latest main')
+              subprocess.run(['git','reset','--hard','origin/main'],check=True)
+              time.sleep(2)
+          else:
+              raise SystemExit('Could not push after 5 attempts')
+          PY
