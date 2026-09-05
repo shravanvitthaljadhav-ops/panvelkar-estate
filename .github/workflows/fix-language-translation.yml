@@ -1,0 +1,110 @@
+name: Fix Language and Number Translation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Patch translation engine
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path('index.html')
+          s = path.read_text(encoding='utf-8')
+
+          start_marker = '<script>\n/* STANFORD_NUMBER_LOCALIZATION_FINAL_V2 */'
+          start = s.find(start_marker)
+          if start < 0:
+              raise SystemExit('Translation engine marker not found')
+
+          end = s.find('</script>', start)
+          if end < 0:
+              raise SystemExit('Translation script end not found')
+          end += len('</script>')
+
+          new_script = '''<script>
+/* STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3 */
+(function(){
+  const DIGITS = {
+    mr: '०१२३४५६७८९',
+    hi: '०१२३४५६७८९',
+    en: '0123456789'
+  };
+  const LATIN = '0123456789';
+  const DEV = '०१२३४५६७८९';
+
+  function toLatin(value){
+    return String(value).replace(/[०१२३४५६७८९]/g, c => LATIN[DEV.indexOf(c)]);
+  }
+
+  function localizeText(root, lang){
+    const target = DIGITS[lang] || DIGITS.mr;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
+
+    nodes.forEach(node => {
+      const parent = node.parentElement;
+      if(!parent || ['SCRIPT','STYLE','SELECT','OPTION'].includes(parent.tagName)) return;
+      const latin = toLatin(node.nodeValue);
+      node.nodeValue = target === LATIN
+        ? latin
+        : latin.replace(/[0-9]/g, d => target[Number(d)]);
+    });
+  }
+
+  function applyNumberLanguage(lang){
+    localizeText(document.body, lang);
+  }
+
+  window.applyNumberLanguage = applyNumberLanguage;
+
+  const select = document.getElementById('languageSelect');
+  if(select){
+    select.addEventListener('change', () => {
+      const lang = select.value || 'mr';
+      setTimeout(() => applyNumberLanguage(lang), 0);
+    });
+    setTimeout(() => applyNumberLanguage(select.value || 'mr'), 0);
+  }
+
+  const originalOpenModal = window.openModal;
+  if(typeof originalOpenModal === 'function'){
+    window.openModal = function(type){
+      originalOpenModal(type);
+      applyNumberLanguage(document.getElementById('languageSelect')?.value || 'mr');
+    };
+  }
+})();
+</script>'''
+
+          s = s[:start] + new_script + s[end:]
+          path.write_text(s, encoding='utf-8')
+      
+      - name: Validate
+        run: |
+          test -f index.html
+          grep -q 'STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3' index.html
+          grep -q 'const translations=' index.html
+          grep -q 'id="languageSelect"' index.html
+
+      - name: Commit and clean up
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html .github/workflows/fix-language-translation.yml
+          git rm -f .github/workflows/fix-language-translation.yml
+          git commit -m 'Fix language and number translation' || exit 0
+          git push
