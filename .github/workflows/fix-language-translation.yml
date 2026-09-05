@@ -35,7 +35,7 @@ jobs:
           new_script = r'''<script>
           /* STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3 */
           (function(){
-            const DIGITS={mr:'०१२३४५६७८९',hi:'०१२३४५६७८९',en:'0123456789'};
+            const DIGITS={mr:'०१२३४५६७८९',hi:'0123456789',en:'0123456789'};
             const LATIN='0123456789', DEV='०१२३४५६७८९';
             function toLatin(v){return String(v).replace(/[०१२३४५६७८९]/g,c=>LATIN[DEV.indexOf(c)]);}
             function applyNumbers(lang){
@@ -74,6 +74,7 @@ jobs:
         run: |
           test -f index.html
           grep -q 'STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3' index.html
+          grep -q "const DIGITS={mr:'०१२३४५६७८९',hi:'0123456789',en:'0123456789'}" index.html
           grep -q 'const translations=' index.html
           grep -q 'id="languageSelect"' index.html
 
