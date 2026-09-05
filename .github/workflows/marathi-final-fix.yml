@@ -37,8 +37,10 @@ jobs:
               '<h3>उद्वाहन यंत्र</h3>':'<h3>उद्वाहन यंत्र / Lift</h3>',
               '<h3>नियमित पाणी पुरवठा</h3>':'<h3>नियमित पाणी पुरवठा / Water Supply</h3>',
               '<h3>बालकांसाठी खेळण्याची जागा</h3>':'<h3>बालकांसाठी खेळण्याची जागा / Play Area</h3>',
+              'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities / Available Facilities':'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities',
               'सोसायटीमध्ये उपलब्ध सुविधा':'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities',
-              'ओपन पाणी सुविधा':'ओपन पाणी सुविधा / Open Water Facility',
+              'ओपन पाणी सुविधा / Open Water Facility':'ओपन पार्किंग सुविधा / Open Parking',
+              'ओपन पाणी सुविधा':'ओपन पार्किंग सुविधा / Open Parking',
               'नियमित नियमित पाणी पुरवठा':'नियमित पाणी पुरवठा / Water Supply'
             }
             for a,b in r.items():s=s.replace(a,b)
@@ -47,23 +49,25 @@ jobs:
             subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
             subprocess.run(['git','add','index.html'],check=True)
             if subprocess.run(['git','diff','--cached','--quiet']).returncode==0: break
-            subprocess.run(['git','commit','-m','Use Marathi and English labels where appropriate [marathi-final]'],check=True)
+            subprocess.run(['git','commit','-m','Correct facility to Open Parking [parking-fix]'],check=True)
             if subprocess.run(['git','push','origin','HEAD:main']).returncode==0: break
             time.sleep(2)
           else: raise SystemExit('Push failed')
           PY
       - name: Validate final homepage
         run: |
-          python3 - <<'PY'
+          python3 <<'PY'
           from pathlib import Path
           s=Path('index.html').read_text(encoding='utf-8')
           assert 'id="languageSelect"' not in s
           assert 'const translations=' not in s
           assert 'STANFORD_LOCALIZATION_V3' not in s
           assert 'panvelkar-stanford-logo.svg' in s
+          assert 'ओपन पार्किंग सुविधा / Open Parking' in s
+          assert 'ओपन पाणी सुविधा' not in s
           for x in ['Garden','Gym','About Our Society','Quick Links','Admin Login','Co-operative Housing Society','Regular flats','Fire flats','8th Floor','12th Floor']:
             assert x not in s, f'Leftover English: {x}'
-          for x in ['सोसायटीची थोडक्यात माहिती','विंग व सदनिका तपशील','सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities','प्रवेश / Login','वीज जनित्र / Generator','सुरक्षा व्यवस्था / Security','उद्वाहन यंत्र / Lift','नियमित पाणी पुरवठा / Water Supply']:
+          for x in ['सोसायटीची थोडक्यात माहिती','विंग व सदनिका तपशील','सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities','प्रवेश / Login','अभ्यागत नोंदणी / Visitor Registration','वीज जनित्र / Generator','सुरक्षा व्यवस्था / Security','उद्वाहन यंत्र / Lift','नियमित पाणी पुरवठा / Water Supply']:
             assert x in s, f'Missing label: {x}'
           print('Final Marathi + English label validation passed')
           PY
