@@ -7,7 +7,7 @@ permissions:
   contents: write
 jobs:
   update:
-    if: ${{ !contains(github.event.head_commit.message, '[society-content]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[society-content]') && !contains(github.event.head_commit.message, '[about-committee-fix]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
