@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="mr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Preview — आपली सोसायटी</title>
+<style>
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden}
+#preview{width:100%;height:100vh;border:0;display:block}
+</style>
+</head>
+<body>
+<iframe id="preview" src="/" title="आपली सोसायटी box preview"></iframe>
+<script>
+const frame=document.getElementById('preview');
+frame.addEventListener('load',()=>{
+  const doc=frame.contentDocument;
+  if(!doc) return;
+  const style=doc.createElement('style');
+  style.textContent=`
+    #about .about-grid > .panel:first-child{
+      background:#EAF4F1 !important;
+      border-color:#C8DED8 !important;
+      box-shadow:0 8px 24px rgba(18,48,71,.08) !important;
+    }
+  `;
+  doc.head.appendChild(style);
+});
+</script>
+</body>
+</html>
