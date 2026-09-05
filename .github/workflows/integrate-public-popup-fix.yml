@@ -1,0 +1,55 @@
+name: Integrate Public Popup Fix
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app.js'
+      - '.github/workflows/integrate-public-popup-fix.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: public-popup-fix
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ensure app.js is loaded by public index
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          tag = '<script src="app.js"></script>'
+          if tag not in s:
+              marker = '</body>'
+              if marker not in s:
+                  raise SystemExit('index.html does not contain </body>')
+              s = s.replace(marker, f'{tag}\n{marker}', 1)
+              p.write_text(s, encoding='utf-8')
+              print('Injected app.js')
+          else:
+              print('app.js already loaded')
+          PY
+
+      - name: Commit integration if changed
+        shell: bash
+        run: |
+          if git diff --quiet -- index.html; then
+            echo 'No integration change required.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Load public popup JavaScript'
+          git push
