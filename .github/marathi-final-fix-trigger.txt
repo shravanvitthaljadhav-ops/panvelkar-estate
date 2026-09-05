@@ -1,1 +1,1 @@
-Fix fire flat Marathi numerals and duplicate facility heading 2026-09-05
+Apply R१A/R२/R३/R४ Fire Flat Marathi display 2026-09-05
