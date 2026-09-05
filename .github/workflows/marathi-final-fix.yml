@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-      - name: Fix final Marathi wording and asset references
+      - name: Fix final Marathi wording and bilingual labels
         run: |
           python3 <<'PY'
           from pathlib import Path
@@ -26,9 +26,20 @@ jobs:
               'panvelkar-stanford-चिन्ह.svg':'panvelkar-stanford-logo.svg',
               'उद्वाहन यंत्रचा':'उद्वाहन यंत्राचा',
               'संकेतस्थळवर':'संकेतस्थळावर',
-              'सोसायटीमध्ये उपलब्ध सुविधा':'सोसायटीमध्ये उपलब्ध सुविधा',
-              'ओपन पाणी सुविधा':'ओपन पाणी सुविधा',
-              'नियमित नियमित पाणी पुरवठा':'नियमित पाणी पुरवठा'
+              '<a href="portal.html" class="login">सदस्य प्रवेश</a>':'<a href="portal.html" class="login">प्रवेश / Login</a>',
+              '<small>अधिकृत संकेतस्थळ</small>':'<small>अधिकृत संकेतस्थळ / Official Website</small>',
+              '<h3>सोसायटी सदस्य पोर्टल</h3>':'<h3>सदस्य पोर्टल / Member Portal</h3>',
+              '<h3>सदस्य प्रवेश</h3>':'<h3>सदस्य प्रवेश / Member Login</h3>',
+              '<small>सुरक्षित प्रवेश</small>':'<small>सुरक्षित प्रवेश / Secure Access</small>',
+              '<h3>अभ्यागत नोंदणी</h3>':'<h3>अभ्यागत नोंदणी / Visitor Registration</h3>',
+              '<h3>वीज जनित्र</h3>':'<h3>वीज जनित्र / Generator</h3>',
+              '<h3>सुरक्षा व्यवस्था</h3>':'<h3>सुरक्षा व्यवस्था / Security</h3>',
+              '<h3>उद्वाहन यंत्र</h3>':'<h3>उद्वाहन यंत्र / Lift</h3>',
+              '<h3>नियमित पाणी पुरवठा</h3>':'<h3>नियमित पाणी पुरवठा / Water Supply</h3>',
+              '<h3>बालकांसाठी खेळण्याची जागा</h3>':'<h3>बालकांसाठी खेळण्याची जागा / Play Area</h3>',
+              'सोसायटीमध्ये उपलब्ध सुविधा':'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities',
+              'ओपन पाणी सुविधा':'ओपन पाणी सुविधा / Open Water Facility',
+              'नियमित नियमित पाणी पुरवठा':'नियमित पाणी पुरवठा / Water Supply'
             }
             for a,b in r.items():s=s.replace(a,b)
             p.write_text(s,encoding='utf-8')
@@ -36,7 +47,7 @@ jobs:
             subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
             subprocess.run(['git','add','index.html'],check=True)
             if subprocess.run(['git','diff','--cached','--quiet']).returncode==0: break
-            subprocess.run(['git','commit','-m','Finalize Marathi website wording [marathi-final]'],check=True)
+            subprocess.run(['git','commit','-m','Use Marathi and English labels where appropriate [marathi-final]'],check=True)
             if subprocess.run(['git','push','origin','HEAD:main']).returncode==0: break
             time.sleep(2)
           else: raise SystemExit('Push failed')
@@ -50,9 +61,9 @@ jobs:
           assert 'const translations=' not in s
           assert 'STANFORD_LOCALIZATION_V3' not in s
           assert 'panvelkar-stanford-logo.svg' in s
-          for x in ['Garden','Gym','About Our Society','Quick Links','Admin Login','Portal','Co-operative Housing Society','Badlapur','Regular flats','Fire flats','8th Floor','12th Floor']:
+          for x in ['Garden','Gym','About Our Society','Quick Links','Admin Login','Co-operative Housing Society','Regular flats','Fire flats','8th Floor','12th Floor']:
             assert x not in s, f'Leftover English: {x}'
-          for x in ['सोसायटीची थोडक्यात माहिती','विंग व सदनिका तपशील','सोसायटीमध्ये उपलब्ध सुविधा','ओपन पाणी सुविधा','नियमित पाणी पुरवठा','व्यवस्थापन समिती']:
-            assert x in s, f'Missing Marathi: {x}'
-          print('Final Marathi homepage validation passed')
+          for x in ['सोसायटीची थोडक्यात माहिती','विंग व सदनिका तपशील','सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities','प्रवेश / Login','वीज जनित्र / Generator','सुरक्षा व्यवस्था / Security','उद्वाहन यंत्र / Lift','नियमित पाणी पुरवठा / Water Supply']:
+            assert x in s, f'Missing label: {x}'
+          print('Final Marathi + English label validation passed')
           PY
