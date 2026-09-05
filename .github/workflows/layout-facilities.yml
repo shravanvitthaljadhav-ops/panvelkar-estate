@@ -23,18 +23,25 @@ jobs:
           if not m: raise SystemExit('Amenities section not found')
           amenities_inner=m.group(1)
           s=s[:m.start()]+s[m.end():]
-          marker='</div></div></section>\n<section id="gallery"'
-          if marker not in s: raise SystemExit('About-section insertion marker not found')
-          embedded='''<div class="embedded-facilities">'''+amenities_inner+'''</div></div></div></section>\n<section id="gallery"'''
-          s=s.replace(marker,embedded,1)
-          stats=re.search(r'<div class="stats">.*?</div></div><div class="panel"><h3 data-i18n="wingTitle">',s,re.S)
+
+          # Insert facilities at the end of the About section, immediately after the wing panel.
+          marker=re.search(r'(</div>\s*</div>\s*</section>\s*<section id="gallery")',s,re.S)
+          if not marker: raise SystemExit('About-section insertion marker not found')
+          before=marker.group(1)
+          embedded='<div class="embedded-facilities">'+amenities_inner+'</div></div></div></section>\n<section id="gallery"'
+          s=s[:marker.start(1)]+embedded+s[marker.end(1):]
+
+          # Move the three existing society stats from the left panel to the top of Wing & Flat Details.
+          stats=re.search(r'<div class="stats">.*?</div>\s*</div>\s*<div class="panel">\s*<h3 data-i18n="wingTitle">',s,re.S)
           if not stats: raise SystemExit('Stats block not found')
           stats_html=re.search(r'<div class="stats">.*?</div>',stats.group(0),re.S).group(0)
           replacement='</div><div class="panel"><div class="wing-stats">'+stats_html+'</div><h3 data-i18n="wingTitle">'
           s=s[:stats.start()]+replacement+s[stats.end():]
+
           css='''<style>\n.embedded-facilities{margin-top:24px;padding-top:18px;border-top:1px solid rgba(18,48,71,.12)}\n.embedded-facilities .section-head{margin-bottom:14px}\n.embedded-facilities .amenities{margin-top:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}\n.embedded-facilities .amenity{padding:12px}\n.wing-stats{margin-bottom:18px}\n.wing-stats .stats{margin:0}\n@media(max-width:900px){.embedded-facilities .amenities{grid-template-columns:repeat(2,minmax(0,1fr))}}\n</style>\n'''
           if '.embedded-facilities{' not in s:
               s=s.replace('</head>',css+'</head>',1)
+
           for x in ['४१४</strong><span data-i18n="flats">फ्लॅट्स','५</strong><span data-i18n="wings">विंग्स','१४</strong><span data-i18n="shops">दुकाने','R1A','R1B','R2','R3','R4','Fire Emergency Guidance','सोसायटीमध्ये उपलब्ध सुविधा','पार्किंग','सिक्युरिटी','लिफ्ट','गार्डन','जनरेटर','पाणी पुरवठा','जिम','प्ले एरिया']:
               if x not in s: raise SystemExit('Missing required content: '+x)
           if '<section id="amenities"' in s: raise SystemExit('Old separate amenities section still present')
