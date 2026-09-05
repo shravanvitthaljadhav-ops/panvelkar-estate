@@ -1,0 +1,51 @@
+name: Fix Society Content
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, '[society-fix]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fix society content
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          replacements = {
+            '<div class="wing">\\g<1>1<br>8th Floor – R2-808</p></div>': '<div class="wing"><strong>R2</strong><p data-i18n="r2">Regular flats – 96<br>Fire flats – 1<br>8th Floor – R2-808</p></div>',
+            '<div class="wing">\\g<1>1<br>8th Floor – R3-808</p></div>': '<div class="wing"><strong>R3</strong><p data-i18n="r3">Regular flats – 96<br>Fire flats – 1<br>8th Floor – R3-808</p></div>',
+            '<div class="wing">\\g<1>0<br>8th Floor – R4-808</p></div>': '<div class="wing"><strong>R4</strong><p data-i18n="r4">Regular flats – 96<br>Fire flats – 1<br>8th Floor – R4-808</p></div>',
+          }
+          for old,new in replacements.items():
+              if old in s:
+                  s=s.replace(old,new,1)
+          for wing in ('R2','R3','R4'):
+              if f'<strong>{wing}</strong>' not in s or f'Fire flats – 1' not in s[s.find(f'<strong>{wing}</strong>'):s.find(f'<strong>{wing}</strong>')+500]:
+                  raise SystemExit(f'{wing} content not fixed')
+          if '४१४</strong><span data-i18n="flats">फ्लॅट्स' not in s:
+              raise SystemExit('414 flats not found')
+          if 'श्री. विनय ठोबरे' not in s or 'श्रीमती कविता गावडे' not in s:
+              raise SystemExit('committee content missing')
+          if 'जिथे माहिती सर्वांसाठी खुली असते' not in s:
+              raise SystemExit('society introduction missing')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit fix
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if git diff --cached --quiet; then
+            echo 'No changes needed'
+          else
+            git commit -m 'Fix society wing fire-flat details [society-fix]'
+            git push
+          fi
