@@ -1,0 +1,79 @@
+name: Fix Localization Now
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  fix:
+    if: ${{ !contains(github.event.head_commit.message, '[localization-fix]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch localization engine
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          marker = '/* STANFORD_LOCALIZATION_V3 */'
+          if marker in s:
+              print('Localization V3 already installed.')
+              raise SystemExit(0)
+          start = s.rfind('<script>')
+          if start < 0:
+              raise SystemExit('No script tag found')
+          end = s.find('</script>', start)
+          if end < 0:
+              raise SystemExit('No script end found')
+          tail = s[start:end]
+          if not any(x in tail for x in ('toLatin','languageSelect','applyNumbers','localization')):
+              raise SystemExit('Could not identify localization script')
+          script = r'''<script>
+          /* STANFORD_LOCALIZATION_V3 */
+          (function(){
+            const DIGITS={mr:'०१२३४५६७८९',hi:'0123456789',en:'0123456789'};
+            const LATIN='0123456789', DEV='०१२३४५६७८९';
+            function toLatin(v){return String(v).replace(/[०१२३४५६७८९]/g,c=>LATIN[DEV.indexOf(c)]);}
+            function applyNumbers(lang){
+              const target=DIGITS[lang]||DIGITS.mr;
+              const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+              const nodes=[];
+              while(walker.nextNode()) nodes.push(walker.currentNode);
+              nodes.forEach(n=>{
+                const p=n.parentElement;
+                if(!p||['SCRIPT','STYLE','SELECT','OPTION'].includes(p.tagName)) return;
+                const latin=toLatin(n.nodeValue);
+                n.nodeValue=target===LATIN?latin:latin.replace(/[0-9]/g,d=>target[Number(d)]);
+              });
+            }
+            window.applyNumberLanguage=applyNumbers;
+            function currentLang(){return document.getElementById('languageSelect')?.value||'mr';}
+            const select=document.getElementById('languageSelect');
+            if(select){
+              select.addEventListener('change',()=>setTimeout(()=>applyNumbers(currentLang()),0));
+              setTimeout(()=>applyNumbers(currentLang()),0);
+            }
+            const originalOpenModal=window.openModal;
+            if(typeof originalOpenModal==='function'){
+              window.openModal=function(type){
+                originalOpenModal(type);
+                setTimeout(()=>applyNumbers(currentLang()),0);
+              };
+            }
+            setTimeout(()=>applyNumbers(currentLang()),100);
+          })();
+          </script>'''
+          s=s[:start]+script+s[end+9:]
+          p.write_text(s,encoding='utf-8')
+          print('Localization V3 installed.')
+      - name: Commit fix
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Fix Marathi Hindi English number localization [localization-fix]"
+          git push
