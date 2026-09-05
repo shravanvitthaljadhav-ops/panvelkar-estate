@@ -40,28 +40,36 @@ function openModal(type){window.currentModal=type;const lang=localStorage.getIte
 function closeModal(){document.getElementById('modal').classList.remove('show');window.currentModal=null}document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal()});
 </script>
 <script>
-/* STANFORD_NUMBER_LOCALIZATION_FINAL_V2 */
+/* STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3 */
 (function(){
-  const sets={mr:'०१२३४५६७८९',en:'0123456789',hi:'०१२३४५६७८९'};
-  const latin='0123456789',dev='०१२३४५६७८९';
-  function toLatin(s){return s.replace(/[०१२३४५६७८९]/g,c=>latin[dev.indexOf(c)]);}
-  function apply(lang){
-    const target=sets[lang]||sets.mr;
+  const DIGITS={mr:'०१२३४५६७८९',hi:'०१२३४५६७८९',en:'0123456789'};
+  const LATIN='0123456789', DEV='०१२३४५६७८९';
+  function toLatin(v){return String(v).replace(/[०१२३४५६७८९]/g,c=>LATIN[DEV.indexOf(c)]);}
+  function applyNumbers(lang){
+    const target=DIGITS[lang]||DIGITS.mr;
     const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
-    const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+    const nodes=[];
+    while(walker.nextNode()) nodes.push(walker.currentNode);
     nodes.forEach(n=>{
       const p=n.parentElement;
-      if(!p || ['SCRIPT','STYLE','SELECT','OPTION'].includes(p.tagName)) return;
-      const normalized=toLatin(n.nodeValue);
-      n.nodeValue=target===latin ? normalized : normalized.replace(/[0-9]/g,c=>target[Number(c)]);
+      if(!p||['SCRIPT','STYLE','SELECT','OPTION'].includes(p.tagName)) return;
+      const latin=toLatin(n.nodeValue);
+      n.nodeValue=target===LATIN?latin:latin.replace(/[0-9]/g,d=>target[Number(d)]);
     });
   }
-  function init(){
-    const sel=document.getElementById('languageSelect'); if(!sel) return;
-    sel.addEventListener('change',()=>setTimeout(()=>apply(sel.value),50));
-    setTimeout(()=>apply(sel.value),100);
+  window.applyNumberLanguage=applyNumbers;
+  const select=document.getElementById('languageSelect');
+  if(select){
+    select.addEventListener('change',()=>setTimeout(()=>applyNumbers(select.value||'mr'),0));
+    setTimeout(()=>applyNumbers(select.value||'mr'),0);
   }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+  const originalOpenModal=window.openModal;
+  if(typeof originalOpenModal==='function'){
+    window.openModal=function(type){
+      originalOpenModal(type);
+      applyNumbers(document.getElementById('languageSelect')?.value||'mr');
+    };
+  }
 })();
 </script>
 </body>
