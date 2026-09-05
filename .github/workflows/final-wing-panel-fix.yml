@@ -19,16 +19,18 @@ jobs:
           p=Path('index.html'); s=p.read_text(encoding='utf-8')
           def enddiv(t,st):
             d=0
-            for m in re.finditer(r'<div\b[^>]*>|</div>',t,re.I|re.S,st):
+            sub=t[st:]
+            for m in re.finditer(r'<div\b[^>]*>|</div>',sub,re.I|re.S):
               d += 1 if m.group(0).lower().startswith('<div') else -1
-              if d==0: return m.end()
+              if d==0: return st+m.end()
             return -1
           fs=s.find('<div class="embedded-facilities">')
           if fs<0: raise SystemExit('embedded facilities not found')
           fe=enddiv(s,fs)
           if fe<0: raise SystemExit('facilities close not found')
           block=s[fs:fe]
-          block=block.replace('गार्डन','').replace('जिम','').replace('Garden','').replace('Gym','')
+          for x in ['गार्डन','जिम','Garden','Gym']:
+            block=block.replace(x,'')
           block=block.replace('पार्किंग सुविधा','ओपन पाणी सुविधा').replace('पार्किंग','ओपन पाणी सुविधा')
           block=block.replace('पाणी पुरवठा','नियमित पाणी पुरवठा')
           s=s[:fs]+s[fe:]
@@ -53,9 +55,10 @@ jobs:
           aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa); about=s[aa:gg]
           def enddiv(t,st):
             d=0
-            for m in re.finditer(r'<div\b[^>]*>|</div>',t,re.I|re.S,st):
+            sub=t[st:]
+            for m in re.finditer(r'<div\b[^>]*>|</div>',sub,re.I|re.S):
               d += 1 if m.group(0).lower().startswith('<div') else -1
-              if d==0:return m.end()
+              if d==0:return st+m.end()
             return -1
           ag=about.find('<div class="about-grid">'); p1=about.find('<div class="panel">',ag); p1e=enddiv(about,p1); p2=about.find('<div class="panel">',p1e); p2e=enddiv(about,p2); fs=about.find('<div class="embedded-facilities">')
           required=['class="wing-stats"','class="embedded-facilities"','विंग आणि फ्लॅट तपशील','४१४','५','१४','ओपन पाणी सुविधा','नियमित पाणी पुरवठा','R1A','R1B','R2','R3','R4']
