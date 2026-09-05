@@ -23,32 +23,27 @@ jobs:
           gg=s.find('<section id="gallery"', aa)
           if aa<0 or gg<0: raise SystemExit('About/Gallery boundary not found')
           about=s[aa:gg]
-          # Extract the facilities component wherever it currently is.
-          m=re.search(r'<div class="embedded-facilities">.*?</div>\s*</div>\s*(?=</section>|$)', about, re.S)
-          if not m:
-              m=re.search(r'<div class="embedded-facilities">.*?</div>\s*</div>\s*</section>', s, re.S)
-          if not m: raise SystemExit('Facilities component not found')
-          embedded=m.group(0)
-          embedded=re.sub(r'\s*</div>\s*</div>\s*</section>\s*$','',embedded,flags=re.S)
-          embedded=re.sub(r'\s*</div>\s*</div>\s*$','',embedded,flags=re.S)
-          # Remove the old component from the complete document.
-          s=s[:m.start()]+s[m.end():]
-          aa=s.find('<section id="about"')
-          gg=s.find('<section id="gallery"', aa)
-          about=s[aa:gg]
-          # Locate the right panel by its Wing stats/title and insert facilities before that panel closes.
-          rp=about.find('<div class="panel">', about.find('<div class="about-grid">'))
-          if rp<0: raise SystemExit('Right panel not found')
-          depth=0; close_at=-1
-          for x in re.finditer(r'<div\b[^>]*>|</div>', about[rp:], re.I):
-              tag=x.group(0)
-              if tag.lower().startswith('<div'): depth+=1
-              else:
-                  depth-=1
-                  if depth==0:
-                      close_at=rp+x.start(); break
-          if close_at<0: raise SystemExit('Right panel closing div not found')
-          about=about[:close_at]+embedded+'\n'+about[close_at:]
+          def balanced_block(text, start):
+              depth=0
+              for m in re.finditer(r'<div\b[^>]*>|</div>', text[start:], re.I):
+                  if m.group(0).lower().startswith('<div'):
+                      depth += 1
+                  else:
+                      depth -= 1
+                      if depth == 0:
+                          return text[start:start+m.end()], start+m.end()
+              raise SystemExit('Unbalanced div block')
+          # Extract the existing facilities block from the About section.
+          fs=about.find('<div class="embedded-facilities">')
+          if fs<0: raise SystemExit('Facilities block not found')
+          embedded, fend=balanced_block(about, fs)
+          about=about[:fs]+about[fend:]
+          # Recalculate the right panel as the second .panel in the About section.
+          panels=[m.start() for m in re.finditer(r'<div class="panel">', about)]
+          if len(panels)<2: raise SystemExit('Two About panels not found')
+          rp=panels[1]
+          _, rend=balanced_block(about, rp)
+          about=about[:rend-len('</div>')]+embedded+'\n'+about[rend-len('</div>'):]
           s=s[:aa]+about+s[gg:]
           p.write_text(s,encoding='utf-8')
           PY
@@ -57,10 +52,11 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
           s=Path('index.html').read_text(encoding='utf-8')
           aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa)
           about=s[aa:gg]
-          ok={
+          checks={
             'wing-stats':'class="wing-stats"' in about,
             'facilities':'class="embedded-facilities"' in about,
             'heading':'विंग आणि फ्लॅट तपशील' in about,
@@ -75,15 +71,16 @@ jobs:
             'r4':'R4' in about and 'Fire flats – 1' in about,
             'no-standalone':'<section id="amenities"' not in s,
           }
-          print(ok)
-          bad=[k for k,v in ok.items() if not v]
+          print(checks)
+          bad=[k for k,v in checks.items() if not v]
           if bad: raise SystemExit('Validation failed: '+', '.join(bad))
-          # Facilities must be inside the right panel, not outside about-grid.
+          # Confirm facilities are within the second About panel, after Wing heading.
           pos=about.find('class="embedded-facilities"')
           wing=about.find('<h3 data-i18n="wingTitle">')
           if pos<wing: raise SystemExit('Facilities appear before Wing heading')
-          if about[:pos].count('<div class="panel">') != about[:pos].count('</div>')-about[:pos].count('<div class="')+1:
-              pass
+          before=about[:pos]
+          if before.count('<div class="panel">') != 2: raise SystemExit('Facilities are not inside the second panel')
+          print('FINAL WING PANEL STRUCTURE OK')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
