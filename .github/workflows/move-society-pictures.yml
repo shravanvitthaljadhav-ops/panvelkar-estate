@@ -1,0 +1,49 @@
+name: Move Society Building Photos
+
+on:
+  push:
+    paths:
+      - '.github/workflows/move-society-pictures.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  move-photos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Move the two society photos
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "Society pictures"
+          for file in "imagessociety-building-1.jpeg" "imagessociety-building-2.jpeg"; do
+            if [ -f "$file" ]; then
+              git mv "$file" "Society pictures/$(basename "$file")"
+            fi
+          done
+          test -f "Society pictures/imagessociety-building-1.jpeg"
+          test -f "Society pictures/imagessociety-building-2.jpeg"
+
+      - name: Commit and push
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --cached --quiet; then
+            echo "No staged changes before commit; staging moved files."
+          fi
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Photos are already in the target folder."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: move society building photos into Society pictures folder"
+          git push
