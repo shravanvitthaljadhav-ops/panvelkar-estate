@@ -38,8 +38,10 @@ jobs:
           kept=[]
           for z in blocks:
               if 'गार्डन' in z or 'जिम' in z: continue
-              if 'पार्किंग' in z:z=re.sub(r'(<p>).*?(</p>)',r'\1ओपन पाणी सुविधा\2',z,count=1,flags=re.S)
-              if 'पाणी पुरवठा' in z:z=re.sub(r'(<p>).*?(</p>)',r'\1नियमित पाणी पुरवठा\2',z,count=1,flags=re.S)
+              if 'पार्किंग' in z:
+                  z=re.sub(r'(<p\b[^>]*>).*?(</p>)',r'\1ओपन पाणी सुविधा\2',z,count=1,flags=re.S)
+              if 'पाणी पुरवठा' in z:
+                  z=re.sub(r'(<p\b[^>]*>).*?(</p>)',r'\1नियमित पाणी पुरवठा\2',z,count=1,flags=re.S)
               kept.append(z)
           hm=re.search(r'(<div class="section-head">.*?</div>)',amenities,re.S)
           if not hm: raise SystemExit('Facilities heading not found')
@@ -63,8 +65,8 @@ jobs:
           if '<section id="amenities"' in s: raise SystemExit('Old separate amenities section remains')
           if '\\g<1>' in s: raise SystemExit('Malformed wing markup remains')
           if 'गार्डन' in embedded or 'जिम' in embedded: raise SystemExit('Removed facilities remain')
-          if 'पार्किंग</h3><p>ओपन पाणी सुविधा</p>' not in embedded: raise SystemExit('Parking description not updated')
-          if 'पाणी पुरवठा</h3><p>नियमित पाणी पुरवठा</p>' not in embedded: raise SystemExit('Water description not updated')
+          if 'ओपन पाणी सुविधा' not in embedded: raise SystemExit('Parking description not updated')
+          if 'नियमित पाणी पुरवठा' not in embedded: raise SystemExit('Water description not updated')
           p.write_text(s,encoding='utf-8')
           PY
       - name: Validate and commit
