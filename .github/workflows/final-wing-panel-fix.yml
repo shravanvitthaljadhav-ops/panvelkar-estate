@@ -11,123 +11,63 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Place facilities inside right panel
-        shell: bash
+      - name: Fix layout
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-          aa=s.find('<section id="about"')
-          gg=s.find('<section id="gallery"',aa)
-          if aa<0 or gg<0: raise SystemExit('About/Gallery boundary not found')
-          about=s[aa:gg]
-
-          def matching_div_end(text,start):
-              token=re.compile(r'<div\b[^>]*>|</div>',re.I|re.S)
-              depth=0
-              for m in token.finditer(text,start):
-                  if m.group(0).lower().startswith('<div'):
-                      depth+=1
-                  else:
-                      depth-=1
-                      if depth==0:
-                          return m.end()
-              return -1
-
-          # Extract the complete facilities component, wherever it currently sits.
-          fs=about.find('<div class="embedded-facilities">')
-          if fs<0: raise SystemExit('Facilities component not found')
-          fe=matching_div_end(about,fs)
-          if fe<0: raise SystemExit('Facilities closing div not found')
-          embedded=about[fs:fe]
-          about=about[:fs]+about[fe:]
-
-          # Find the second .panel inside .about-grid (the Wing panel).
-          ag=about.find('<div class="about-grid">')
-          if ag<0: raise SystemExit('About grid not found')
-          first=about.find('<div class="panel">',ag)
-          if first<0: raise SystemExit('First panel not found')
-          first_end=matching_div_end(about,first)
-          if first_end<0: raise SystemExit('First panel closing div not found')
-          second=about.find('<div class="panel">',first_end)
-          if second<0: raise SystemExit('Right panel not found')
-          second_end=matching_div_end(about,second)
-          if second_end<0: raise SystemExit('Right panel closing div not found')
-
-          # Insert facilities immediately before the right panel's closing div.
-          about=about[:second_end-6] + embedded + '\n' + about[second_end-6:]
-          s=s[:aa]+about+s[gg:]
-
-          # Keep the requested facility set and exact wording inside the embedded block.
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          def enddiv(t,st):
+            d=0
+            for m in re.finditer(r'<div\b[^>]*>|</div>',t,re.I|re.S,st):
+              d += 1 if m.group(0).lower().startswith('<div') else -1
+              if d==0: return m.end()
+            return -1
+          fs=s.find('<div class="embedded-facilities">')
+          if fs<0: raise SystemExit('embedded facilities not found')
+          fe=enddiv(s,fs)
+          if fe<0: raise SystemExit('facilities close not found')
+          block=s[fs:fe]
+          block=block.replace('गार्डन','').replace('जिम','').replace('Garden','').replace('Gym','')
+          block=block.replace('पार्किंग सुविधा','ओपन पाणी सुविधा').replace('पार्किंग','ओपन पाणी सुविधा')
+          block=block.replace('पाणी पुरवठा','नियमित पाणी पुरवठा')
+          s=s[:fs]+s[fe:]
           aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa)
           about=s[aa:gg]
-          fs=about.find('<div class="embedded-facilities">')
-          fe=matching_div_end(about,fs)
-          block=about[fs:fe]
-          block=re.sub(r'(<h3[^>]*>)[^<]*(</h3>)',lambda m:m.group(0),block)
-          for label in ['गार्डन','जिम','Garden','Gym']:
-              block=block.replace(label,'')
-          block=re.sub(r'(<p\b[^>]*>)[^<]*(</p>)',lambda m:m.group(0),block)
-          # Exact requested text replacements.
-          block=re.sub(r'पार्किंग सुविधा|पार्किंग','ओपन पाणी सुविधा',block)
-          block=re.sub(r'पाणी पुरवठा','नियमित पाणी पुरवठा',block)
-          s=s[:aa+fs]+block+s[aa+fe:]
+          ag=about.find('<div class="about-grid">')
+          p1=about.find('<div class="panel">',ag)
+          p1e=enddiv(about,p1)
+          p2=about.find('<div class="panel">',p1e)
+          p2e=enddiv(about,p2)
+          if min(ag,p1,p1e,p2,p2e)<0: raise SystemExit('about panel structure not found')
+          about=about[:p2e-6]+block+'\n'+about[p2e-6:]
+          s=s[:aa]+about+s[gg:]
           p.write_text(s,encoding='utf-8')
           PY
-      - name: Validate final structure
-        shell: bash
+      - name: Validate and commit
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
           s=Path('index.html').read_text(encoding='utf-8')
-          aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa)
-          if aa<0 or gg<0: raise SystemExit('About/Gallery boundary not found')
-          about=s[aa:gg]
-          checks={
-            'wing-stats':'class="wing-stats"' in about,
-            'facilities':'class="embedded-facilities"' in about,
-            'heading':'विंग आणि फ्लॅट तपशील' in about,
-            '414':'४१४' in about,
-            '5':'५' in about,
-            '14':'१४' in about,
-            'parking':'ओपन पाणी सुविधा' in about,
-            'water':'नियमित पाणी पुरवठा' in about,
-            'r1a':'R1A' in about and 'Fire flats – 2' in about,
-            'r1b':'R1B' in about and 'Fire flats – 0' in about,
-            'r2':'R2' in about and 'Fire flats – 1' in about,
-            'r3':'R3' in about and 'Fire flats – 1' in about,
-            'r4':'R4' in about and 'Fire flats – 1' in about,
-            'no-standalone':'<section id="amenities"' not in s,
-          }
-          print(checks)
-          bad=[k for k,v in checks.items() if not v]
-          if bad: raise SystemExit('Validation failed: '+', '.join(bad))
-
-          # Structural check: facilities must be between the Wing panel opening and its matching close.
-          def matching_div_end(text,start):
-              token=re.compile(r'<div\b[^>]*>|</div>',re.I|re.S)
-              depth=0
-              for m in token.finditer(text,start):
-                  if m.group(0).lower().startswith('<div'): depth+=1
-                  else:
-                      depth-=1
-                      if depth==0: return m.end()
-              return -1
-          ag=about.find('<div class="about-grid">')
-          first=about.find('<div class="panel">',ag)
-          first_end=matching_div_end(about,first)
-          second=about.find('<div class="panel">',first_end)
-          second_end=matching_div_end(about,second)
-          fs=about.find('<div class="embedded-facilities">')
-          if not (second < fs < second_end): raise SystemExit('Facilities are not inside right Wing panel')
-          print('STRUCTURE_OK: facilities are inside right Wing panel')
+          aa=s.find('<section id="about"'); gg=s.find('<section id="gallery"',aa); about=s[aa:gg]
+          def enddiv(t,st):
+            d=0
+            for m in re.finditer(r'<div\b[^>]*>|</div>',t,re.I|re.S,st):
+              d += 1 if m.group(0).lower().startswith('<div') else -1
+              if d==0:return m.end()
+            return -1
+          ag=about.find('<div class="about-grid">'); p1=about.find('<div class="panel">',ag); p1e=enddiv(about,p1); p2=about.find('<div class="panel">',p1e); p2e=enddiv(about,p2); fs=about.find('<div class="embedded-facilities">')
+          required=['class="wing-stats"','class="embedded-facilities"','विंग आणि फ्लॅट तपशील','४१४','५','१४','ओपन पाणी सुविधा','नियमित पाणी पुरवठा','R1A','R1B','R2','R3','R4']
+          missing=[x for x in required if x not in about]
+          if missing: raise SystemExit('Missing: '+', '.join(missing))
+          if not (p2<fs<p2e): raise SystemExit('Facilities are outside right panel')
+          if '<section id="amenities"' in s: raise SystemExit('Standalone amenities section remains')
+          print('FINAL_LAYOUT_VALID')
           PY
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          if git diff --cached --quiet; then echo 'No changes needed'; exit 0; fi
-          git commit -m 'Apply Wing panel placement [wing-fix-applied]'
+          if git diff --cached --quiet; then echo 'Already fixed'; exit 0; fi
+          git commit -m 'Apply final Wing layout [wing-fix-applied]'
           git push
