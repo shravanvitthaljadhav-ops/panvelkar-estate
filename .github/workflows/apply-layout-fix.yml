@@ -1,0 +1,59 @@
+name: Apply Final About Layout
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  layout:
+    if: ${{ !contains(github.event.head_commit.message, '[layout-applied]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply layout
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          m=re.search(r'<section id="amenities" class="section alt">(.*?)</section>',s,re.S)
+          if not m: raise SystemExit('Amenities section not found')
+          amenities_inner=m.group(1)
+          s=s[:m.start()]+s[m.end():]
+          marker='</div></div></section>\n<section id="gallery"'
+          if marker not in s: raise SystemExit('About-section insertion marker not found')
+          embedded='<div class="embedded-facilities">'+amenities_inner+'</div></div></div></section>\n<section id="gallery"'
+          s=s.replace(marker,embedded,1)
+          stats=re.search(r'<div class="stats">.*?</div></div><div class="panel"><h3 data-i18n="wingTitle">',s,re.S)
+          if not stats: raise SystemExit('Stats block not found')
+          stats_html=re.search(r'<div class="stats">.*?</div>',stats.group(0),re.S).group(0)
+          replacement='</div><div class="panel"><div class="wing-stats">'+stats_html+'</div><h3 data-i18n="wingTitle">'
+          s=s[:stats.start()]+replacement+s[stats.end():]
+          css='''<style>\n.embedded-facilities{margin-top:24px;padding-top:18px;border-top:1px solid rgba(18,48,71,.12)}\n.embedded-facilities .section-head{margin-bottom:14px}\n.embedded-facilities .amenities{margin-top:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}\n.embedded-facilities .amenity{padding:12px}\n.wing-stats{margin-bottom:18px}\n.wing-stats .stats{margin:0}\n@media(max-width:900px){.embedded-facilities .amenities{grid-template-columns:repeat(2,minmax(0,1fr))}}\n</style>\n'''
+          if '.embedded-facilities{' not in s: s=s.replace('</head>',css+'</head>',1)
+          checks=['class="wing-stats"','class="embedded-facilities"','सोसायटीमध्ये उपलब्ध सुविधा','४१४</strong><span data-i18n="flats">फ्लॅट्स','R2</strong><p data-i18n="r2">Regular flats – 96<br>Fire flats – 1','श्री. विनय ठोबरे','श्रीमती कविता गावडे']
+          for x in checks:
+              if x not in s: raise SystemExit('Missing required content: '+x)
+          if '<section id="amenities"' in s: raise SystemExit('Old facilities section remains')
+          if '\\g<1>' in s: raise SystemExit('Malformed wing markup remains')
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate and commit
+        shell: bash
+        run: |
+          grep -q 'class="wing-stats"' index.html
+          grep -q 'class="embedded-facilities"' index.html
+          grep -q 'सोसायटीमध्ये उपलब्ध सुविधा' index.html
+          grep -q '४१४</strong><span data-i18n="flats">फ्लॅट्स' index.html
+          grep -q 'R2</strong><p data-i18n="r2">Regular flats – 96<br>Fire flats – 1' index.html
+          if grep -q '<section id="amenities"' index.html; then echo 'Facilities section remains'; exit 1; fi
+          if grep -q '\\g<1>' index.html; then echo 'Malformed wing markup remains'; exit 1; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Apply final facilities layout [layout-applied] [layout-fix]'
+          git push
