@@ -32,8 +32,8 @@ async function signout()'''
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
           start = s.index('<section id="home" class="hero">')
-          end = s.index('</section>\n<section id="about"', start)
-          new_hero = '''<section id="home" class="hero"><div class="hero-image-wrap"><img class="hero-image" src="hero-banner.jpg" alt="Panvelkar Estate Stanford hero banner"></div></section>'''
+          end = s.index('<section id="about"', start)
+          new_hero = '''<section id="home" class="hero"><div class="hero-image-wrap"><img class="hero-image" src="hero-banner.jpg" alt="Panvelkar Estate Stanford hero banner"></div></section>\n'''
           s = s[:start] + new_hero + s[end:]
           marker = '/* EXACT HERO BANNER OVERRIDE */'
           css = '''\n/* EXACT HERO BANNER OVERRIDE */\n.hero{min-height:0;height:auto;padding:0;display:block;background:none;color:initial;position:relative;overflow:hidden}\n.hero:before,.hero:after{display:none}\n.hero-content{display:none}\n.hero-image-wrap{width:100%;margin:0;padding:0;line-height:0}\n.hero-image{display:block;width:100%;height:auto;max-width:none;object-fit:contain}\n'''
