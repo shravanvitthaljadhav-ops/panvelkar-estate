@@ -17,83 +17,47 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import re
-
-          p=Path('index.html')
-          s=p.read_text(encoding='utf-8')
-
-          def block(text, start, tag='div'):
+          p=Path('index.html'); s=p.read_text(encoding='utf-8')
+          def block(text,start,tag='div'):
               i=text.find(start)
-              if i < 0: raise SystemExit(f'Block not found: {start}')
-              open_tag=re.search(r'<'+tag+r'\b[^>]*>', text[i:])
-              if not open_tag: raise SystemExit(f'Opening tag not found: {start}')
-              a=i+open_tag.start()
-              depth=0
-              pat=re.compile(r'<(/?)'+tag+r'\b[^>]*>', re.I)
-              for m in pat.finditer(text, a):
-                  if m.group(1): depth-=1
-                  else: depth+=1
+              if i<0: raise SystemExit(f'Block not found: {start}')
+              om=re.search(r'<'+tag+r'\b[^>]*>',text[i:])
+              if not om: raise SystemExit(f'Opening tag not found: {start}')
+              a=i+om.start(); depth=0; pat=re.compile(r'<(/?)'+tag+r'\b[^>]*>',re.I)
+              for m in pat.finditer(text,a):
+                  depth += -1 if m.group(1) else 1
                   if depth==0: return a,m.end(),text[a:m.end()]
               raise SystemExit(f'Unclosed {tag} block: {start}')
-
-          # Extract the whole standalone facilities section using section boundaries.
           a=s.find('<section id="amenities"')
-          if a < 0: raise SystemExit('Amenities section not found')
-          b=s.find('<section id="gallery"', a)
-          if b < 0: raise SystemExit('Gallery section boundary not found')
-          amenities_section=s[a:b]
-          s=s[:a]+s[b:]
-
-          # Apply the requested final facility changes only inside the facilities content.
-          def amenity_blocks(text):
-              out=[]; pos=0
-              while True:
-                  try: x,y,z=block(text,'<div class="amenity">','div')
-                  except SystemExit: break
-                  out.append((x,y,z))
-                  text=text[:x]+text[y:]
-              return out
-
-          blocks=amenity_blocks(amenities_section)
+          if a<0: raise SystemExit('Amenities section not found')
+          b=s.find('<section id="gallery"',a)
+          if b<0: raise SystemExit('Gallery section boundary not found')
+          amenities_section=s[a:b]; s=s[:a]+s[b:]
+          blocks=[]; work=amenities_section
+          while '<div class="amenity">' in work:
+              x,y,z=block(work,'<div class="amenity">','div'); blocks.append(z); work=work[:x]+work[y:]
           kept=[]
-          for _,_,z in blocks:
-              if 'गार्डन' in z or 'जिम' in z:
-                  continue
-              if 'पार्किंग' in z:
-                  z=re.sub(r'(<p>).*?(</p>)', r'\1ओपन पाणी सुविधा\2', z, count=1, flags=re.S)
-              if 'पाणी पुरवठा' in z:
-                  z=re.sub(r'(<p>).*?(</p>)', r'\1नियमित पाणी पुरवठा\2', z, count=1, flags=re.S)
+          for z in blocks:
+              if 'गार्डन' in z or 'जिम' in z: continue
+              if 'पार्किंग' in z: z=re.sub(r'(<p>).*?(</p>)',r'\1ओपन पाणी सुविधा\2',z,count=1,flags=re.S)
+              if 'पाणी पुरवठा' in z: z=re.sub(r'(<p>).*?(</p>)',r'\1नियमित पाणी पुरवठा\2',z,count=1,flags=re.S)
               kept.append(z)
-
-          head_match=re.search(r'(<div class="section-head">.*?</div>)', amenities_section, re.S)
-          if not head_match: raise SystemExit('Facilities heading not found')
-          facilities_inner=head_match.group(1)+'<div class="amenities">'+''.join(kept)+'</div>'
-          embedded='<div class="embedded-facilities">'+facilities_inner+'</div>'
-
-          # Locate About section by its own section boundaries, not fragile closing-tag text.
-          about_start=s.find('<section id="about"')
-          gallery_start=s.find('<section id="gallery"', about_start)
-          if about_start < 0 or gallery_start < 0: raise SystemExit('About/Gallery section boundaries not found')
+          hm=re.search(r'(<div class="section-head">.*?</div>)',amenities_section,re.S)
+          if not hm: raise SystemExit('Facilities heading not found')
+          embedded='<div class="embedded-facilities">'+hm.group(1)+'<div class="amenities">'+''.join(kept)+'</div></div>'
+          about_start=s.find('<section id="about"'); gallery_start=s.find('<section id="gallery"',about_start)
+          if about_start<0 or gallery_start<0: raise SystemExit('About/Gallery section boundaries not found')
           about=s[about_start:gallery_start]
-
-          # Move the existing stats block from the left panel to the top of the Wing & Flat panel.
-          stats_a,stats_b,stats_html=block(about,'<div class="stats">','div')
-          about=about[:stats_a]+about[stats_b:]
+          sa,sb,stats_html=block(about,'<div class="stats">','div'); about=about[:sa]+about[sb:]
           wing=about.find('<h3 data-i18n="wingTitle">')
-          if wing < 0: raise SystemExit('Wing title not found')
-          panel_start=about.rfind('<div class="panel">',0,wing)
-          if panel_start < 0: raise SystemExit('Wing panel not found')
+          if wing<0: raise SystemExit('Wing title not found')
           about=about[:wing]+'<div class="wing-stats">'+stats_html+'</div>'+about[wing:]
-
-          # Insert facilities immediately after the Wing & Flat panel, before the Gallery section.
           close=about.rfind('</section>')
-          if close < 0: raise SystemExit('About section closing tag not found')
+          if close<0: raise SystemExit('About section closing tag not found')
           about=about[:close]+embedded+about[close:]
           s=s[:about_start]+about+s[gallery_start:]
-
           css='''<style>\n.embedded-facilities{margin-top:24px;padding-top:18px;border-top:1px solid rgba(18,48,71,.12)}\n.embedded-facilities .section-head{margin-bottom:14px}\n.embedded-facilities .section-head h2{font-size:1.35rem}\n.embedded-facilities .section-head p{display:none}\n.embedded-facilities .amenities{max-width:none;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}\n.embedded-facilities .amenity{padding:12px}\n.embedded-facilities .amenity-icon{width:44px;height:44px;font-size:1.2rem;margin-bottom:8px}\n.embedded-facilities .amenity h3{font-size:1rem}\n.embedded-facilities .amenity p{font-size:.8rem}\n.wing-stats{margin-bottom:18px}\n.wing-stats .stats{margin:0}\n@media(max-width:950px){.embedded-facilities .amenities{grid-template-columns:repeat(2,minmax(0,1fr))}}\n@media(max-width:560px){.embedded-facilities .amenities{grid-template-columns:1fr}}\n</style>\n'''
-          if '.embedded-facilities{' not in s:
-              s=s.replace('</head>',css+'</head>',1)
-
+          if '.embedded-facilities{' not in s: s=s.replace('</head>',css+'</head>',1)
           required=['४१४</strong><span data-i18n="flats">फ्लॅट्स','५</strong><span data-i18n="wings">विंग्स','१४</strong><span data-i18n="shops">दुकाने','R1A','R1B','R2','R3','R4','Fire Emergency Guidance','सोसायटीमध्ये उपलब्ध सुविधा','पार्किंग','सिक्युरिटी','लिफ्ट','जनरेटर','पाणी पुरवठा','प्ले एरिया']
           for x in required:
               if x not in s: raise SystemExit('Missing required content: '+x)
