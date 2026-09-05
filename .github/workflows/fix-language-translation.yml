@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Patch translation engine
+      - name: Patch translation engine and final layout
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -23,6 +23,9 @@ jobs:
 
           path = Path('index.html')
           s = path.read_text(encoding='utf-8')
+
+          # Keep the required language/number behavior:
+          # Marathi = Marathi digits; Hindi + English = Latin digits.
           start_marker = '<script>\n/* STANFORD_NUMBER_LOCALIZATION_FINAL_V2 */'
           start = s.find(start_marker)
           if start < 0:
@@ -67,6 +70,38 @@ jobs:
           </script>'''
 
           s=s[:start]+new_script+s[end:]
+
+          # Move the existing facilities cards into the Wing & Flat panel without changing their data.
+          m=re.search(r'<section id="amenities" class="section alt">(.*?)</section>',s,re.S)
+          if m:
+              amenities_inner=m.group(1)
+              s=s[:m.start()]+s[m.end():]
+              marker='</div></div></section>\n<section id="gallery"'
+              if marker not in s:
+                  raise SystemExit('About-section insertion marker not found')
+              embedded='<div class="embedded-facilities">'+amenities_inner+'</div></div></div></section>\n<section id="gallery"'
+              s=s.replace(marker,embedded,1)
+
+          # Move the existing three statistics boxes above Wing & Flat cards.
+          if 'class="wing-stats"' not in s:
+              stats=re.search(r'<div class="stats">.*?</div></div><div class="panel"><h3 data-i18n="wingTitle">',s,re.S)
+              if stats:
+                  stats_html=re.search(r'<div class="stats">.*?</div>',stats.group(0),re.S).group(0)
+                  replacement='</div><div class="panel"><div class="wing-stats">'+stats_html+'</div><h3 data-i18n="wingTitle">'
+                  s=s[:stats.start()]+replacement+s[stats.end():]
+
+          # Add only the layout CSS needed for the embedded facilities/stats.
+          if '.embedded-facilities{' not in s:
+              css='''<style>\n.embedded-facilities{margin-top:24px;padding-top:18px;border-top:1px solid rgba(18,48,71,.12)}\n.embedded-facilities .section-head{margin-bottom:14px}\n.embedded-facilities .amenities{margin-top:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}\n.embedded-facilities .amenity{padding:12px}\n.wing-stats{margin-bottom:18px}\n.wing-stats .stats{margin:0}\n@media(max-width:900px){.embedded-facilities .amenities{grid-template-columns:repeat(2,minmax(0,1fr))}}\n</style>\n'''
+              s=s.replace('</head>',css+'</head>',1)
+
+          # Hard validation of the requested final state.
+          required=['४१४</strong><span data-i18n="flats">फ्लॅट्स','५</strong><span data-i18n="wings">विंग्स','१४</strong><span data-i18n="shops">दुकाने','R1A','R1B','R2','R3','R4','Fire Emergency Guidance','सोसायटीमध्ये उपलब्ध सुविधा','पार्किंग','सिक्युरिटी','लिफ्ट','गार्डन','जनरेटर','पाणी पुरवठा','जिम','प्ले एरिया','श्री. विनय ठोबरे','श्रीमती कविता गावडे']
+          for x in required:
+              if x not in s: raise SystemExit('Missing required content: '+x)
+          if '<section id="amenities"' in s: raise SystemExit('Facilities section was not moved')
+          if '\\g<1>' in s: raise SystemExit('Malformed wing markup found')
+          if 'class="wing-stats"' not in s: raise SystemExit('Stats were not moved')
           path.write_text(s,encoding='utf-8')
           PY
 
@@ -75,8 +110,12 @@ jobs:
           test -f index.html
           grep -q 'STANFORD_LANGUAGE_NUMBER_LOCALIZATION_V3' index.html
           grep -q "const DIGITS={mr:'०१२३४५६७८९',hi:'0123456789',en:'0123456789'}" index.html
-          grep -q 'const translations=' index.html
-          grep -q 'id="languageSelect"' index.html
+          grep -q 'class="wing-stats"' index.html
+          grep -q 'class="embedded-facilities"' index.html
+          grep -q '४१४</strong><span data-i18n="flats">फ्लॅट्स' index.html
+          grep -q 'R2</strong><p data-i18n="r2">Regular flats – 96<br>Fire flats – 1' index.html
+          if grep -q '<section id="amenities"' index.html; then exit 1; fi
+          if grep -q '\\g<1>' index.html; then exit 1; fi
 
       - name: Commit patch
         run: |
@@ -87,5 +126,5 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add index.html
-          git commit -m 'Fix language and number translation'
+          git commit -m 'Fix language and final society layout'
           git push
