@@ -1,8 +1,7 @@
 (()=>{
   'use strict';
-  const dbx=window.db;
-  if(!dbx || !window.supabase) return;
-
+  if(!window.supabase) return;
+  const dbx=window.supabase.createClient('https://zawatmovyrjcpgxkqcqq.supabase.co','sb_publishable_x9u_XeQlrOil8VRZ6Kcbjg_48JRq51y');
   async function getProfile(userId){
     const {data,error}=await dbx.from('profiles').select('id,full_name,email,role,active,unit_id').eq('id',userId).maybeSingle();
     if(error) throw error;
@@ -10,7 +9,6 @@
     if(data.active===false) throw new Error('This portal account is inactive. Please contact the society administrator.');
     return data;
   }
-
   async function routeAuthenticated(){
     const {data:{user}}=await dbx.auth.getUser();
     if(!user) return false;
@@ -20,16 +18,15 @@
         if(!location.pathname.endsWith('/member-dashboard.html')) location.href='member-dashboard.html';
         return true;
       }
-      if(p.role==='admin' || p.role==='super_admin'){
-        const login=document.getElementById('login'),dash=document.getElementById('dash'),admin=document.getElementById('admin'),member=document.getElementById('member');
-        if(login) login.classList.add('hidden');
-        if(dash) dash.classList.remove('hidden');
-        if(member) member.classList.add('hidden');
-        if(admin) admin.classList.remove('hidden');
+      if(p.role==='admin'||p.role==='super_admin'){
+        document.getElementById('login')?.classList.add('hidden');
+        document.getElementById('dash')?.classList.remove('hidden');
+        document.getElementById('member')?.classList.add('hidden');
+        document.getElementById('admin')?.classList.remove('hidden');
         const role=document.getElementById('role'); if(role) role.textContent=p.role.replace('_',' ').toUpperCase();
         const welcome=document.getElementById('welcome'); if(welcome) welcome.textContent='Welcome, '+(p.full_name||user.email||'Administrator');
         const email=document.getElementById('userEmail'); if(email) email.textContent=user.email||'';
-        const logout=document.getElementById('logoutBtn'); if(logout) logout.classList.remove('hidden');
+        document.getElementById('logoutBtn')?.classList.remove('hidden');
         if(typeof window.loadOp==='function') window.loadOp('members');
         return true;
       }
@@ -40,12 +37,11 @@
       return false;
     }
   }
-
   window.login=async function(){
     const email=(document.getElementById('email')?.value||'').trim().toLowerCase();
     const password=document.getElementById('password')?.value||'';
     const msg=document.getElementById('msg');
-    if(!email||!password){ if(msg){msg.className='msg error';msg.textContent='Please enter email and password.';} return; }
+    if(!email||!password){if(msg){msg.className='msg error';msg.textContent='Please enter email and password.';}return;}
     if(msg){msg.className='msg';msg.textContent='Signing in…';}
     try{
       await dbx.auth.signOut({scope:'local'});
@@ -59,8 +55,5 @@
       console.error('Portal login:',e);
     }
   };
-
-  window.addEventListener('DOMContentLoaded',()=>{
-    setTimeout(()=>routeAuthenticated(),150);
-  });
+  window.addEventListener('DOMContentLoaded',()=>setTimeout(routeAuthenticated,150));
 })();
