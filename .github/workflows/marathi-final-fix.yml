@@ -38,17 +38,24 @@ jobs:
               '<h3>नियमित पाणी पुरवठा</h3>':'<h3>नियमित पाणी पुरवठा / Water Supply</h3>',
               '<h3>बालकांसाठी खेळण्याची जागा</h3>':'<h3>बालकांसाठी खेळण्याची जागा / Play Area</h3>',
               'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities / Available Facilities':'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities',
-              'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities / Available Facilities / Available Facilities':'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities',
+              'सोसायटीमध्ये उपलब्ध सुविधा':'सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities',
               'ओपन पाणी सुविधा / Open Water Facility':'ओपन पार्किंग सुविधा / Open Parking',
               'ओपन पाणी सुविधा':'ओपन पार्किंग सुविधा / Open Parking',
+              'ओपन पार्किंग सुविधा':'ओपन पार्किंग सुविधा / Open Parking',
               'नियमित नियमित पाणी पुरवठा':'नियमित पाणी पुरवठा / Water Supply',
-              'R1A-809':'R1A-८०९',
-              'R1A-1209':'R1A-१२०९',
-              'R2-808':'R2-८०८',
-              'R3-808':'R3-८०८',
-              'R4-808':'R4-८०८'
+              'R1A-809':'R१A-८०९',
+              'R1A-1209':'R१A-१२०९',
+              'R2-808':'R२-८०८',
+              'R3-808':'R३-८०८',
+              'R4-808':'R४-८०८',
+              'R1A-८०९':'R१A-८०९',
+              'R1A-१२०९':'R१A-१२०९',
+              'R2-८०८':'R२-८०८',
+              'R3-८०८':'R३-८०८',
+              'R4-८०८':'R४-८०८'
             }
-            for a,b in r.items(): s=s.replace(a,b)
+            for a,b in r.items():
+              s=s.replace(a,b)
             p.write_text(s,encoding='utf-8')
             subprocess.run(['git','config','user.name','github-actions[bot]'],check=True)
             subprocess.run(['git','config','user.email','41898282+github-actions[bot]@users.noreply.github.com'],check=True)
@@ -72,7 +79,7 @@ jobs:
           assert 'ओपन पाणी सुविधा' not in s
           for x in ['Garden','Gym','About Our Society','Quick Links','Admin Login','Co-operative Housing Society','Regular flats','Fire flats','8th Floor','12th Floor']:
             assert x not in s, f'Leftover English: {x}'
-          for x in ['सोसायटीची थोडक्यात माहिती','विंग व सदनिका तपशील','सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities','प्रवेश / Login','अभ्यागत नोंदणी / Visitor Registration','वीज जनित्र / Generator','सुरक्षा व्यवस्था / Security','उद्वाहन यंत्र / Lift','नियमित पाणी पुरवठा / Water Supply','R1A-८०९','R1A-१२०९','R2-८०८','R3-८०८','R4-८०८']:
+          for x in ['सोसायटीची थोडक्यात माहिती','विंग व सदनिका तपशील','सोसायटीमध्ये उपलब्ध सुविधा / Available Facilities','प्रवेश / Login','अभ्यागत नोंदणी / Visitor Registration','वीज जनित्र / Generator','सुरक्षा व्यवस्था / Security','उद्वाहन यंत्र / Lift','नियमित पाणी पुरवठा / Water Supply','R१A-८०९','R१A-१२०९','R२-८०८','R३-८०८','R४-८०८']:
             assert x in s, f'Missing final content: {x}'
           assert 'Available Facilities / Available Facilities' not in s
           print('Final Marathi + English labels and fire-flat numerals validation passed')
