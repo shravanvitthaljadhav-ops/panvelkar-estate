@@ -5,12 +5,45 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Apply exact hero banner
+        shell: python
+        run: |
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          start = s.index('<section id="home" class="hero">')
+          end = s.index('<section id="about"', start)
+          new_hero = '<section id="home" class="hero"><div class="hero-image-wrap"><img class="hero-image" src="hero-banner.jpg" alt="Panvelkar Estate Stanford hero banner"></div></section>\n'
+          s = s[:start] + new_hero + s[end:]
+          marker = '/* EXACT HERO BANNER OVERRIDE */'
+          css = '''\n/* EXACT HERO BANNER OVERRIDE */\n.hero{min-height:0;height:auto;padding:0;display:block;background:none;color:initial;position:relative;overflow:hidden}\n.hero:before,.hero:after{display:none}\n.hero-content{display:none}\n.hero-image-wrap{width:100%;margin:0;padding:0;line-height:0}\n.hero-image{display:block;width:100%;height:auto;max-width:none;object-fit:contain}\n'''
+          if marker not in s:
+              s = s.replace('</style>', css + '</style>', 1)
+          p.write_text(s, encoding='utf-8')
+          print('Exact hero banner applied.')
+
+      - name: Commit hero patch
+        shell: bash
+        run: |
+          if git diff --quiet; then
+            echo "Hero already correct"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Apply exact hero banner image'
+          git push
 
       - name: Validate public homepage and gallery assets
         shell: python
@@ -21,16 +54,15 @@ jobs:
               raise SystemExit('index.html is missing')
           html = index.read_text(encoding='utf-8')
           required = [
-              'आपलं घर,', 'आपली सोसायटी', 'सोसायटीची थोडक्यात माहिती',
-              'सोसायटीमध्ये उपलब्ध सुविधा', 'सूचना', 'कमिटी', 'दुकाने',
-              'नियम व अटी', 'आणीबाणी संपर्क',
-              'imagessociety-building-1.jpeg', 'imagessociety-building-2.jpeg',
+              'सोसायटीची थोडक्यात माहिती', 'सोसायटीमध्ये उपलब्ध सुविधा',
+              'सूचना', 'कमिटी', 'दुकाने', 'नियम व अटी', 'आणीबाणी संपर्क',
+              'hero-banner.jpg', 'imagessociety-building-1.jpeg', 'imagessociety-building-2.jpeg',
           ]
           missing = [item for item in required if item not in html]
           if missing:
               raise SystemExit('Missing required public-page content: ' + ', '.join(missing))
-          for asset in ['imagessociety-building-1.jpeg', 'imagessociety-building-2.jpeg']:
+          for asset in ['hero-banner.jpg', 'imagessociety-building-1.jpeg', 'imagessociety-building-2.jpeg']:
               if not Path(asset).exists():
-                  raise SystemExit(f'Missing gallery asset: {asset}')
+                  raise SystemExit(f'Missing page asset: {asset}')
           print('Public homepage validation passed.')
           print('No resident-data, complaints, document-upload, or portal mechanism is modified by this workflow.')
