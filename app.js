@@ -9,15 +9,15 @@ const committeeMembers = [
   { name: "श्री. विनय ठोबरे", role: "अध्यक्ष / Chairman" },
   { name: "श्री. श्रीकांत पाटील", role: "सचिव / Secretary" },
   { name: "श्री. कल्पेश घाग", role: "खजिनदार / Treasurer" },
-  { name: "समिती सदस्य ०४", role: "समिती सदस्य / Committee Member" },
-  { name: "समिती सदस्य ०५", role: "समिती सदस्य / Committee Member" },
-  { name: "समिती सदस्य ०६", role: "समिती सदस्य / Committee Member" },
-  { name: "समिती सदस्य ०७", role: "समिती सदस्य / Committee Member" },
-  { name: "समिती सदस्य ०८", role: "समिती सदस्य / Committee Member" },
-  { name: "समिती सदस्य ०९", role: "समिती सदस्य / Committee Member" },
-  { name: "समिती सदस्य १०", role: "समिती सदस्य / Committee Member" },
-  { name: "समिती सदस्य ११", role: "समिती सदस्य / Committee Member" },
-  { name: "समिती सदस्य १२", role: "समिती सदस्य / Committee Member" }
+  { name: "श्री. राकेश इंगळे", role: "सदस्य / Committee Member" },
+  { name: "श्री. तुषार कुंभार", role: "सदस्य / Committee Member" },
+  { name: "श्री. संदीप कांबळे", role: "सदस्य / Committee Member" },
+  { name: "श्री. कविराज मालंडकर", role: "सदस्य / Committee Member" },
+  { name: "श्री. प्रकाश लोखंडे", role: "सदस्य / Committee Member" },
+  { name: "श्री. तुकाराम पाटील", role: "सदस्य / Committee Member" },
+  { name: "श्री. प्रविण पाटील", role: "सदस्य / Committee Member" },
+  { name: "श्रीमती तेजस्वी कदम", role: "सदस्य / Committee Member" },
+  { name: "श्रीमती कविता गावडे", role: "सदस्य / Committee Member" }
 ];
 
 const shops = Array.from({ length: 14 }, (_, i) => ({
@@ -81,5 +81,3 @@ document.addEventListener("DOMContentLoaded", function () {
     if (event.key === "Escape") closeModal();
   });
 });
-
-// Popup integration trigger.
