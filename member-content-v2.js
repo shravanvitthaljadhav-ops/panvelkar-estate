@@ -1,0 +1,84 @@
+(()=>{
+'use strict';
+const SB_URL='https://zawatmovyrjcpgxkqcqq.supabase.co';
+const SB_KEY='sb_publishable_x9u_XeQlrOil8VRZ6Kcbjg_48JRq51y';
+const FN=SB_URL+'/functions/v1/content-signed-url';
+const mdb=window.supabase?.createClient(SB_URL,SB_KEY);
+const $=id=>document.getElementById(id);
+let msession=null;
+
+function esc(v){return String(v??'').replace(/[&<>\"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;',"'":'&#39;'}[c]));}
+async function session(){ if(!mdb)return null; const r=await mdb.auth.getSession(); msession=r.data?.session||null; return msession; }
+async function signed(photoId){
+  if(!msession)return null;
+  const r=await fetch(FN,{method:'POST',headers:{'Authorization':'Bearer '+msession.access_token,'Content-Type':'application/json'},body:JSON.stringify({type:'gallery',id:photoId})});
+  if(!r.ok)return null; const j=await r.json(); return j.url||j.signedUrl||null;
+}
+function addGalleryNav(){
+  const navs=[...document.querySelectorAll('.nav')];
+  const society=navs.find(n=>n.previousElementSibling?.textContent?.trim()==='Society');
+  if(!society||society.querySelector('[data-view="gallery"]'))return;
+  const b=document.createElement('button'); b.type='button'; b.dataset.view='gallery'; b.innerHTML='<span class="nav-icon">📸</span>Photo Gallery'; society.appendChild(b);
+  b.addEventListener('click',()=>window.memberGallery?.());
+}
+function addGalleryView(){
+  if($('gallery'))return;
+  const main=document.querySelector('.main'); if(!main)return;
+  const s=document.createElement('section'); s.id='gallery'; s.className='view';
+  s.innerHTML='<div class="card page-card"><div class="card-head"><h3>📸 Photo Gallery</h3></div><div id="memberGalleryGrid"><p>Loading gallery…</p></div></div>';
+  main.appendChild(s);
+}
+async function memberGallery(){
+  document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='gallery'));
+  document.querySelectorAll('.nav button[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view==='gallery'));
+  addGalleryView(); const el=$('memberGalleryGrid'); if(!el)return;
+  const s=await session(); if(!s){el.innerHTML='<p>Session expired. Please login again.</p>';return;}
+  const {data:albums,error}=await mdb.from('gallery_albums').select('id,title,event_date,description,visibility,published,created_at').eq('published',true).in('visibility',['public','members']).order('event_date',{ascending:false});
+  if(error){el.innerHTML='<p>Gallery load failed: '+esc(error.message)+'</p>';return;}
+  if(!albums?.length){el.innerHTML='<p>No published photos yet.</p>';return;}
+  const out=[];
+  for(const a of albums){
+    const p=await mdb.from('gallery_photos').select('id,caption,storage_path,sort_order').eq('album_id',a.id).order('sort_order',{ascending:true}).order('created_at',{ascending:true});
+    const photos=p.data||[]; const imgs=[];
+    for(const x of photos.slice(0,12)){const u=await signed(x.id);if(u)imgs.push('<img src="'+esc(u)+'" alt="'+esc(x.caption||a.title)+'" loading="lazy" data-gallery-url="'+esc(u)+'" style="width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;cursor:pointer">');}
+    out.push('<article style="margin:0 0 22px;padding:16px;border:1px solid var(--line);border-radius:14px;background:var(--white)"><div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start"><div><h4 style="margin:0 0 4px;color:var(--navy)">'+esc(a.title)+'</h4><div style="font-size:11px;color:var(--muted)">'+(a.event_date?esc(new Date(a.event_date+'T00:00:00').toLocaleDateString()):'')+'</div></div><span class="badge">'+esc(a.visibility==='members'?'Members':'Public')+'</span></div>'+(a.description?'<p style="font-size:12px;color:var(--muted)">'+esc(a.description)+'</p>':'')+'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px">'+(imgs.join('')||'<p style="color:var(--muted)">No photos</p>')+'</div></article>');
+  }
+  el.innerHTML=out.join(''); el.querySelectorAll('[data-gallery-url]').forEach(i=>i.addEventListener('click',()=>window.open(i.dataset.galleryUrl,'_blank','noopener')));
+}
+function addComplaintForm(){
+  const el=document.querySelector('#complaints .page-card'); if(!el||el.dataset.v2)return; el.dataset.v2='1';
+  const old=el.innerHTML;
+  el.innerHTML='<div class="card-head"><h3>🛠️ तक्रारी</h3></div><form id="memberComplaintForm" style="margin-bottom:18px"><div class="formgrid"><input id="mcSubject" class="input" required maxlength="120" placeholder="तक्रारीचा विषय"><select id="mcCategory" class="input"><option value="general">सामान्य</option><option value="maintenance">मेंटेनन्स</option><option value="water">पाणी</option><option value="electricity">वीज</option><option value="security">सुरक्षा</option><option value="cleanliness">स्वच्छता</option><option value="parking">पार्किंग</option><option value="other">इतर</option></select></div><div class="formgrid"><select id="mcPriority" class="input"><option value="normal">Normal</option><option value="high">High</option><option value="urgent">Urgent</option></select><textarea id="mcDetails" class="input" rows="4" required maxlength="2000" placeholder="तक्रारीचे सविस्तर वर्णन"></textarea></div><button class="primary" type="submit">तक्रार नोंदवा</button><div id="mcStatus" class="msg" style="display:none"></div></form><div id="mcList">'+old+'</div>';
+  $('memberComplaintForm').addEventListener('submit',submitComplaint);
+  refreshComplaintList();
+}
+async function refreshComplaintList(){
+  const s=await session(); if(!s)return; const r=await mdb.from('change_requests').select('id,complaint_subject,complaint_category,priority,status,created_at,updated_at,admin_note,approver_note').eq('requested_by',s.user.id).eq('request_type','complaint').order('created_at',{ascending:false}).limit(30);
+  const list=$('mcList'); if(!list)return;
+  if(r.error){list.innerHTML='<div class="msg error">'+esc(r.error.message)+'</div>';return;}
+  list.innerHTML=(r.data||[]).map(x=>'<div class="row"><span><b>'+esc(x.complaint_subject||x.complaint_category||'Complaint')+'</b><br><small>'+new Date(x.created_at).toLocaleString()+' · '+esc(x.priority||'normal')+'</small>'+(x.admin_note?'<br><small>Admin: '+esc(x.admin_note)+'</small>':'')+'</span><span class="status '+(['closed','resolved'].includes(String(x.status||'').toLowerCase())?'ok':'')+'">'+esc(x.status||'open')+'</span></div>').join('')||'<div class="row"><span>अजून कोणतीही तक्रार नाही.</span></div>';
+}
+async function submitComplaint(e){
+  e.preventDefault(); const s=await session(); const st=$('mcStatus'); if(!s){st.textContent='Session expired. Please login again.';st.className='msg error';st.style.display='block';return;}
+  const subject=$('mcSubject').value.trim(),category=$('mcCategory').value,priority=$('mcPriority').value,details=$('mcDetails').value.trim();
+  st.style.display='none';
+  const base=window.profile||null; const unitId=base?.unit_id||null;
+  const payload={requested_by:s.user.id,unit_id:unitId,request_type:'complaint',request_data:{subject,category,priority,details},complaint_subject:subject,complaint_category:category,priority,status:'open',applicant_name:base?.full_name||s.user.email||'Member',unit_label:(window.unit?.wing?window.unit.wing+'-':'')+(window.unit?.unit_number||''),applicant_email:base?.email||s.user.email,applicant_mobile:base?.mobile||null};
+  const r=await mdb.from('change_requests').insert(payload).select('id').single();
+  if(r.error){st.textContent='तक्रार नोंदवता आली नाही: '+r.error.message;st.className='msg error';st.style.display='block';return;}
+  st.textContent='तुमची तक्रार Admin कडे पाठवली आहे.';st.className='msg success';st.style.display='block';e.target.reset();
+  await refreshComplaintList();
+  if(typeof window.loadDashboard==='function')await window.loadDashboard();
+}
+function patchGlobals(){
+  if(window.profile){} // original script keeps these in lexical scope; form uses session identity and DB profile below when available.
+  const originalSetView=window.setView;
+  window.setView=function(view){if(view==='gallery'){memberGallery();return} if(originalSetView)originalSetView(view);if(view==='complaints')setTimeout(addComplaintForm,0)};
+  window.memberGallery=memberGallery;
+  addGalleryNav();addGalleryView();
+  const cbtn=document.querySelector('[data-view="complaints"]'); if(cbtn)cbtn.addEventListener('click',()=>setTimeout(addComplaintForm,20));
+  setTimeout(()=>{if(document.querySelector('#complaints')?.classList.contains('active'))addComplaintForm();},500);
+}
+function boot(){if(!mdb)return;patchGlobals();setTimeout(addGalleryNav,700);setTimeout(()=>{if(document.querySelector('#complaints')?.classList.contains('active'))addComplaintForm();},900);}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>setTimeout(boot,0));else setTimeout(boot,0);
+})();
