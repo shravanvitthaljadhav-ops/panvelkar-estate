@@ -4,6 +4,7 @@ alter table public.payment_templates add column if not exists system_key text;
 create unique index if not exists payment_templates_system_key_uidx
   on public.payment_templates(system_key) where system_key is not null;
 
+alter table public.payment_templates disable trigger payment_templates_audit;
 insert into public.payment_templates(system_key,name,category,message,file_name,is_default,active)
 values
 ('default_maintenance','Maintenance Reminder','Default',$maintenance$
@@ -39,6 +40,7 @@ Kindly clear the remaining amount at the earliest. Thank you.
 Society Management Committee
 $partial$,'',true,true)
 on conflict(system_key) where system_key is not null do nothing;
+alter table public.payment_templates enable trigger payment_templates_audit;
 
 create or replace function public.payment_bulk_set_outstanding(p_rows jsonb)
 returns integer language plpgsql security invoker set search_path = '' as $$
