@@ -63,7 +63,7 @@ create or replace function public.payment_update_flat_status(p_unit_id uuid,p_fl
 returns void language plpgsql security invoker set search_path = '' as $$
 begin
   perform public.payment_assert_admin();
-  update public.payment_units set flat_status=nullif(trim(coalesce(p_flat_status,''),''),
+  update public.payment_units set flat_status=nullif(trim(coalesce(p_flat_status,'')),''),
     updated_at=now(),updated_by=auth.uid() where id=p_unit_id;
   if not found then raise exception 'Unit not found'; end if;
 end; $$;
