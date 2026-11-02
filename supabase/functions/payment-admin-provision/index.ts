@@ -32,7 +32,7 @@ Deno.serve(async(req:Request)=>{
     const email=String(body.email||"").trim().toLowerCase();
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))return reply({error:"A valid email address is required"},400,cors);
     const admin=createClient(url,service,{auth:{persistSession:false,autoRefreshToken:false}});
-    const {data,error}=await admin.auth.admin.inviteUserByEmail(email,{data:{invited_for:"payment_portal"}});
+    const {data,error}=await admin.auth.admin.inviteUserByEmail(email,{redirectTo:"https://payments.panvelkar-estate-stanford.in/payment-portal.html",data:{invited_for:"payment_portal"}});
     if(error||!data.user)return reply({error:error?.message||"Invitation failed"},400,cors);
     const {error:grantErr}=await caller.rpc("payment_admin_grant",{p_user_id:data.user.id,p_note:"Payment portal invitation"});
     if(grantErr)return reply({error:"Invitation sent but payment access grant failed; owner reconciliation required."},500,cors);
