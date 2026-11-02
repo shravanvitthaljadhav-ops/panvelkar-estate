@@ -13,10 +13,10 @@ function reply(body: unknown, status=200) {
 }
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") return new Response("ok",{headers:cors});
-  if (req.method !== "POST") return reply({error:"Method not allowed"},405);
+  if (req.method !== "POST") return reply({error:"Method not allowed"},405,cors);
   const authHeader=req.headers.get("Authorization")||"";
   const token=authHeader.replace(/^Bearer\s+/i,"");
-  if(!token) return reply({error:"Authentication required"},401);
+  if(!token) return reply({error:"Authentication required"},401,cors);
   const url=Deno.env.get("SUPABASE_URL")!;
   const anon=Deno.env.get("SUPABASE_ANON_KEY")!;
   const service=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -24,9 +24,9 @@ Deno.serve(async (req: Request) => {
   const {data:{user},error:userErr}=await caller.auth.getUser(token);
   if(userErr||!user) return reply({error:"Invalid session"},401);
   const {data:profile,error:profileErr}=await caller.from("profiles").select("role,active").eq("id",user.id).maybeSingle();
-  if(profileErr||profile?.role!=="super_admin"||profile?.active!==true) return reply({error:"Only an active super administrator can manage portal access"},403);
+  if(profileErr||profile?.role!=="super_admin"||profile?.active!==true) return reply({error:"Only an active super administrator can manage portal access"},403,cors);
   let body:any;
-  try{body=await req.json();}catch{return reply({error:"Invalid JSON body"},400);}
+  try{body=await req.json();}catch{return reply({error:"Invalid JSON body"},400,cors);}
   if(body.action==="invite"){
     const email=String(body.email||"").trim().toLowerCase();
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return reply({error:"A valid email address is required"},400);
@@ -34,7 +34,7 @@ Deno.serve(async (req: Request) => {
     const {data,error}=await admin.auth.admin.inviteUserByEmail(email,{data:{invited_for:"payment_portal"}});
     if(error||!data.user) return reply({error:error?.message||"Invitation failed"},400);
     const {error:grantErr}=await caller.rpc("payment_admin_grant",{p_user_id:data.user.id,p_note:"Payment portal invitation"});
-    if(grantErr) return reply({error:"Invitation sent but access grant failed. Owner must reconcile: "+grantErr.message},500);
+    if(grantErr) return reply({error:"Invitation sent but access grant failed. Owner must reconcile: "+grantErr.message},500,cors);
     return reply({success:true,message:"Invitation sent. Access will be available after the invited user sets a password and signs in."});
   }
   if(body.action==="revoke"){
