@@ -38,7 +38,7 @@ Kindly clear the remaining amount at the earliest. Thank you.
 
 Society Management Committee
 $partial$,'',true,true)
-on conflict(system_key) do nothing;
+on conflict(system_key) where system_key is not null do nothing;
 
 create or replace function public.payment_bulk_set_outstanding(p_rows jsonb)
 returns integer language plpgsql security invoker set search_path = '' as $$
