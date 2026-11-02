@@ -1,23 +1,109 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Payment Portal Admin Access</title>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Payment Portal Admin Access</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f3f6fb;font-family:Inter,Arial,sans-serif;color:#18243a;min-height:100vh;display:grid;place-items:center;padding:18px}
+*{box-sizing:border-box}
+body{margin:0;background:#f3f6fb;font-family:Inter,Arial,sans-serif;color:#18243a;min-height:100vh;display:grid;place-items:center;padding:18px}
 .card{width:min(460px,100%);background:white;border:1px solid #dbe3ee;border-radius:18px;padding:24px;box-shadow:0 18px 50px #172b4d18}
-h1{font-size:22px;margin:0 0 6px}p{font-size:13px;color:#667085;line-height:1.5}label{display:block;font-size:12px;font-weight:700;margin:14px 0 6px}
+h1{font-size:22px;margin:0 0 6px}
+h2{font-size:16px;margin:20px 0 6px}
+p{font-size:13px;color:#667085;line-height:1.5}
+label{display:block;font-size:12px;font-weight:700;margin:14px 0 6px}
 input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font-size:15px}
 button{padding:12px 14px;border:0;border-radius:9px;background:#18243a;color:white;font-weight:700;cursor:pointer}
-button:disabled{opacity:.55;cursor:wait}.wide{width:100%;margin-top:16px}.hidden{display:none!important}.status{font-size:13px;margin-top:12px;min-height:18px}.ok{color:#067647}.err{color:#b42318}.muted{font-size:12px;color:#667085}
-</style></head><body>
-<div class="card"><h1>Payment Portal Admin Access</h1><p>Invite an individual administrator. Only the existing active Super Admin can issue or revoke access.</p>
-<form id="login"><label>Email</label><input id="email" type="email" autocomplete="username" required><label>Password</label><input id="password" type="password" autocomplete="current-password" required><button class="wide" id="loginBtn">Sign in as Super Admin</button></form>
-<form id="invite" class="hidden"><label>New Admin email address</label><input id="inviteEmail" type="email" required placeholder="admin@example.com"><button class="wide" id="inviteBtn">Send individual invitation</button><p class="muted">The invited person sets their own password. No shared credentials are created.</p><button type="button" id="logout" class="wide">Sign out</button></form>
-<div id="status" class="status"></div><p><a href="payment-portal.html">Return to Payment Portal</a></p></div>
+button:disabled{opacity:.55;cursor:wait}
+.wide{width:100%;margin-top:16px}
+.hidden{display:none!important}
+.status{font-size:13px;margin-top:12px;min-height:18px}
+.ok{color:#067647}
+.err{color:#b42318}
+.muted{font-size:12px;color:#667085}
+.section{border-top:1px solid #e4eaf2;margin-top:18px;padding-top:2px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Payment Portal Admin Access</h1>
+  <p>Only the existing active Super Admin can issue, activate or revoke Payment Portal access.</p>
+
+  <form id="login">
+    <label>Email</label><input id="email" type="email" autocomplete="username" required>
+    <label>Password</label><input id="password" type="password" autocomplete="current-password" required>
+    <button class="wide" id="loginBtn">Sign in as Super Admin</button>
+  </form>
+
+  <div id="adminPanel" class="hidden">
+    <p class="ok">Super Admin verified.</p>
+
+    <section>
+      <h2>Activate an existing Admin</h2>
+      <p>Use this for an account that already exists and has an active Admin profile. The user's current password remains unchanged.</p>
+      <form id="activate">
+        <label>Existing Admin email address</label>
+        <input id="activateEmail" type="email" value="shravanj1995@gmail.com" required>
+        <button class="wide" id="activateBtn">Activate existing Admin</button>
+      </form>
+    </section>
+
+    <section class="section">
+      <h2>Invite a new Admin</h2>
+      <p>The invited person sets their own password. No shared credentials are created.</p>
+      <form id="invite">
+        <label>New Admin email address</label>
+        <input id="inviteEmail" type="email" required placeholder="admin@example.com">
+        <button class="wide" id="inviteBtn">Send individual invitation</button>
+      </form>
+    </section>
+
+    <button type="button" id="logout" class="wide">Sign out</button>
+  </div>
+
+  <div id="status" class="status"></div>
+  <p><a href="payment-portal.html">Return to Payment Portal</a></p>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>window.PAYMENT_PORTAL_CONFIG={supabaseUrl:'https://zawatmovyrjcpgxkqcqq.supabase.co',publishableKey:'sb_publishable_x9u_XeQlrOil8VRZ6Kcbjg_48JRq51y'};</script>
 <script src="src/payment-portal-auth.js"></script>
 <script>
 const $=id=>document.getElementById(id),db=()=>PaymentPortalAuth.getClient();
-$('login').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;$('status').textContent='Checking access…';$('status').className='status';try{await PaymentPortalAuth.signIn($('email').value,$('password').value);const {data:{user}}=await db().auth.getUser();const {data:p,error}=await db().from('profiles').select('role,active').eq('id',user.id).maybeSingle();if(error||p?.role!=='super_admin'||p?.active!==true)throw Error('Only an active Super Admin can invite administrators.');$('login').classList.add('hidden');$('invite').classList.remove('hidden');$('status').textContent='Super Admin verified.';$('status').className='status ok';}catch(err){$('status').textContent=err.message;$('status').className='status err';await PaymentPortalAuth.signOut();}finally{$('loginBtn').disabled=false;}});
-$('invite').addEventListener('submit',async e=>{e.preventDefault();$('inviteBtn').disabled=true;$('status').textContent='Sending invitation…';$('status').className='status';try{const {data,error}=await db().functions.invoke('payment-admin-provision',{body:{action:'invite',email:$('inviteEmail').value.trim()}});if(error)throw error;if(data?.error)throw Error(data.error);$('status').textContent=data?.message||'Invitation sent.';$('status').className='status ok';$('inviteEmail').value='';}catch(err){$('status').textContent=err.message||'Invitation failed.';$('status').className='status err';}finally{$('inviteBtn').disabled=false;}});
+async function runAdminAction(buttonId,action,emailId,successFallback){
+  const button=$(buttonId);
+  button.disabled=true;
+  $('status').textContent=action==='invite'?'Sending invitation…':'Activating existing Admin…';
+  $('status').className='status';
+  try{
+    const {data,error}=await db().functions.invoke('payment-admin-provision',{body:{action,email:$(emailId).value.trim()}});
+    if(error)throw error;
+    if(data?.error)throw Error(data.error);
+    $('status').textContent=data?.message||successFallback;
+    $('status').className='status ok';
+    $(emailId).value='';
+  }catch(err){
+    $('status').textContent=err.message||'Request failed.';
+    $('status').className='status err';
+  }finally{button.disabled=false;}
+}
+$('login').addEventListener('submit',async e=>{
+  e.preventDefault();$('loginBtn').disabled=true;$('status').textContent='Checking access…';$('status').className='status';
+  try{
+    await PaymentPortalAuth.signIn($('email').value,$('password').value);
+    const {data:{user}}=await db().auth.getUser();
+    const {data:p,error}=await db().from('profiles').select('role,active').eq('id',user.id).maybeSingle();
+    if(error||p?.role!=='super_admin'||p?.active!==true)throw Error('Only an active Super Admin can manage portal access.');
+    $('login').classList.add('hidden');$('adminPanel').classList.remove('hidden');
+    $('status').textContent='';$('status').className='status';
+  }catch(err){
+    $('status').textContent=err.message;$('status').className='status err';
+    await PaymentPortalAuth.signOut();
+  }finally{$('loginBtn').disabled=false;}
+});
+$('activate').addEventListener('submit',e=>{e.preventDefault();runAdminAction('activateBtn','activate_existing','activateEmail','Existing Admin activated.');});
+$('invite').addEventListener('submit',e=>{e.preventDefault();runAdminAction('inviteBtn','invite','inviteEmail','Invitation sent.');});
 $('logout').addEventListener('click',async()=>{await PaymentPortalAuth.signOut();location.reload();});
-</script></body></html>
+</script>
+</body>
+</html>
