@@ -26,8 +26,6 @@ begin
           v_tx_opening:=v_tx_opening+greatest(coalesce(nullif(tx->>'amount','')::numeric,0),0);
         else
           v_date:=(tx->>'date')::date;
-          insert into public.payment_transactions(unit_id,amount,payment_date,remarks,created_by,updated_by)
-          values(nullif('00000000-0000-0000-0000-000000000000','')::uuid,1,current_date,'placeholder',auth.uid(),auth.uid());
         end if;
       end loop;
     end if;
