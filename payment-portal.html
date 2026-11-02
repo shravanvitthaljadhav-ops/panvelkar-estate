@@ -1,0 +1,542 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panvelkar Estate Stanford — V1.9</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{box-sizing:border-box}body{margin:0;background:#f4f7fb;color:#172033;font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif}header{background:#18243a;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:10}h1{margin:0;font-size:19px}.sub{font-size:11px;opacity:.75;margin-top:4px}.wrap{max-width:1250px;margin:auto;padding:10px}.topbar{display:flex;gap:7px;align-items:center;justify-content:space-between;margin-bottom:9px}.tabs{display:flex;gap:6px;overflow:auto;padding-bottom:2px}.tab{border:1px solid #d5dce7;background:#fff;border-radius:9px;padding:9px 12px;font-size:12px;white-space:nowrap;cursor:pointer}.tab.active{background:#18243a;color:#fff;border-color:#18243a}.utility{display:flex;gap:5px}.iconbtn{border:1px solid #d5dce7;background:#fff;border-radius:8px;padding:7px 9px;font-size:11px;cursor:pointer}.notice{background:#fff8e6;border:1px solid #efd99a;border-radius:10px;padding:8px 10px;font-size:11px;margin-bottom:9px}.panel{background:#fff;border:1px solid #e1e6ee;border-radius:11px;padding:11px;margin-bottom:10px}.filters{display:flex;gap:6px;flex-wrap:wrap;align-items:center}.filters button,.filters input,.btn,.filters select{border:1px solid #d5dce7;background:#fff;border-radius:8px;padding:8px 9px;font-size:11px}.filters button{cursor:pointer}.filters button.active{background:#18243a;color:#fff;border-color:#18243a}.search{min-width:210px;flex:1}.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:9px}.card{background:#fff;border:1px solid #e1e6ee;border-radius:10px;padding:11px}.label{font-size:10px;color:#687386}.value{font-size:19px;font-weight:700;margin-top:4px}.section-title{font-size:14px;font-weight:700}.section-sub{font-size:10px;color:#687386;margin-top:3px}.template-grid{display:grid;grid-template-columns:1fr 2fr 1fr;gap:8px;margin-top:10px}.field label{display:block;font-size:10px;color:#667085;margin-bottom:4px}.field input,.field select,.field textarea{width:100%;padding:8px;border:1px solid #d5dce7;border-radius:8px;font-size:11px;background:#fff}.field textarea{min-height:140px;resize:vertical}.template-actions{display:flex;gap:6px}.btn{cursor:pointer}.btn.primary{background:#16834b;color:#fff;border-color:#16834b}.btn.dark{background:#18243a;color:#fff;border-color:#18243a}.btn.warn{background:#fff3cd;border-color:#eed28a}.saved{margin-top:8px;padding:8px 9px;background:#eef8f1;border:1px solid #c9e6d2;border-radius:8px;font-size:10px}.member-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.member-card{background:#fff;border:1px solid #dfe5ed;border-radius:12px;padding:11px;box-shadow:0 1px 2px rgba(20,30,50,.03)}.member-head{display:flex;justify-content:space-between;gap:8px}.flat{font-size:15px;font-weight:800}.name{font-size:12px;font-weight:600;margin-top:3px;line-height:1.35}.meta{font-size:10px;color:#687386;margin-top:3px}.statusrow{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}.badge{padding:4px 7px;border-radius:20px;font-size:9px;font-weight:700;display:inline-block}.paid{background:#e7f7ed;color:#126b3d}.pending{background:#fff3cd;color:#805b00}.partial{background:#f1eaff;color:#6644a6}.sent{background:#e6f0ff;color:#245a9c}.notreq{background:#e8f5e9;color:#256029}.sealed{background:#eceff1;color:#37474f}.tenant{background:#e8f1ff;color:#285b9f}.closed{background:#f1f1f1;color:#555}.owner{background:#e8f7ef;color:#176a43}.metricline{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:8px 0}.mini{background:#f8f9fb;border-radius:8px;padding:7px}.mini b{display:block;font-size:12px}.mini span{font-size:9px;color:#687386}.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}.actions .btn{padding:8px 5px}.summary-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.chartbar{height:10px;background:#edf1f5;border-radius:20px;overflow:hidden}.chartfill{height:100%;border-radius:20px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:11px}.table th,.table td{padding:8px 7px;border-bottom:1px solid #edf0f5;text-align:left;white-space:nowrap}.table th{background:#f8f9fb;color:#596579;font-size:10px;position:sticky;top:0}.wingblock{margin-top:10px}.wingtitle{font-size:13px;font-weight:800;margin-bottom:6px}.report-actions{display:flex;justify-content:flex-end;gap:6px}.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;align-items:center;justify-content:center;padding:12px}.modal.show{display:flex}.box{background:#fff;border-radius:14px;width:min(650px,100%);padding:15px;max-height:90vh;overflow:auto}.box h2{margin:0 0 9px;font-size:17px}.message{background:#f7f8fa;border:1px solid #e0e4ea;border-radius:9px;padding:11px;white-space:pre-wrap;line-height:1.5;font-size:12px;max-height:400px;overflow:auto}.modal-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:10px}.hidden{display:none!important}.print-only{display:none}
+@media(max-width:760px){header{padding:12px}.wrap{padding:7px}.cards{grid-template-columns:repeat(2,1fr)}.member-grid{grid-template-columns:1fr}.summary-grid{grid-template-columns:repeat(2,1fr)}.template-grid{grid-template-columns:1fr}.actions{grid-template-columns:1fr 1fr 1fr}.member-card{padding:10px}.search{min-width:160px}.tab{padding:8px 10px}.utility .iconbtn{font-size:10px;padding:6px}.topbar{align-items:flex-start}.table{font-size:10px}}
+@page{size:A4 portrait;margin:9mm 9mm 10mm 9mm}
+@media print{body{background:#fff;color:#172033;font-size:9px}header,.tabs,.utility,.notice,.no-print,.report-actions{display:none!important}.printing-summary #home,.printing-summary #comm{display:none!important}.wrap{max-width:none;padding:0}.printing-summary #summary{display:block!important}.printing-summary #summary>.panel{border:1px solid #dfe3e8;box-shadow:none;border-radius:6px;padding:7px;margin:0 0 7px;break-inside:avoid;page-break-inside:avoid}.printing-summary #summary>.summary-grid{grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:7px}.printing-summary #summary .card{padding:7px;border:1px solid #dfe3e8;border-radius:6px;break-inside:avoid}.printing-summary #summary .label{font-size:8px}.printing-summary #summary .value{font-size:13px;margin-top:2px}.printing-summary #summary .section-title{font-size:11px}.printing-summary #summary .section-sub{font-size:8px}.printing-summary #summary .table{font-size:8px}.printing-summary #summary .table th,.printing-summary #summary .table td{padding:4px 4px}.printing-summary #summary .table th{font-size:8px;position:static}.printing-summary #summary .wingblock{margin:0 0 7px;padding:7px;border:1px solid #dfe3e8;border-radius:6px;break-inside:avoid;page-break-inside:avoid}.printing-summary #summary .wingtitle{font-size:10px;margin-bottom:4px}.printing-summary #summary #dayTable{margin-top:3px}.printing-summary #summary #highlights{font-size:8px;line-height:1.55!important}.print-only{display:block}}
+
+.contact-card{background:#fff;border:1px solid #e1e6ed;border-radius:10px;padding:12px;box-shadow:0 2px 8px rgba(23,32,51,.05)}.contact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.contact-card .master-line{font-size:11px;color:#5d6675;margin-top:3px}.contact-card .readonly{background:#f5f6f8;border:1px solid #e2e6eb;border-radius:7px;padding:7px}.contact-card input{width:100%;box-sizing:border-box}.contact-actions{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap}.contact-wing{border:1px solid #d6dbe3;background:#fff;border-radius:20px;padding:7px 11px;cursor:pointer}.contact-wing.active{background:#172033;color:#fff;border-color:#172033}
+@media(max-width:760px){.contact-grid{grid-template-columns:1fr}}
+@media print{.printing-summary #contacts{display:none!important}}
+.kpi-card{border-left:4px solid transparent;min-height:76px}.kpi-card .value{font-size:20px}.kpi-1{background:#eaf2ff;border-color:#2f80ed}.kpi-2{background:#eaf8ef;border-color:#27ae60}.kpi-3{background:#e8f7ee;border-color:#159447}.kpi-4{background:#fff4e5;border-color:#f2994a}.kpi-5{background:#f2ebff;border-color:#8e5be8}.kpi-6{background:#e8f8f7;border-color:#16a6a0}.kpi-7{background:#ffebeb;border-color:#eb5757}.kpi-8{background:#eef0ff;border-color:#5b6ee1}.kpi-3 .value{color:#117a3f}.kpi-4 .value{color:#b76100}.kpi-7 .value{color:#c43d3d}.kpi-8 .value{color:#4657b8}.summary-section{border-top:4px solid #2f80ed}.summary-section:nth-of-type(2){border-top-color:#16a6a0}.summary-section:nth-of-type(3){border-top-color:#8e5be8}.summary-section:nth-of-type(4){border-top-color:#f2994a}.total-row th,.total-row td{font-weight:800;background:#f1f4f8}
+
+/* V1.2 approved refinements */
+.filters .filter-group{display:flex;align-items:center;gap:5px}.summary-visual{background:#fff;border:1px solid #d7e1ec;border-radius:12px;padding:10px;margin-bottom:12px;overflow:hidden}.visual-title{background:#073d67;color:#fff;text-align:center;border-radius:9px;padding:13px 8px;font-size:clamp(17px,2.4vw,27px);font-weight:800;margin-bottom:8px}.visual-subtitle{display:block;font-size:.72em;font-weight:500;margin-top:2px}.visual-table{width:100%;border-collapse:collapse;min-width:650px;font-size:clamp(10px,1.2vw,15px)}.visual-table th,.visual-table td{border:1px solid #c7d0d9;padding:10px 8px;text-align:center}.visual-table th{background:#b9def4;color:#101b2b;font-weight:800}.visual-table th:nth-child(3){background:#ccebd1}.visual-table th:nth-child(4){background:#ffedaa}.visual-table th:nth-child(5){background:#f6caca}.visual-table th:last-child{background:#073d67;color:#fff}.visual-table td:first-child{text-align:left;font-weight:800;background:#eef5fc}.visual-table td:nth-child(2){background:#edf5fc;font-weight:700}.visual-table td:nth-child(3){background:#eef8f0}.visual-table td:nth-child(4){background:#fff8e8}.visual-table td:nth-child(5){background:#fff0f0}.visual-table .grand td{background:#073d67!important;color:#fff;font-weight:800}.pct-cell{display:flex;align-items:center;gap:8px;justify-content:center}.pct-track{height:13px;min-width:65px;flex:1;background:rgba(20,35,55,.12);border-radius:20px;overflow:hidden}.pct-fill{height:100%;border-radius:20px}.visual-note{background:#e8f2fb;padding:10px;border-radius:8px;margin-top:8px;font-size:12px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}.legend{display:flex;gap:12px;flex-wrap:wrap}.legend span{white-space:nowrap}.legend i{display:inline-block;width:13px;height:13px;border-radius:4px;vertical-align:middle;margin-right:4px}.tx-actions{display:flex;gap:5px}.tx-actions .btn{padding:5px 7px;font-size:10px}
+@media(max-width:760px){.filters .filter-group{width:100%}.filters .filter-group select{flex:1}.visual-note{font-size:10px}}
+
+/* V1.4 responsive Home: natural page scroll with a compact sticky filter bar.
+   No fixed-height/overflow-hidden body, so every member card remains reachable on phones. */
+html,body{min-height:100%;height:auto;overflow-x:hidden}
+body.home-fixed{height:auto;min-height:100vh;overflow-x:hidden;overflow-y:visible;display:block}
+body.home-fixed header{position:sticky;top:0;z-index:50}
+body.home-fixed .wrap{width:100%;max-width:1250px;display:block;overflow:visible;min-height:0}
+body.home-fixed .topbar{position:sticky;top:var(--home-header-height,76px);z-index:45;background:#f4f7fb;padding:5px 0;margin:0 0 8px}
+body.home-fixed #home:not(.hidden){display:block;height:auto;min-height:0;overflow:visible}
+body.home-fixed #home>.panel:first-child{position:sticky;top:calc(var(--home-header-height,76px) + var(--home-tabs-height,58px));z-index:40;box-shadow:0 3px 10px rgba(20,30,50,.08)}
+body.home-fixed #memberGrid{display:grid;overflow:visible;min-height:0;align-content:start;padding:1px 0 18px}
+@media(max-width:760px){html{overflow-y:auto}body.home-fixed{overflow:visible;height:auto;min-height:100%;-webkit-overflow-scrolling:touch}body.home-fixed .wrap{padding:7px}body.home-fixed .topbar{top:var(--home-header-height,76px);overflow-x:auto;overflow-y:visible}body.home-fixed #home>.panel:first-child{top:calc(var(--home-header-height,76px) + var(--home-tabs-height,58px));padding:8px}body.home-fixed #memberGrid{grid-template-columns:1fr;overflow:visible}.member-grid{grid-template-columns:1fr}.member-card{min-height:0}.filters{gap:5px}.filters button{padding:7px 9px}.filters select{min-width:0;max-width:100%}}
+@media(min-width:761px){body.home-fixed #home>.panel:first-child{top:126px}}
+.edit-pencil{border:0;background:#edf3fa;border-radius:6px;padding:2px 6px;margin-left:4px;font-size:10px;cursor:pointer;color:#244b72;vertical-align:middle}
+.meta-line{display:flex;align-items:center;gap:2px;flex-wrap:wrap}.mini-head{display:flex;align-items:center;justify-content:space-between;gap:4px}.mini-head span{font-size:9px;color:#687386}
+.upload-preview{max-height:260px;overflow:auto;border:1px solid #dfe5ed;border-radius:8px;margin-top:8px}
+.upload-preview table{width:100%;border-collapse:collapse;font-size:10px}.upload-preview th,.upload-preview td{padding:6px;border-bottom:1px solid #edf0f5;text-align:left;white-space:nowrap}.upload-preview th{position:sticky;top:0;background:#f3f6fa}
+
+/* V1.4 responsive home navigation */
+html,body{min-height:100%;height:auto;overflow-x:hidden}
+header{position:sticky;top:0;z-index:40}
+.topbar{position:sticky;top:76px;z-index:35;background:#f4f7fb;padding:5px 0}
+#home>.panel:first-child{position:sticky;top:122px;z-index:30;background:#fff;box-shadow:0 3px 10px rgba(20,30,50,.08)}
+#memberGrid{position:relative;overflow:visible;min-height:1px}
+.member-card{min-width:0;overflow-wrap:anywhere}
+@media(max-width:760px){
+ header{position:sticky;top:0;padding:10px 12px}
+ header h1{font-size:17px} header .sub{font-size:10px}
+ .wrap{padding:6px}
+ .topbar{top:67px;align-items:center;overflow-x:auto;gap:6px}
+ .tabs{min-width:0;flex:1}.utility{flex:0 0 auto}
+ #home>.panel:first-child{top:116px;padding:8px}
+ #home>.panel:first-child .filters{gap:6px}
+ #home>.panel:first-child .filters button{padding:7px 9px}
+ #home>.panel:first-child .filters select{min-width:0;max-width:48%;flex:1}
+ #home>.panel:first-child .search{flex:1 1 100%;min-width:0}
+ #memberGrid{display:grid;grid-template-columns:1fr;gap:8px}
+ .member-card{width:100%;padding:10px}
+ .member-head{align-items:flex-start}
+ .actions{grid-template-columns:1fr 1fr}
+ #home{overflow:visible} body{overflow-y:auto}
+}
+
+
+/* V1.5: reliable mobile sticky navigation */
+html{overflow-y:auto!important}
+body.home-fixed{overflow-x:hidden!important;overflow-y:visible!important;height:auto!important;min-height:100vh!important}
+body.home-fixed header{position:sticky!important;top:0!important;z-index:100!important}
+body.home-fixed .topbar{position:sticky!important;top:var(--home-header-height,76px)!important;z-index:95!important;background:#f4f7fb!important}
+body.home-fixed #home>.panel:first-child{position:sticky!important;top:calc(var(--home-header-height,76px) + var(--home-tabs-height,58px))!important;z-index:90!important;background:#fff!important}
+body.home-fixed #memberGrid{overflow:visible!important;height:auto!important;max-height:none!important}
+@media(max-width:760px){
+ html,body{overflow-x:hidden!important}
+ body.home-fixed{overflow-y:visible!important}
+ body.home-fixed header{position:sticky!important}
+ body.home-fixed .topbar{overflow-x:auto!important}
+ body.home-fixed #home>.panel:first-child{position:sticky!important}
+}
+
+
+/* V1.6: fixed app chrome + independently scrolling Home content */
+@media(max-width:760px){
+ html,body{height:100%!important;min-height:100%!important;overflow:hidden!important}
+ body.home-fixed{height:100dvh!important;min-height:100dvh!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+ body.home-fixed>header{position:relative!important;top:auto!important;flex:0 0 auto!important;z-index:100!important}
+ body.home-fixed>.wrap{height:calc(100dvh - var(--app-header-height,76px))!important;min-height:0!important;max-height:calc(100dvh - var(--app-header-height,76px))!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;padding:5px!important}
+ body.home-fixed .topbar{position:relative!important;top:auto!important;flex:0 0 auto!important;overflow-x:auto!important;z-index:90!important;margin-bottom:5px!important}
+ body.home-fixed .notice{flex:0 0 auto!important;max-height:64px!important;overflow:auto!important;margin-bottom:5px!important}
+ body.home-fixed #home:not(.hidden){display:flex!important;flex:1 1 auto!important;flex-direction:column!important;min-height:0!important;height:auto!important;overflow:hidden!important}
+ body.home-fixed #home>.panel:first-child{position:relative!important;top:auto!important;flex:0 0 auto!important;z-index:80!important;margin-bottom:5px!important}
+ body.home-fixed #home>.home-content-scroll{display:block!important;flex:1 1 auto!important;min-height:0!important;height:auto!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior:contain}
+ body.home-fixed #memberGrid{display:grid!important;grid-template-columns:1fr!important;overflow:visible!important;height:auto!important;max-height:none!important;padding-bottom:24px!important}
+ body.home-fixed .member-card{width:100%!important;min-height:0!important}
+}
+@media(min-width:761px){
+ body.home-fixed{height:100vh!important;overflow:hidden!important}
+ body.home-fixed>.wrap{height:calc(100vh - 76px)!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+ body.home-fixed .topbar{position:relative!important;top:auto!important;flex:0 0 auto!important}
+ body.home-fixed #home:not(.hidden){display:flex!important;flex:1 1 auto!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important}
+ body.home-fixed #home>.panel:first-child{position:relative!important;top:auto!important;flex:0 0 auto!important}
+ body.home-fixed #home>.home-content-scroll{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+}
+
+
+/* V1.7: freeze app header, tabs and filters only on Home and Contact Master */
+@media(max-width:760px){
+ html,body{width:100%;height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important}
+ html:has(body.fixed-list-screen),body.fixed-list-screen{height:100%!important;min-height:100%!important;overflow:hidden!important}
+ body.fixed-list-screen{position:fixed!important;inset:0!important;height:100dvh!important;min-height:100dvh!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+ body.fixed-list-screen>header{position:relative!important;top:auto!important;flex:0 0 auto!important;z-index:100!important}
+ body.fixed-list-screen>.wrap{position:relative!important;flex:1 1 auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;padding:5px!important}
+ body.fixed-list-screen .topbar{position:relative!important;top:auto!important;flex:0 0 auto!important;overflow-x:auto!important;z-index:95!important;margin:0 0 5px!important}
+ body.fixed-list-screen #home:not(.hidden),body.fixed-list-screen #contacts:not(.hidden){display:flex!important;flex:1 1 auto!important;flex-direction:column!important;min-height:0!important;height:auto!important;overflow:hidden!important}
+ body.fixed-list-screen #home>.panel:first-child,body.fixed-list-screen #contacts>.panel:first-child{position:relative!important;top:auto!important;flex:0 0 auto!important;z-index:90!important;margin-bottom:5px!important}
+ body.fixed-list-screen .fixed-list-scroll{display:block!important;flex:1 1 auto!important;min-height:0!important;height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important;padding-bottom:24px!important}
+ body.fixed-list-screen #memberGrid,body.fixed-list-screen #contactGrid{display:grid!important;grid-template-columns:1fr!important;overflow:visible!important;height:auto!important;max-height:none!important}
+ body.fixed-list-screen .member-card{width:100%!important;min-height:0!important}
+}
+@media(min-width:761px){
+ body.fixed-list-screen{height:100vh!important;overflow:hidden!important}
+ body.fixed-list-screen>.wrap{height:calc(100vh - 76px)!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+ body.fixed-list-screen .topbar{position:relative!important;top:auto!important;flex:0 0 auto!important}
+ body.fixed-list-screen #home:not(.hidden),body.fixed-list-screen #contacts:not(.hidden){display:flex!important;flex:1 1 auto!important;flex-direction:column!important;min-height:0!important;overflow:hidden!important}
+ body.fixed-list-screen #home>.panel:first-child,body.fixed-list-screen #contacts>.panel:first-child{position:relative!important;top:auto!important;flex:0 0 auto!important}
+ body.fixed-list-screen .fixed-list-scroll{flex:1 1 auto!important;min-height:0!important;height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+}
+.section-download{justify-content:flex-end;margin-top:12px;padding-top:9px;border-top:1px solid #edf0f5}
+
+
+/* V1.8 scroll correction: lock the viewport only on Home and Contact Master */
+html,body{overflow-x:hidden}
+html:not(.fixed-list-html),html:not(.fixed-list-html) body{
+ height:auto!important;min-height:100%!important;overflow-y:auto!important;overflow-x:hidden!important
+}
+html.fixed-list-html,html.fixed-list-html body{
+ height:100%!important;min-height:100%!important;overflow:hidden!important
+}
+@media(max-width:760px){
+ body.fixed-list-screen{
+  position:fixed!important;inset:0!important;width:100%!important;
+  height:100dvh!important;min-height:100dvh!important;
+  display:flex!important;flex-direction:column!important;overflow:hidden!important
+ }
+ body.fixed-list-screen>.wrap{
+  flex:1 1 0!important;height:0!important;min-height:0!important;
+  max-height:none!important;overflow:hidden!important;display:flex!important;flex-direction:column!important
+ }
+ body.fixed-list-screen .topbar{flex:0 0 auto!important}
+ body.fixed-list-screen #home:not(.hidden),
+ body.fixed-list-screen #contacts:not(.hidden){
+  flex:1 1 0!important;height:0!important;min-height:0!important;
+  overflow:hidden!important;display:flex!important;flex-direction:column!important
+ }
+ body.fixed-list-screen #home>.panel:first-child,
+ body.fixed-list-screen #contacts>.panel:first-child{flex:0 0 auto!important}
+ body.fixed-list-screen .fixed-list-scroll{
+  flex:1 1 0!important;height:0!important;min-height:0!important;
+  overflow-y:scroll!important;overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;
+  overscroll-behavior:contain!important;display:block!important
+ }
+}
+@media(min-width:761px){
+ body.fixed-list-screen{height:100vh!important;overflow:hidden!important}
+ body.fixed-list-screen>.wrap{height:calc(100vh - 76px)!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+ body.fixed-list-screen #home:not(.hidden),
+ body.fixed-list-screen #contacts:not(.hidden){flex:1 1 0!important;height:0!important;min-height:0!important;overflow:hidden!important;display:flex!important;flex-direction:column!important}
+ body.fixed-list-screen .fixed-list-scroll{flex:1 1 0!important;height:0!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+}
+
+
+/* V1.9: stable document scrolling with sticky controls only on Home and Contact Master */
+html,body{
+ height:auto!important;min-height:100%!important;
+ overflow-x:hidden!important;overflow-y:auto!important;
+}
+body{position:static!important;display:block!important;overflow-y:auto!important}
+body>.wrap{
+ height:auto!important;min-height:0!important;max-height:none!important;
+ display:block!important;overflow:visible!important;position:relative!important;
+}
+body.freeze-active>header{
+ position:sticky!important;top:0!important;z-index:120!important;
+}
+body.freeze-active>.wrap>.topbar{
+ position:sticky!important;top:var(--sticky-header-h,76px)!important;
+ z-index:110!important;background:#f4f7fb!important;
+}
+body.freeze-active #home:not(.hidden)>.panel:first-child,
+body.freeze-active #contacts:not(.hidden)>.panel:first-child{
+ position:sticky!important;
+ top:calc(var(--sticky-header-h,76px) + var(--sticky-tabs-h,54px))!important;
+ z-index:100!important;background:#fff!important;
+ box-shadow:0 3px 10px rgba(20,30,50,.08)!important;
+}
+body.freeze-active #home,
+body.freeze-active #contacts{
+ display:block!important;height:auto!important;min-height:0!important;
+ overflow:visible!important;
+}
+body.freeze-active .fixed-list-scroll{
+ display:contents!important;height:auto!important;min-height:0!important;
+ max-height:none!important;overflow:visible!important;
+}
+body.freeze-active #memberGrid,
+body.freeze-active #contactGrid{
+ height:auto!important;max-height:none!important;overflow:visible!important;
+}
+body:not(.freeze-active) header,
+body:not(.freeze-active) .topbar,
+body:not(.freeze-active) #home>.panel:first-child,
+body:not(.freeze-active) #contacts>.panel:first-child{
+ position:static!important;top:auto!important;
+}
+@media(max-width:760px){
+ body.freeze-active>.wrap{padding:5px!important}
+ body.freeze-active>.wrap>.topbar{overflow-x:auto!important;overflow-y:visible!important}
+ body.freeze-active #home:not(.hidden)>.panel:first-child,
+ body.freeze-active #contacts:not(.hidden)>.panel:first-child{padding:8px!important}
+ body.freeze-active #memberGrid,
+ body.freeze-active #contactGrid{grid-template-columns:1fr!important}
+}
+
+
+/* V2.0 MOBILE SCROLL REBUILD
+   Use normal document scrolling. No fixed body, no nested scrollers, no height-limited member list. */
+html,html.fixed-list-html,body{
+ width:100%!important;height:auto!important;min-height:100%!important;
+ max-height:none!important;overflow-x:hidden!important;overflow-y:auto!important;
+}
+body,body.freeze-active,body.home-fixed,body.fixed-list-screen{
+ position:static!important;inset:auto!important;
+ display:block!important;height:auto!important;min-height:100%!important;
+ max-height:none!important;overflow-x:hidden!important;overflow-y:auto!important;
+}
+body>.wrap,.wrap,body.freeze-active>.wrap,body.home-fixed>.wrap,body.fixed-list-screen>.wrap{
+ position:relative!important;display:block!important;
+ width:100%!important;height:auto!important;min-height:0!important;
+ max-height:none!important;overflow:visible!important;
+}
+.tabpage,#home,#contacts,
+body.freeze-active #home,body.freeze-active #contacts,
+body.home-fixed #home,body.fixed-list-screen #home,
+body.fixed-list-screen #contacts{
+ position:relative!important;display:block!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ overflow:visible!important;
+}
+.fixed-list-scroll,.home-content-scroll{
+ display:contents!important;position:static!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ overflow:visible!important;
+}
+#memberGrid,#contactGrid,.member-grid{
+ display:grid!important;height:auto!important;min-height:0!important;
+ max-height:none!important;overflow:visible!important;
+ align-content:start!important;
+}
+body.freeze-active>header{
+ position:sticky!important;top:0!important;z-index:1000!important;
+}
+body.freeze-active>.wrap>.topbar{
+ position:sticky!important;top:var(--sticky-header-h,76px)!important;
+ z-index:990!important;background:#f4f7fb!important;
+}
+body.freeze-active #home:not(.hidden)>.panel:first-child,
+body.freeze-active #contacts:not(.hidden)>.panel:first-child{
+ position:sticky!important;
+ top:calc(var(--sticky-header-h,76px) + var(--sticky-tabs-h,58px))!important;
+ z-index:980!important;background:#fff!important;
+ box-shadow:0 3px 10px rgba(20,30,50,.08)!important;
+}
+body.freeze-active .notice{position:static!important}
+body:not(.freeze-active)>header,
+body:not(.freeze-active)>.wrap>.topbar,
+body:not(.freeze-active) #home>.panel:first-child,
+body:not(.freeze-active) #contacts>.panel:first-child{
+ position:static!important;top:auto!important;
+}
+@media(max-width:760px){
+ body.freeze-active>.wrap{padding:5px!important}
+ body.freeze-active>.wrap>.topbar{overflow:visible!important}
+ body.freeze-active .tabs{overflow-x:auto!important}
+ body.freeze-active #memberGrid,
+ body.freeze-active #contactGrid{grid-template-columns:1fr!important}
+ body.freeze-active #home:not(.hidden)>.panel:first-child,
+ body.freeze-active #contacts:not(.hidden)>.panel:first-child{padding:8px!important}
+}
+
+</style><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head><body><style>
+#portalLogin{position:fixed;inset:0;z-index:100000;background:#f3f6fb;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Inter,Arial,sans-serif}
+#portalLogin .login-card{width:min(420px,100%);background:#fff;border:1px solid #dbe3ee;border-radius:18px;padding:26px;box-shadow:0 20px 60px rgba(25,45,75,.12)}
+#portalLogin h2{margin:0 0 8px;color:#18243a}#portalLogin p{color:#667085;font-size:13px;line-height:1.5}
+#portalLogin label{display:block;font-size:12px;font-weight:700;margin:14px 0 6px}#portalLogin input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font-size:15px}
+#portalLogin button{width:100%;margin-top:18px;padding:12px;border:0;border-radius:9px;background:#18243a;color:white;font-weight:700;font-size:14px}
+#portalLogin .error{color:#b42318;min-height:18px;font-size:12px;margin-top:8px}
+body:not(.portal-authenticated)>header,body:not(.portal-authenticated)>.wrap{display:none!important}
+body.portal-authenticated #portalLogin{display:none}
+</style>
+<div id="portalLogin"><div class="login-card"><h2>Panvelkar Estate Stanford</h2><p>Private Payment & WhatsApp Administration Portal</p><form id="portalLoginForm"><label for="portalEmail">Admin Email</label><input id="portalEmail" type="email" autocomplete="username" required><label for="portalPassword">Password</label><input id="portalPassword" type="password" autocomplete="current-password" required><button id="portalLoginButton" type="submit">Sign In Securely</button><div id="portalLoginError" class="error"></div></form></div></div>
+<header><h1>Panvelkar Estate Stanford</h1><div class="sub">Private WhatsApp Communication & Payment Tool • V2.0</div></header>
+<div class="wrap">
+<div class="topbar"><div class="tabs"><button class="tab active" onclick="showTab('home',this)">🏠 Home</button><button class="tab" onclick="showTab('summary',this)">💰 Payment Summary</button><button class="tab" onclick="showTab('contacts',this)">👥 Contact Master</button><button class="tab" onclick="showTab('comm',this)">📢 Communication Templates</button></div><div class="utility"><button class="iconbtn" onclick="openBackup()">⚙ Backup</button><button class="iconbtn" onclick="paymentPortalLogout()">↪ Sign Out</button></div></div>
+
+<section id="home" class="tabpage">
+<div class="panel no-print"><div class="filters"><b style="font-size:11px">Wing:</b><button class="wing active" data-wing="ALL">All</button><button class="wing" data-wing="R1-A">R1-A</button><button class="wing" data-wing="R1-B">R1-B</button><button class="wing" data-wing="R2">R2</button><button class="wing" data-wing="R3">R3</button><button class="wing" data-wing="R4">R4</button><select id="messageFilter" aria-label="Message Status Filter"><option value="ALL">All Message Status</option><option value="PENDING">Message Pending</option><option value="SENT">Message Sent</option><option value="NOTREQ">No Message Required</option></select><select id="paymentFilter" aria-label="Payment Status Filter"><option value="ALL">All Payment Status</option><option value="FULL">Fully Paid</option><option value="PARTIAL">Partially Paid</option><option value="PENDING">Pending</option></select><input id="search" class="search" placeholder="🔍 Search flat / name / mobile"></div></div>
+<div class="panel no-print" style="padding:8px 10px"><div class="topbar" style="margin:0"><div><div class="section-title">Update Outstanding from File</div><div class="section-sub">Upload CSV / Excel with Flat / Unit and Outstanding Amount columns. Only matched outstanding balances will be updated.</div></div><button class="btn" onclick="document.getElementById('outstandingUpload').click()">📥 Upload File</button><input id="outstandingUpload" class="hidden" type="file" accept=".csv,.xlsx,.xls" onchange="previewOutstandingUpload(event)"></div><div id="outstandingUploadStatus" class="section-sub"></div></div>
+<div class="panel no-print"><div class="topbar"><div><div class="section-title">Daily Message Status</div></div><button class="btn primary" onclick="refreshWhatsAppStatus()">🔄 Refresh WhatsApp Status</button></div><div class="section-sub">Full payment = no message required. Sent status becomes pending again after 24 hours if balance remains outstanding.</div><div class="cards" style="margin-top:8px"><div class="card"><div class="label">Message Pending</div><div class="value" id="mPending">0</div></div><div class="card"><div class="label">Message Sent Today</div><div class="value" id="mSent">0</div></div><div class="card"><div class="label">No Message Required</div><div class="value" id="mNotReq">0</div></div><div class="card"><div class="label">No Contact Number</div><div class="value" id="mNoPhone">0</div></div><div class="card"><div class="label">Total Units</div><div class="value" id="mTotal">0</div></div></div></div>
+<div class="member-grid" id="memberGrid"></div>
+</section>
+<section id="summary" class="tabpage hidden">
+<div class="panel"><div class="topbar"><div><div class="section-title">📊 Payment Collection Summary</div><div class="section-sub">Live database position • Collection: All recorded payment transactions</div></div><div class="report-actions"><button class="btn primary" onclick="downloadPDF()">📥 PDF</button><button class="btn" onclick="downloadSummaryHTML()">🌐 HTML</button><button class="btn" onclick="downloadSummaryExcel()">📊 Excel</button></div></div></div>
+<div class="panel summary-section"><div class="topbar"><div class="section-title">📌 Overall Collection KPIs</div></div><div class="summary-grid" id="summaryKpis"></div><div class="report-actions section-download"><button class="btn primary" onclick="downloadSummarySection('kpis',this)">⬇ Download PNG</button></div></div>
+<div class="panel summary-section"><div class="topbar"><div class="section-title">📅 Day-wise Collection</div></div><div class="table-wrap" style="margin-top:8px"><table class="table"><thead><tr><th>Date</th><th>Payment Transactions</th><th>Collection</th></tr></thead><tbody id="dayTable"></tbody></table></div><div class="report-actions section-download"><button class="btn primary" onclick="downloadSummarySection('daywise',this)">⬇ Download PNG</button></div></div>
+<div class="summary-visual" id="wingCountVisual"><div class="visual-title">Wing-wise Maintenance Payment Summary<span class="visual-subtitle">(Flats &amp; Shops)</span></div><div class="table-wrap"><table class="visual-table"><thead><tr><th>Wing</th><th>Total Units</th><th>Full</th><th>Partial</th><th>Pending</th><th>% Paid</th></tr></thead><tbody id="wingCountTable"></tbody></table></div><div class="visual-note"><b>Note: % Paid = (Full + Partial) ÷ Total Units × 100</b><div class="legend"><span><i style="background:#59bd61"></i>≥ 50% Good</span><span><i style="background:#f4c21b"></i>30%–50% Moderate</span><span><i style="background:#e65b5b"></i>&lt; 30% Low</span></div></div><div class="report-actions" style="margin-top:8px"><button class="btn primary" onclick="downloadSummarySection('wingcount',this)">⬇ Download PNG</button></div></div>
+<div class="summary-visual" id="wingAmountVisual"><div class="visual-title">Wing-wise Maintenance Collection Summary<span class="visual-subtitle">(Flats &amp; Shops – Amount in ₹)</span></div><div class="table-wrap"><table class="visual-table"><thead><tr><th>Wing</th><th>Total Demand</th><th>Received</th><th>Outstanding</th><th>Collection %</th></tr></thead><tbody id="wingAmountTable"></tbody></table></div><div class="visual-note"><b>Note: Collection % = Received ÷ Total Demand × 100</b><div class="legend"><span><i style="background:#59bd61"></i>≥ 50% Good</span><span><i style="background:#f4c21b"></i>30%–50% Moderate</span><span><i style="background:#e65b5b"></i>&lt; 30% Low</span></div></div><div class="report-actions" style="margin-top:8px"><button class="btn primary" onclick="downloadSummarySection('wingamount',this)">⬇ Download PNG</button></div></div>
+<div class="panel summary-section"><div class="topbar"><div class="section-title">💳 Payment Status Summary</div></div><div class="table-wrap" style="margin-top:8px"><table class="table"><thead><tr><th>Status</th><th>Units</th><th>Collection</th><th>Outstanding</th></tr></thead><tbody id="payTable"></tbody></table></div><div class="report-actions section-download"><button class="btn primary" onclick="downloadSummarySection('paymentstatus',this)">⬇ Download PNG</button></div></div>
+</section>
+<section id="contacts" class="tabpage hidden">
+<div class="panel no-print"><div class="filters"><b style="font-size:11px">Wing:</b><button class="contact-wing active" data-wing="ALL">All</button><button class="contact-wing" data-wing="R1-A">R1-A</button><button class="contact-wing" data-wing="R1-B">R1-B</button><button class="contact-wing" data-wing="R2">R2</button><button class="contact-wing" data-wing="R3">R3</button><button class="contact-wing" data-wing="R4">R4</button><input id="contactSearch" class="search" placeholder="🔍 Search flat / name / mobile / email"></div></div>
+<div class="panel no-print"><div class="topbar"><div><div class="section-title">👥 Contact Master</div><div class="section-sub">Master information is read-only. Only Mobile 1, Mobile 2, Mobile 3 and Email can be edited.</div></div><button class="btn" onclick="downloadContactsExcel()">📊 Download Excel</button></div></div>
+<div class="member-grid" id="contactGrid"></div>
+</section>
+<section id="comm" class="tabpage hidden">
+<div class="panel"><div class="section-title">📢 Communication Template Library</div><div class="section-sub">Manage reusable templates. The member-wise WhatsApp Communication button automatically selects the correct message unless an administrator override is active.</div>
+<div class="panel" style="margin-top:10px;background:#f8fafc"><div class="section-title">Active communication override</div><div id="activeTemplateInfo" class="section-sub">No custom template active. Automatic template selection is enabled.</div><div class="template-actions" style="margin-top:8px"><button class="btn dark" onclick="applySelectedTemplate()">Apply Selected Template to All Members</button><button class="btn warn" onclick="clearActiveTemplate()">Clear Active Template</button></div><div class="section-sub">Clearing deactivates the override only. The saved template remains in the library.</div></div>
+<div class="template-grid"><div class="field"><label>Template Name</label><input id="templateName" placeholder="e.g. October General Notice"></div><div class="field"><label>Message</label><textarea id="templateMessage" placeholder="Enter message. Use placeholders where required."></textarea></div><div><div class="field"><label>Category</label><select id="templateType"><option>General Notice</option><option>Event</option><option>Emergency</option><option>Custom</option></select></div><div class="field"><label>Attachment — Photo / PDF / Document</label><input id="templateFile" type="file" accept="image/*,.pdf,.doc,.docx"></div><div class="template-actions" style="margin-top:8px;flex-wrap:wrap"><button class="btn dark" onclick="saveTemplate()">Save Template</button><button class="btn" onclick="newTemplateForm()">New</button><button class="btn warn" onclick="deleteSelectedTemplate()">Delete Selected</button></div></div></div>
+<div class="section-sub" style="margin-top:8px">Placeholders: {{FLAT}}, {{NAME}}, {{MOBILE}}, {{AMOUNT}}, {{RECEIVED}}, {{BALANCE}}</div><div class="field" style="margin-top:10px"><label>Saved Templates</label><select id="templateLibrarySelect" onchange="loadSelectedTemplate()"><option value="">Select a saved template</option></select></div><div id="savedTemplate" class="saved"></div></div>
+</section>
+</div>
+<div class="modal" id="messageModal"><div class="box"><h2>💬 WhatsApp Communication</h2><div id="msgMeta" class="section-sub"></div><div id="selectedMessageType" class="saved"></div><div id="messageText" class="message" style="margin-top:8px"></div><div class="modal-actions"><button class="btn" onclick="closeModal('messageModal')">Close</button><button class="btn" onclick="copyText('messageText')">Copy</button><button class="btn primary" onclick="openMaintenanceWA()">Open WhatsApp</button></div></div></div>
+<div class="modal" id="homeEditModal"><div class="box" style="max-width:480px"><h2 id="homeEditTitle">Edit Details</h2><div id="homeEditBody"></div><div class="modal-actions"><button class="btn" onclick="closeModal('homeEditModal')">Cancel</button><button class="btn primary" onclick="saveHomeEdit()">Save Changes</button></div></div></div>
+<div class="modal" id="outstandingPreviewModal"><div class="box"><h2>Review Outstanding Update</h2><div class="section-sub" id="outstandingPreviewMeta"></div><div class="upload-preview" id="outstandingPreviewTable"></div><div class="modal-actions"><button class="btn" onclick="closeModal('outstandingPreviewModal')">Cancel</button><button class="btn primary" onclick="applyOutstandingUpload()">Apply Matched Updates</button></div></div></div>
+<div class="modal" id="paymentModal"><div class="box"><h2>💰 Add Payment Transaction</h2><div id="payMeta" class="section-sub"></div><div id="paymentHistory" class="table-wrap" style="margin-top:10px"></div><div class="report-actions" style="margin-top:6px"><button class="btn warn" onclick="clearPaymentHistory()">Clear All Payment History</button></div><div class="panel" style="margin-top:10px;background:#f8fafc"><div class="section-title" id="paymentFormTitle">Record a new payment</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div class="field"><label>Amount Received (this transaction)</label><input id="payAmount" type="number" min="0.01" step="0.01" placeholder="Enter payment amount"></div><div class="field"><label>Payment Date</label><input id="payDate" type="date"></div></div><div class="field" style="margin-top:8px"><label>Remarks</label><input id="payRemarks" placeholder="Optional remarks"></div><div class="section-sub" id="payStatus" style="margin-top:8px"></div></div><div class="modal-actions"><button class="btn" onclick="closeModal('paymentModal')">Cancel</button><button class="btn" id="cancelEditPayment" style="display:none" onclick="cancelPaymentEdit()">Cancel Edit</button><button class="btn primary" id="savePaymentBtn" onclick="savePayment()">Add Transaction</button></div></div></div>
+</div>
+<div class="modal" id="backupModal"><div class="box"><h2>⚙ Data Backup</h2><div class="section-sub">Your entries are saved automatically on this device. Use backup files when moving to a new tool version or device.</div><div class="modal-actions" style="justify-content:flex-start;flex-wrap:wrap"><button class="btn primary" onclick="downloadBackup()">📤 JSON Backup</button><button class="btn" onclick="downloadBackupExcel()">📊 Excel Backup</button><button class="btn" onclick="document.getElementById('restoreFile').click()">📥 Restore Backup</button><input id="restoreFile" type="file" accept="application/json" class="hidden" onchange="restoreBackup(event)"></div><div id="backupInfo" class="section-sub" style="margin-top:10px"></div><div class="modal-actions"><button class="btn" onclick="closeModal('backupModal')">Close</button></div></div></div>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js">
+
+// V1.9: no nested scroll wrappers; browser document scroll is used throughout.
+function setupFixedScreens(){ /* intentionally no-op */ }
+document.addEventListener('DOMContentLoaded',setupFixedScreens);
+
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>window.PAYMENT_PORTAL_CONFIG={supabaseUrl:'https://zawatmovyrjcpgxkqcqq.supabase.co',publishableKey:'sb_publishable_x9u_XeQlrOil8VRZ6Kcbjg_48JRq51y'};</script>
+<script src="src/payment-portal-auth.js"></script><script src="src/payment-portal-data-v6.js"></script>
+<script>
+const seed=[];
+let data=[];
+data.forEach(r=>{if(!Array.isArray(r.transactions)){r.transactions=[];const oldReceived=Number(r.received||0);if(oldReceived>0)r.transactions.push({id:uid(),amount:oldReceived,date:r.paymentDate||'',remarks:r.remarks||'Migrated from previous version'});}});
+let wing='ALL', messageFilter='ALL', paymentFilter='ALL', current=null, editingTransactionId='';
+let homeEditFlat='', homeEditType='', pendingOutstandingRows=[];
+let newCommTemplate=null;
+const defaultTemplate=`*📌 देखभाल शुल्क भरण्याबाबत नम्र सूचना*
+
+*महत्त्वाची सूचना:*
+खाली नमूद केलेली रक्कम 30 सप्टेंबर 2026 पर्यंतची थकबाकी तसेच ऑक्टोबर 2026 महिन्याचे देखभाल शुल्क यांची एकत्रित देय रक्कम आहे.
+
+ज्या सभासदांनी 1 ऑक्टोबर 2026 नंतर देखभाल शुल्क जमा केले आहे, त्यांनी कृपया हा संदेश दुर्लक्षित करावा.
+
+*👤 सदनिकेचा क्रमांक व सभासदाचे नाव:* {{FLAT}} {{NAME}}
+*💰 देय रक्कम:* ₹{{AMOUNT}}/-
+*📅 अंतिम दिनांक:* 15 ऑक्टोबर 2026
+
+सर्व संबंधित सभासदांनी कृपया सदर देय रक्कम अंतिम दिनांकापूर्वी जमा करून सहकार्य करावे, ही नम्र विनंती.
+
+*रक्कम जमा केल्यानंतर कृपया UTR क्रमांक / पेमेंटचा स्क्रीनशॉट*
+*📱 91568 22501 या WhatsApp क्रमांकावर पाठवावा.*
+
+*काही शंका किंवा अडचण असल्यास कृपया खालील ई-मेलवर कळवावे:*
+*📧 panvelkar.stanford@gmail.com*
+
+आपल्या सहकार्याबद्दल धन्यवाद. 🙏
+*सोसायटी व्यवस्थापन समिती*`;
+newCommTemplate={type:'Payment Reminder',message:defaultTemplate,fileName:''};
+const PART_PAYMENT_DEFAULT=`Dear {{NAME}},
+
+We acknowledge receipt of ₹{{RECEIVED}} against your maintenance demand of ₹{{AMOUNT}} for {{FLAT}}. The outstanding balance is ₹{{BALANCE}}.
+
+Kindly clear the remaining amount at the earliest. Thank you.
+
+Society Management Committee`;
+let templateLibrary=[];
+let activeTemplateId='';
+let selectedTemplateId='';
+function uid(){return 'tpl_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
+function persistTemplates(){}
+function initTemplateLibrary(){}
+function selectedTemplate(){return templateLibrary.find(t=>t.id===selectedTemplateId)}
+function renderTemplateLibrary(){const sel=document.getElementById('templateLibrarySelect');if(!sel)return;sel.innerHTML='<option value="">Select a saved template</option>'+templateLibrary.map(t=>`<option value="${t.id}">${t.name} — ${t.category}</option>`).join('');if(selectedTemplateId&&templateLibrary.some(t=>t.id===selectedTemplateId))sel.value=selectedTemplateId;const active=templateLibrary.find(t=>t.id===activeTemplateId);document.getElementById('activeTemplateInfo').textContent=active?'Active for all members: '+active.name+' ('+active.category+').':'No custom template active. Automatic template selection is enabled.'}
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:0})}
+function normFlat(s){return String(s||'').toUpperCase().replace('R1-A','R1A').replace('R1-B','R1B')}
+function getWing(r){const w=String(r.wing||'').toUpperCase();if(w==='R1A'||w==='R1-A')return 'R1-A';if(w==='R1B'||w==='R1-B')return 'R1-B';return w||String(r.flat||'').split('-')[0]}
+function resetExpiredMessages(){const now=Date.now();data.forEach(r=>{if(r._preserveWaStatus)return;if(Number(r.balance||0)<=0){r.wa='Not Required';r.waSentAt='';}else if(r.wa==='Sent'&&r.waSentAt&&now-Number(r.waSentAt)>=86400000){r.wa='Pending';r.waSentAt='';}});saveData()}
+function saveData(){}
+function createDailySnapshot(){}
+function showTab(id,btn){
+ const freeze=(id==='home'||id==='contacts');
+ document.body.classList.toggle('freeze-active',freeze);
+ document.body.classList.remove('fixed-list-screen','home-fixed');
+ document.documentElement.classList.remove('fixed-list-html');
+ document.querySelectorAll('.tabpage').forEach(x=>x.classList.add('hidden'));
+ document.getElementById(id).classList.remove('hidden');
+ document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+ if(btn)btn.classList.add('active');
+ if(id==='summary')renderSummary();
+ window.scrollTo(0,0);
+ updateStickyOffsets();
+}
+function updateStickyOffsets(){
+ const header=document.querySelector('body > header');
+ const tabs=document.querySelector('.wrap > .topbar');
+ document.documentElement.style.setProperty('--sticky-header-h',(header?header.getBoundingClientRect().height:0)+'px');
+ document.documentElement.style.setProperty('--sticky-tabs-h',(tabs?tabs.getBoundingClientRect().height:0)+'px');
+}
+window.addEventListener('resize',updateStickyOffsets);
+document.addEventListener('DOMContentLoaded',updateStickyOffsets);
+function filtered(){const q=(document.getElementById('search')?.value||'').toLowerCase().trim();return data.filter(r=>{if(wing!=='ALL'&&getWing(r)!==wing)return false;if(q&&!(`${r.flat} ${r.name} ${r.phone}`).toLowerCase().includes(q))return false;if(messageFilter==='PENDING'&&r.wa!=='Pending')return false;if(messageFilter==='SENT'&&r.wa!=='Sent')return false;if(messageFilter==='NOTREQ'&&r.wa!=='Not Required')return false;const ps=calcPaymentStatus(r);if(paymentFilter==='FULL'&&ps!=='Paid')return false;if(paymentFilter==='PARTIAL'&&ps!=='Partial')return false;if(paymentFilter==='PENDING'&&ps!=='Pending')return false;return true}).sort((a,b)=>{const order={'SHOP':0,'R1-A':1,'R1-B':2,'R2':3,'R3':4,'R4':5};const wa=String(a.unitType||'').toLowerCase()==='shop'?'SHOP':getWing(a),wb=String(b.unitType||'').toLowerCase()==='shop'?'SHOP':getWing(b);return (order[wa]??99)-(order[wb]??99)||String(a.flat||'').localeCompare(String(b.flat||''),undefined,{numeric:true,sensitivity:'base'});})}
+function statusClass(s){return s==='Owner Occupied'?'owner':s==='Tenant Occupied'?'tenant':s==='Closed / Not Occupied'?'closed':s==='Sealed'?'sealed':''}
+function card(r){const canMessage=(Number(r.balance||0)>0||!!activeTemplateId)&&!!r.phone;const msg=r.wa==='Not Required'?'No Message Required':r.wa;const idx=data.indexOf(r);return `<div class="member-card"><div class="member-head"><div style="min-width:0"><div class="flat">${r.flat}</div><div class="name">${r.name||'Member details not available'}</div><div class="meta-line"><span class="meta">${r.phone||'No contact number'}</span><button class="edit-pencil" title="Edit contact details" onclick="openHomeEdit('${r.flat}','contact')">✏</button></div><div class="meta-line"><span class="meta">${r.email||'No email'}</span></div></div><div style="text-align:right"><span class="badge ${statusClass(r.flatStatus)}">${r.flatStatus||r.unitType||'Status unavailable'}</span><div><button class="edit-pencil" title="Edit flat status" onclick="openHomeEdit('${r.flat}','status')">✏ Edit Status</button></div></div></div><div class="statusrow"><span class="badge ${r.payment==='Paid'?'paid':r.payment==='Partial'?'partial':'pending'}">${r.payment}</span><span class="badge ${r.wa==='Sent'?'sent':r.wa==='Not Required'?'notreq':'pending'}">${msg}</span></div><div class="metricline"><div class="mini"><div class="mini-head"><span>Total Demand</span><button class="edit-pencil" title="Edit revised total demand" onclick="openHomeEdit('${r.flat}','demand')">✏</button></div><b>${money(r.due)}</b></div><div class="mini"><span>Received</span><b>${money(r.received)}</b></div><div class="mini"><span>Outstanding</span><b>${money(r.balance)}</b></div></div><div class="actions" style="grid-template-columns:1fr 1fr"><button class="btn" onclick="payment('${r.flat}')">Payment History</button><button class="btn primary" ${canMessage?'':'disabled'} onclick="maintenance('${r.flat}')">WhatsApp Communication</button></div></div>`}
+function refreshHomeFilters(){document.querySelectorAll('.wing').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.wing').forEach(x=>x.classList.remove('active'));b.classList.add('active');wing=b.dataset.wing;render()}));document.getElementById('messageFilter')?.addEventListener('change',e=>{messageFilter=e.target.value;render()});document.getElementById('paymentFilter')?.addEventListener('change',e=>{paymentFilter=e.target.value;render()});document.getElementById('search')?.addEventListener('input',render)}
+function render(){resetExpiredMessages();const rows=filtered();document.getElementById('memberGrid').innerHTML=rows.map(card).join('')||'<div class="panel section-sub">No units found for the selected filter/search.</div>';const pending=data.filter(r=>r.wa==='Pending').length,sent=data.filter(r=>r.wa==='Sent').length,nr=data.filter(r=>r.wa==='Not Required').length,np=data.filter(r=>!r.phone).length;document.getElementById('mPending').textContent=pending;document.getElementById('mSent').textContent=sent;document.getElementById('mNotReq').textContent=nr;document.getElementById('mNoPhone').textContent=np;document.getElementById('mTotal').textContent=data.length}
+function openHomeEdit(flat,type){const r=data.find(x=>x.flat===flat);if(!r)return;homeEditFlat=flat;homeEditType=type;const title=document.getElementById('homeEditTitle'),body=document.getElementById('homeEditBody');if(type==='contact'){title.textContent='Edit Contact Details — '+flat;body.innerHTML=`<div class="contact-grid"><div class="field"><label>Mobile 1</label><input id="homeMobile1" value="${String(r.phone||'').replace(/"/g,'&quot;')}" inputmode="tel"></div><div class="field"><label>Mobile 2</label><input id="homeMobile2" value="${String((r.phones||[])[0]||'').replace(/"/g,'&quot;')}" inputmode="tel"></div><div class="field"><label>Mobile 3</label><input id="homeMobile3" value="${String((r.phones||[])[1]||'').replace(/"/g,'&quot;')}" inputmode="tel"></div><div class="field"><label>Email</label><input id="homeEmail" type="email" value="${String(r.email||'').replace(/"/g,'&quot;')}"></div></div>`}else if(type==='status'){title.textContent='Update Flat Status — '+flat;const opts=['Owner Occupied','Tenant Occupied','Sealed','Closed / Not Occupied','Possession Pending'];body.innerHTML=`<div class="field"><label>Flat Status</label><select id="homeFlatStatus">${opts.map(v=>`<option ${r.flatStatus===v?'selected':''}>${v}</option>`).join('')}</select></div>`}else{title.textContent='Revise Total Demand — '+flat;body.innerHTML=`<div class="field"><label>Revised Total Demand (₹)</label><input id="homeDemand" type="number" min="0" step="0.01" value="${Number(r.due||0)}"></div><div class="section-sub" style="margin-top:9px">Total Received (unchanged): <b>${money(r.received)}</b></div><div class="section-sub">Current Outstanding: <b>${money(r.balance)}</b></div><div class="section-sub" style="margin-top:8px">New Outstanding: <b id="homeNewBalance">—</b></div>`;setTimeout(()=>{const inp=document.getElementById('homeDemand');inp?.addEventListener('input',()=>{const v=Number(inp.value||0)-Number(r.received||0);document.getElementById('homeNewBalance').textContent=money(Math.max(v,0))})},0)}document.getElementById('homeEditModal').classList.add('show')}
+async function saveHomeEdit(){const r=data.find(x=>x.flat===homeEditFlat);if(!r)return;try{if(homeEditType==='contact'){const clean=v=>String(v||'').replace(/[^0-9+]/g,'');await PaymentPortalData.updateUnitContact(r.id,clean(document.getElementById('homeMobile1').value),clean(document.getElementById('homeMobile2').value),clean(document.getElementById('homeMobile3').value),document.getElementById('homeEmail').value.trim());}else if(homeEditType==='status'){await PaymentPortalData.updateFlatStatus(r.id,document.getElementById('homeFlatStatus').value);}else{const due=Number(document.getElementById('homeDemand').value);if(!Number.isFinite(due)||due<0)return alert('Enter a valid total demand amount.');await PaymentPortalData.setOutstanding(r.id,Math.max(due-Number(r.received||0),0));}await refreshPortalSnapshot();closeModal('homeEditModal');}catch(e){alert('Unable to save changes: '+e.message)}}
+function parseCSV(text){const rows=[];let row=[],cell='',q=false;for(let i=0;i<text.length;i++){const c=text[i],n=text[i+1];if(c==='"'&&q&&n==='"'){cell+='"';i++}else if(c==='"'){q=!q}else if(c===','&&!q){row.push(cell);cell=''}else if((c==='\n'||c==='\r')&&!q){if(c==='\r'&&n==='\n')i++;row.push(cell);if(row.some(x=>String(x).trim()))rows.push(row);row=[];cell=''}else cell+=c}row.push(cell);if(row.some(x=>String(x).trim()))rows.push(row);return rows}
+function normalizeHeader(v){return String(v||'').toLowerCase().replace(/[^a-z0-9]/g,'')}
+function previewOutstandingUpload(ev){const file=ev.target.files?.[0];if(!file)return;const readRows=async()=>{let rows;if(/\.csv$/i.test(file.name)){rows=parseCSV(await file.text())}else{if(!window.XLSX){alert('Excel reading library could not be loaded. Please upload a CSV file.');return}const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:'array'});rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''})}if(rows.length<2){alert('The uploaded file does not contain data rows.');return}const headers=rows[0].map(normalizeHeader);const fi=headers.findIndex(x=>['flat','flatno','flatnumber','unit','unitno','unitnumber','masterunit'].includes(x));const oi=headers.findIndex(x=>['outstanding','outstandingamount','balance','amountoutstanding','revisedoutstanding'].includes(x));if(fi<0||oi<0){alert('Required columns not found. Please include Flat / Unit and Outstanding Amount.');return}pendingOutstandingRows=[];let unmatched=0,invalid=0;rows.slice(1).forEach(row=>{const flat=String(row[fi]||'').trim();const raw=String(row[oi]??'').replace(/[₹,\s]/g,'');const amount=Number(raw);if(!flat)return;if(!Number.isFinite(amount)||amount<0){invalid++;return}const key=normFlat(flat);const member=data.find(r=>normFlat(r.flat)===key||normFlat(r.masterUnit)===key);if(!member){unmatched++;return}pendingOutstandingRows.push({flat:member.flat,outstanding:amount,received:Number(member.received||0),newDemand:amount+Number(member.received||0)})});const preview=pendingOutstandingRows.slice(0,100);document.getElementById('outstandingPreviewMeta').textContent=`Matched: ${pendingOutstandingRows.length} • Unmatched: ${unmatched} • Invalid: ${invalid}. Only Total Demand will be adjusted to produce the uploaded outstanding amount; receipts and transactions remain unchanged.`;document.getElementById('outstandingPreviewTable').innerHTML='<table><thead><tr><th>Flat / Unit</th><th>New Outstanding</th><th>Received (unchanged)</th><th>Revised Total Demand</th></tr></thead><tbody>'+preview.map(x=>`<tr><td>${x.flat}</td><td>${money(x.outstanding)}</td><td>${money(x.received)}</td><td>${money(x.newDemand)}</td></tr>`).join('')+(pendingOutstandingRows.length>100?`<tr><td colspan="4">Showing first 100 of ${pendingOutstandingRows.length} matched rows.</td></tr>`:'')+'</tbody></table>';document.getElementById('outstandingPreviewModal').classList.add('show')};readRows().catch(e=>{console.error(e);alert('Unable to read the selected file. Please check the file format.')});ev.target.value=''}
+async function applyOutstandingUpload(){if(!pendingOutstandingRows.length)return alert('No matched rows are available to update.');if(!confirm(`Apply outstanding updates to ${pendingOutstandingRows.length} matched units? Member details, payment history, receipts, WhatsApp status and templates will remain unchanged.`))return;try{const payload=pendingOutstandingRows.map(x=>{const r=data.find(y=>y.flat===x.flat);return{unit_id:r.id,outstanding:x.outstanding}});await PaymentPortalData.bulkSetOutstanding(payload);const n=pendingOutstandingRows.length;pendingOutstandingRows=[];await refreshPortalSnapshot();document.getElementById('outstandingUploadStatus').textContent=`Updated ${n} matched units. All other member and payment data was preserved.`;closeModal('outstandingPreviewModal')}catch(e){alert('Outstanding update failed: '+e.message)}}
+function fillPlaceholders(message,r,amountOverride){return String(message||'').replace(/\{\{FLAT\}\}/gi,r.flat||'').replace(/\{\{NAME\}\}/gi,r.name||'').replace(/\{\{MOBILE\}\}/gi,r.phone||'').replace(/\{\{AMOUNT\}\}/gi,Number(amountOverride===undefined?r.due:amountOverride).toLocaleString('en-IN')).replace(/\{\{RECEIVED\}\}/gi,Number(r.received||0).toLocaleString('en-IN')).replace(/\{\{BALANCE\}\}/gi,Number(r.balance||0).toLocaleString('en-IN'))}
+function resolveMemberTemplate(r){if(activeTemplateId)return templateLibrary.find(t=>t.id===activeTemplateId)||null;const tx=(r.transactions||[]).reduce((a,t)=>a+Number(t.amount||0),0);return tx>0?templateLibrary.find(t=>t.id==='default_part_payment'):templateLibrary.find(t=>t.id==='default_maintenance')}
+function maintenance(flat){current=data.find(x=>x.flat===flat);if(!current)return;if(!current.phone)return alert('No WhatsApp number available.');const tpl=resolveMemberTemplate(current);if(!tpl?.message)return alert('The selected communication template is unavailable.');const msg=fillPlaceholders(tpl.message,current,tpl.id==='default_maintenance'?current.balance:current.due);document.getElementById('msgMeta').textContent=current.flat+' • '+current.name+' • '+current.phone;document.getElementById('selectedMessageType').textContent='Selected template: '+tpl.name+(activeTemplateId?' • Administrator override':' • Automatic selection');document.getElementById('messageText').textContent=msg;document.getElementById('messageModal').classList.add('show')}
+async function openMaintenanceWA(){if(!current?.phone)return;const target=window.open('about:blank','_blank');try{await PaymentPortalData.updateWhatsAppStatus(current.id,'Sent',new Date().toISOString());const url='https://wa.me/'+current.phone+'?text='+encodeURIComponent(document.getElementById('messageText').textContent);if(target)target.location=url;else window.location.href=url;await refreshPortalSnapshot();closeModal('messageModal')}catch(e){if(target)target.close();alert('Unable to update message status: '+e.message)}}
+function payment(flat){current=data.find(x=>x.flat===flat);if(!current)return;current.transactions=Array.isArray(current.transactions)?current.transactions:[];editingTransactionId='';document.getElementById('payMeta').textContent=current.flat+' • '+current.name+' • Demand '+money(current.due)+' • Total received '+money(current.received)+' • Outstanding '+money(current.balance);document.getElementById('payAmount').value='';document.getElementById('payDate').value=new Date().toISOString().slice(0,10);document.getElementById('payRemarks').value='';document.getElementById('payStatus').textContent='Current status: '+current.payment;resetPaymentForm();renderPaymentHistory();document.getElementById('paymentModal').classList.add('show')}
+function resetPaymentForm(){editingTransactionId='';document.getElementById('paymentFormTitle').textContent='Record a new payment';document.getElementById('savePaymentBtn').textContent='Add Transaction';document.getElementById('cancelEditPayment').style.display='none';}
+function renderPaymentHistory(){const tx=(current?.transactions||[]).slice().sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));document.getElementById('paymentHistory').innerHTML='<div class="section-title">Transaction history</div><table class="table"><thead><tr><th>Date</th><th>Amount</th><th>Remarks</th><th>Actions</th></tr></thead><tbody>'+(tx.map(t=>`<tr><td>${t.date||'—'}</td><td>${money(t.amount)}</td><td>${t.remarks||'—'}</td><td><div class="tx-actions"><button class="btn" onclick="editPaymentTransaction('${t.id}')">Edit</button><button class="btn warn" onclick="deletePaymentTransaction('${t.id}')">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="4">No payment transactions recorded.</td></tr>')+`<tr class="total-row"><th>Total received</th><th>${money(tx.reduce((a,t)=>a+Number(t.amount||0),0))}</th><th colspan="2"></th></tr></tbody></table>`}
+function editPaymentTransaction(id){const t=(current?.transactions||[]).find(x=>String(x.id)===String(id));if(!t)return;editingTransactionId=id;document.getElementById('payAmount').value=t.amount;document.getElementById('payDate').value=t.date||'';document.getElementById('payRemarks').value=t.remarks||'';document.getElementById('paymentFormTitle').textContent='Edit payment transaction';document.getElementById('savePaymentBtn').textContent='Save Changes';document.getElementById('cancelEditPayment').style.display='inline-block';document.getElementById('payStatus').textContent='Editing transaction dated '+(t.date||'—')}
+function cancelPaymentEdit(){document.getElementById('payAmount').value='';document.getElementById('payDate').value=new Date().toISOString().slice(0,10);document.getElementById('payRemarks').value='';resetPaymentForm();}
+function recalculateCurrentPayment(){delete current._preserveWaStatus;current.received=(current.transactions||[]).reduce((a,t)=>a+Number(t.amount||0),0);current.balance=Math.max((+current.due||0)-current.received,0);current.payment=calcPaymentStatus(current);const latest=(current.transactions||[]).slice().sort((a,b)=>String(b.date||'').localeCompare(String(a.date||'')))[0];current.paymentDate=latest?.date||'';current.remarks=latest?.remarks||'';if(current.balance<=0){current.wa='Not Required';current.waSentAt='';}else{current.wa='Pending';current.waSentAt='';}saveData();syncPaymentStatuses();document.getElementById('payMeta').textContent=current.flat+' • '+current.name+' • Demand '+money(current.due)+' • Total received '+money(current.received)+' • Outstanding '+money(current.balance);document.getElementById('payStatus').textContent='Updated status: '+current.payment;renderPaymentHistory();render();if(document.getElementById('summary').classList.contains('tabpage')&&!document.getElementById('summary').classList.contains('hidden'))renderSummary()}
+async function savePayment(){const amount=Number(document.getElementById('payAmount').value||0);if(!Number.isFinite(amount)||amount<=0)return alert('Enter a payment amount greater than zero.');const date=document.getElementById('payDate').value;if(!date)return alert('Select the payment date.');try{if(editingTransactionId)await PaymentPortalData.updateTransaction(editingTransactionId,amount,date,document.getElementById('payRemarks').value.trim());else await PaymentPortalData.recordTransaction(current.id,amount,date,document.getElementById('payRemarks').value.trim());await refreshPortalSnapshot();closeModal('paymentModal');showTab('home',document.querySelector('.tab[onclick*=\"home\"]'));}catch(e){alert('Payment could not be saved: '+e.message)}}
+async function deletePaymentTransaction(id){const t=(current?.transactions||[]).find(x=>String(x.id)===String(id));if(!t)return;if(!confirm('Delete this payment transaction of '+money(t.amount)+' dated '+(t.date||'—')+'? This will recalculate the member balance.'))return;try{await PaymentPortalData.deleteTransaction(id);if(editingTransactionId===id)cancelPaymentEdit();await refreshPortalSnapshot();current=data.find(x=>x.id===current?.id)||current; if(current){renderPaymentHistory();document.getElementById('payMeta').textContent=current.flat+' • '+current.name+' • Demand '+money(current.due)+' • Total received '+money(current.received)+' • Outstanding '+money(current.balance)}}catch(e){alert('Transaction could not be deleted: '+e.message)}}
+async function clearPaymentHistory(){if(!current)return;if(!(current.transactions||[]).length)return alert('No payment history is available to clear.');if(!confirm('Clear ALL payment transactions for '+current.flat+'? The member record and demand will remain.'))return;try{const id=current.id;await PaymentPortalData.clearUnitTransactions(id);cancelPaymentEdit();await refreshPortalSnapshot();current=data.find(x=>x.id===id);if(current){document.getElementById('payMeta').textContent=current.flat+' • '+current.name+' • Demand '+money(current.due)+' • Total received '+money(current.received)+' • Outstanding '+money(current.balance);renderPaymentHistory()}}catch(e){alert('Payment history could not be cleared: '+e.message)}}
+async function saveTemplate(){const name=document.getElementById('templateName').value.trim(),msg=document.getElementById('templateMessage').value.trim();if(!name||!msg)return alert('Enter a template name and message.');const f=document.getElementById('templateFile').files[0],existing=selectedTemplate();if(existing?.locked)return alert('Default templates are protected. Create a new template instead.');try{const id=await PaymentPortalData.saveTemplate(existing?existing.id:null,name,document.getElementById('templateType').value,msg,f?f.name:(existing?.fileName||''));await refreshPortalSnapshot();selectedTemplateId=id||selectedTemplateId;renderTemplateLibrary();showSavedTemplate();alert('Template saved in the library.')}catch(e){alert('Template could not be saved: '+e.message)}}
+function showSavedTemplate(){const t=selectedTemplate();document.getElementById('savedTemplate').textContent=t?'Selected: '+t.name+' • '+t.category+(t.fileName?' • Attachment: '+t.fileName:''):'Select a template or create a new one.'}
+function loadSelectedTemplate(){selectedTemplateId=document.getElementById('templateLibrarySelect').value;const t=selectedTemplate();if(!t){newTemplateForm();return;}document.getElementById('templateName').value=t.name;document.getElementById('templateType').value=t.category==='Default'?'General Notice':t.category;document.getElementById('templateMessage').value=t.message;document.getElementById('savedTemplate').textContent='Selected: '+t.name+(t.locked?' • Default template (protected)':'')+(t.fileName?' • Attachment: '+t.fileName:'')}
+function newTemplateForm(){selectedTemplateId='';document.getElementById('templateLibrarySelect').value='';document.getElementById('templateName').value='';document.getElementById('templateType').value='General Notice';document.getElementById('templateMessage').value='';document.getElementById('templateFile').value='';showSavedTemplate()}
+async function applySelectedTemplate(){const t=selectedTemplate();if(!t)return alert('Select a saved template first.');if(!confirm('Apply "'+t.name+'" as the WhatsApp template for all members? This will override automatic template selection until cleared.'))return;try{await PaymentPortalData.setActiveTemplate(t.id);await refreshPortalSnapshot();alert('Custom template applied for all members.')}catch(e){alert('Template could not be applied: '+e.message)}}
+async function clearActiveTemplate(){if(!activeTemplateId)return alert('No custom template is currently active.');if(!confirm('Clear the active override? The saved template will remain in the library.'))return;try{await PaymentPortalData.setActiveTemplate(null);await refreshPortalSnapshot();alert('Active template cleared. Automatic template selection has resumed.')}catch(e){alert('Template override could not be cleared: '+e.message)}}
+async function deleteSelectedTemplate(){const t=selectedTemplate();if(!t)return alert('Select a saved template first.');if(t.locked)return alert('Default templates cannot be deleted.');if(!confirm('Permanently delete the saved template "'+t.name+'"?'))return;try{await PaymentPortalData.deleteTemplate(t.id);selectedTemplateId='';await refreshPortalSnapshot();newTemplateForm();alert('Template deleted.')}catch(e){alert('Template could not be deleted: '+e.message)}}
+function newCommunication(flat){maintenance(flat)}
+function openNewCommWA(){openMaintenanceWA()}
+
+function copyText(id){navigator.clipboard?.writeText(document.getElementById(id).textContent);alert('Message copied.')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function openBackup(){document.getElementById('backupInfo').textContent='Backup will contain the current database snapshot.';document.getElementById('backupModal').classList.add('show')}
+function downloadBackup(){const payload={version:'V2.0',createdAt:new Date().toISOString(),data:data,templateLibrary:templateLibrary,activeTemplateId:activeTemplateId};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Stanford_Backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();document.getElementById('backupInfo').textContent='Backup downloaded: '+new Date().toLocaleString('en-IN')}
+function restoreBackup(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=async()=>{try{const p=JSON.parse(rd.result);if(!Array.isArray(p.data))throw Error('Invalid backup');if(data.length)throw Error('Restore is available only when the payment portal is empty.');const result=await PaymentPortalData.importV20(p.data);for(const t of (p.templateLibrary||[])){if(!t.locked)await PaymentPortalData.saveTemplate(null,t.name,t.category,t.message,t.fileName||'')}await refreshPortalSnapshot();alert('Backup restored: '+(result?.units_imported||p.data.length)+' units.')}catch(e){alert('Backup restore failed: '+e.message)}};rd.readAsText(f);ev.target.value=''}
+function downloadPDF(){showTab('summary',document.querySelectorAll('.tab')[1]);document.body.classList.add('printing-summary');setTimeout(()=>{window.print();setTimeout(()=>document.body.classList.remove('printing-summary'),500)},200)}
+function pct(c,d){return d?((c/d)*100).toFixed(1)+'%':'0.0%'}
+function calcPaymentStatus(r){const due=Number(r.due||0),received=Number(r.received||0),balance=Math.max(due-received,0);if(due<=0||balance<=0)return 'Paid';if(received>0)return 'Partial';return 'Pending'}
+function syncPaymentStatuses(){data.forEach(r=>{r.transactions=Array.isArray(r.transactions)?r.transactions:[];r.received=r.transactions.length?r.transactions.reduce((a,t)=>a+Number(t.amount||0),0):Number(r.received||0);r.due=Number(r.due||0);r.balance=Math.max(r.due-r.received,0);r.payment=calcPaymentStatus(r);if(r.balance<=0){r.wa='Not Required';r.waSentAt='';}else if(r.wa!=='Sent'&&r.wa!=='Pending'){r.wa='Pending';}})}
+function summaryTables(){const flats=data.filter(r=>String(r.unitType||'').toLowerCase()!=='shop');const shops=data.filter(r=>String(r.unitType||'').toLowerCase()==='shop');const wings=['R1-A','R1-B','R2','R3','R4'];const sts=['Owner Occupied','Tenant Occupied','Closed / Not Occupied','Sealed'];return {flats,shops,wings,sts}}
+async function refreshWhatsAppStatus(){if(!confirm('Refresh WhatsApp Message Status? All outstanding units will be reset to Message Pending. Payment and contact data will not change.'))return;try{await PaymentPortalData.resetWhatsAppStatuses();await refreshPortalSnapshot();alert('WhatsApp message status refreshed.')}catch(e){alert('Status refresh failed: '+e.message)}}
+function contactFiltered(){const q=(document.getElementById('contactSearch')?.value||'').toLowerCase().trim();return data.filter(r=>{if(contactWing!=='ALL'&&getWing(r)!==contactWing)return false;return !q||(`${r.flat} ${r.name} ${r.phone} ${(r.phones||[]).join(' ')} ${r.email} ${r.otherEmail}`).toLowerCase().includes(q)})}
+let contactWing='ALL';
+function renderContacts(){const grid=document.getElementById('contactGrid');if(!grid)return;const rows=contactFiltered();grid.innerHTML=rows.map((r,i)=>`<div class="contact-card"><div class="member-head"><div><div class="flat">${r.flat}</div><div class="name">${r.name||'Member details not available'}</div><div class="master-line">${getWing(r)} • ${r.unitType||'Unit'} • ${r.flatStatus||''}</div></div><span class="badge ${r.unitType==='Shop'?'tenant':statusClass(r.flatStatus)}">${r.unitType==='Shop'?'Shop':(r.flatStatus||'Status unavailable')}</span></div><div class="contact-grid" style="margin-top:10px"><div><div class="field"><label>Wing / Unit</label><div class="readonly">${getWing(r)} • ${r.flat}</div></div></div><div><div class="field"><label>Member Name</label><div class="readonly">${r.name||''}</div></div></div><div><div class="field"><label>Mobile</label><div class="readonly">${r.phone||'No contact number'}</div></div></div></div><div id="editContact_${i}" style="display:none;margin-top:10px"><div class="contact-grid"><div><div class="field"><label>Mobile 1</label><input id="c1_${i}" value="${String(r.phone||'').replace(/"/g,'&quot;')}" inputmode="tel"></div></div><div><div class="field"><label>Mobile 2</label><input id="c2_${i}" value="${String((r.phones||[])[0]||'').replace(/"/g,'&quot;')}" inputmode="tel"></div></div><div><div class="field"><label>Mobile 3</label><input id="c3_${i}" value="${String((r.phones||[])[1]||'').replace(/"/g,'&quot;')}" inputmode="tel"></div></div><div><div class="field"><label>Email</label><input id="ce_${i}" value="${String(r.email||'').replace(/"/g,'&quot;')}" type="email"></div></div></div><div class="contact-actions"><button class="btn primary" onclick="saveContact(${i})">💾 Save</button><button class="btn" onclick="cancelContactEdit(${i})">Cancel</button></div></div><div class="contact-actions"><button class="btn" onclick="editContact(${i})">✏️ Edit</button><button class="btn" onclick="copyIndividualContact(${i})">📋 Copy</button></div></div>`).join('')||'<div class="panel section-sub">No contacts found.</div>'}
+function editContact(i){const p=document.getElementById('editContact_'+i);if(p)p.style.display='block'}
+function cancelContactEdit(i){const p=document.getElementById('editContact_'+i);if(p)p.style.display='none'}
+function refreshContactFilters(){document.querySelectorAll('.contact-wing').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.contact-wing').forEach(x=>x.classList.remove('active'));b.classList.add('active');contactWing=b.dataset.wing;renderContacts()}));document.getElementById('contactSearch')?.addEventListener('input',renderContacts);renderContacts()}
+async function saveContact(i){const rows=contactFiltered(),r=rows[i];if(!r)return;const clean=v=>String(v||'').replace(/[^0-9+]/g,'');const m1=clean(document.getElementById('c1_'+i)?.value),m2=clean(document.getElementById('c2_'+i)?.value),m3=clean(document.getElementById('c3_'+i)?.value),email=(document.getElementById('ce_'+i)?.value||'').trim();try{await PaymentPortalData.updateUnitContact(r.id,m1,m2,m3,email);await refreshPortalSnapshot();alert(r.flat+' contact details saved successfully.')}catch(e){alert('Contact update failed: '+e.message)}}
+function contactExcelSheets(r){return [{name:'Contact',headers:['Field','Value'],rows:[['Wing',getWing(r)],['Flat / Unit',r.flat],['Unit Type',r.unitType||''],['Member Name',r.name||''],['Occupancy Status',r.flatStatus||''],['Mobile 1',r.phone||''],['Mobile 2',(r.phones||[])[0]||''],['Mobile 3',(r.phones||[])[1]||''],['Email',r.email||''],['Last Updated',r.lastContactUpdated||'']]}]}
+function contactText(r){return ['PANVELKAR ESTATE STANFORD','Contact Details','------------------------------','Wing / Unit: '+getWing(r)+' / '+(r.flat||''),'Unit Type: '+(r.unitType||''),'Member Name: '+(r.name||''),'Occupancy Status: '+(r.flatStatus||''),'Mobile 1: '+(r.phone||''),'Mobile 2: '+((r.phones||[])[0]||''),'Mobile 3: '+((r.phones||[])[1]||''),'Email: '+(r.email||''),'Last Updated: '+(r.lastContactUpdated?new Date(r.lastContactUpdated).toLocaleString('en-IN'):'')].join('\n')}
+async function copyIndividualContact(i){const rows=contactFiltered(),r=rows[i];if(!r)return;const text=contactText(r);try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);showToast('Contact details copied.');return;}const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.focus();ta.select();const ok=document.execCommand('copy');ta.remove();if(ok){showToast('Contact details copied.');return;}throw new Error('Clipboard unavailable');}catch(e){showCopyFallback(text)}}
+function showToast(msg){const old=document.getElementById('copyToast');if(old)old.remove();const t=document.createElement('div');t.id='copyToast';t.textContent='✓ '+msg;t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:99999;background:#18243A;color:#fff;padding:12px 18px;border-radius:12px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.25);font-family:Inter,Arial,sans-serif';document.body.appendChild(t);setTimeout(()=>t.remove(),2200)}
+function showCopyFallback(text){const old=document.getElementById('copyFallback');if(old)old.remove();const wrap=document.createElement('div');wrap.id='copyFallback';wrap.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99998;display:flex;align-items:center;justify-content:center;padding:16px;font-family:Inter,Arial,sans-serif';wrap.innerHTML=`<div style="background:#fff;border-radius:18px;width:min(560px,100%);padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3)"><div style="font-size:20px;font-weight:800;margin-bottom:8px">📋 Copy Contact Details</div><div style="font-size:13px;color:#667085;margin-bottom:12px">Automatic clipboard access is unavailable in this browser. The text below is selected for manual Copy.</div><textarea id="copyFallbackText" readonly style="width:100%;min-height:260px;box-sizing:border-box;padding:12px;border:1px solid #d0d5dd;border-radius:10px;font:14px/1.5 Inter,Arial,sans-serif"></textarea><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:12px"><button class="btn" onclick="document.getElementById('copyFallback').remove()">Close</button><button class="btn primary" onclick="const x=document.getElementById('copyFallbackText');x.focus();x.select();document.execCommand('copy');showToast('If not copied, long-press the selected text and choose Copy.')">📋 Select & Copy</button></div></div>`;document.body.appendChild(wrap);const ta=document.getElementById('copyFallbackText');ta.value=text;ta.focus();ta.select()}
+function downloadContactsExcel(){const rows=data.map(r=>[getWing(r),r.flat,r.unitType||'',r.name||'',r.flatStatus||'',r.phone||'',(r.phones||[])[0]||'',(r.phones||[])[1]||'',r.email||'',r.lastContactUpdated||'']);downloadExcelWorkbook('Stanford_Contact_Master_'+new Date().toISOString().slice(0,10)+'.xls',[{name:'Contact Master',headers:['Wing','Flat / Unit','Unit Type','Member Name','Occupancy Status','Mobile 1','Mobile 2','Mobile 3','Email','Last Updated'],rows}])}
+function downloadBackupExcel(){const rows=data.map(r=>[getWing(r),r.flat,r.unitType||'',r.name||'',r.flatStatus||'',r.due||0,r.received||0,r.balance||0,calcPaymentStatus(r),r.phone||'',(r.phones||[])[0]||'',(r.phones||[])[1]||'',r.email||'',r.wa||'',r.paymentDate||'',r.remarks||'']);const tx=[];data.forEach(r=>(r.transactions||[]).forEach(t=>tx.push([getWing(r),r.flat,r.name||'',t.date||'',t.amount||0,t.remarks||''])));const tpl=templateLibrary.map(t=>[t.name,t.category,t.message,t.fileName||'',t.locked?'Default':'Custom',activeTemplateId===t.id?'Active':'']);downloadExcelWorkbook('Stanford_Full_Backup_'+new Date().toISOString().slice(0,10)+'.xls',[{name:'Full Data',headers:['Wing','Flat / Unit','Unit Type','Member Name','Occupancy Status','Due','Received','Outstanding','Payment Status','Mobile 1','Mobile 2','Mobile 3','Email','Message Status','Latest Payment Date','Remarks'],rows},{name:'Transactions',headers:['Wing','Flat / Unit','Member Name','Payment Date','Amount','Remarks'],rows:tx},{name:'Templates',headers:['Template Name','Category','Message','Attachment Name','Type','Active Status'],rows:tpl}])}
+function renderSummary(){
+ syncPaymentStatuses();const {flats,shops,wings}=summaryTables();
+ const totalDue=data.reduce((a,r)=>a+(+r.due||0),0),col=data.reduce((a,r)=>a+(+r.received||0),0),out=data.reduce((a,r)=>a+(+r.balance||0),0);
+ const fullCount=data.filter(r=>calcPaymentStatus(r)==='Paid').length,partialCount=data.filter(r=>calcPaymentStatus(r)==='Partial').length,paidCount=fullCount+partialCount;
+ document.getElementById('summaryKpis').innerHTML=[['Total Units',data.length,'kpi-1'],['# Units Paid',paidCount+'<span style="display:block;font-size:10px;font-weight:600;color:#526070;margin-top:2px">'+fullCount+' Full / '+partialCount+' Partial</span>','kpi-2'],['Total Due',money(totalDue),'kpi-5'],['Total Collection',money(col),'kpi-6'],['Outstanding',money(out),'kpi-7'],['Collection %',pct(col,totalDue),'kpi-8']].map(x=>'<div class="card kpi-card '+x[2]+'"><div class="label">'+x[0]+'</div><div class="value">'+x[1]+'</div></div>').join('');
+ const dates={};data.forEach(r=>(r.transactions||[]).forEach(t=>{if(t.date&&Number(t.amount||0)>0)dates[t.date]=(dates[t.date]||0)+Number(t.amount||0)}));const ds=Object.entries(dates).sort();
+ document.getElementById('dayTable').innerHTML=(ds.map(([d,v])=>'<tr><td>'+d+'</td><td>'+data.reduce((n,r)=>n+(r.transactions||[]).filter(t=>t.date===d&&Number(t.amount||0)>0).length,0)+'</td><td>'+money(v)+'</td></tr>').join('')||'<tr><td colspan="3" class="section-sub">No payment entries available.</td></tr>')+'<tr class="total-row"><th>Total</th><th>'+data.reduce((n,r)=>n+(r.transactions||[]).length,0)+'</th><th>'+money(col)+'</th></tr>';
+ const rows=[{label:'Shops',items:shops},...wings.map(w=>({label:w,items:flats.filter(r=>getWing(r)===w)}))];
+ const fullFor=x=>x.filter(r=>calcPaymentStatus(r)==='Paid').length,partialFor=x=>x.filter(r=>calcPaymentStatus(r)==='Partial').length,pendingFor=x=>x.filter(r=>calcPaymentStatus(r)==='Pending').length;
+ const pctColor=v=>parseFloat(v)>=50?'#59bd61':parseFloat(v)>=30?'#f4c21b':'#e65b5b';
+ const pctBar=v=>`<div class="pct-cell"><b>${v}</b><div class="pct-track"><div class="pct-fill" style="width:${Math.min(100,Math.max(0,parseFloat(v)||0))}%;background:${pctColor(v)}"></div></div></div>`;
+ const countRows=rows.map(x=>{const n=x.items.length,f=fullFor(x.items),p=partialFor(x.items),q=pendingFor(x.items),rate=pct(f+p,n);return `<tr><td>${x.label==='Shops'?'🏪':'🏢'} ${x.label}</td><td>${n}</td><td>${f}</td><td>${p}</td><td>${q}</td><td>${pctBar(rate)}</td></tr>`}).join('');
+ const allFull=fullFor(data),allPartial=partialFor(data),allPending=pendingFor(data),allRate=pct(allFull+allPartial,data.length);
+ document.getElementById('wingCountTable').innerHTML=countRows+`<tr class="grand"><td>Grand Total</td><td>${data.length}</td><td>${allFull}</td><td>${allPartial}</td><td>${allPending}</td><td>${pctBar(allRate)}</td></tr>`;
+ const amountRows=rows.map(x=>{const d=x.items.reduce((a,r)=>a+(+r.due||0),0),c=x.items.reduce((a,r)=>a+(+r.received||0),0),o=x.items.reduce((a,r)=>a+(+r.balance||0),0),rate=pct(c,d);return `<tr><td>${x.label==='Shops'?'🏪':'🏢'} ${x.label}</td><td>${money(d)}</td><td>${money(c)}</td><td>${money(o)}</td><td>${pctBar(rate)}</td></tr>`}).join('');
+ document.getElementById('wingAmountTable').innerHTML=amountRows+`<tr class="grand"><td>Grand Total</td><td>${money(totalDue)}</td><td>${money(col)}</td><td>${money(out)}</td><td>${pctBar(pct(col,totalDue))}</td></tr>`;
+ const statuses=[['Full Payment','Paid'],['Partial Payment','Partial'],['No Payment','Pending']];document.getElementById('payTable').innerHTML=statuses.map(([l,st])=>{const rr=data.filter(r=>calcPaymentStatus(r)===st);return '<tr><td><b>'+l+'</b></td><td>'+rr.length+'</td><td>'+money(rr.reduce((a,r)=>a+(+r.received||0),0))+'</td><td>'+money(rr.reduce((a,r)=>a+(+r.balance||0),0))+'</td></tr>'}).join('')+'<tr class="total-row"><th>Total</th><th>'+data.length+'</th><th>'+money(col)+'</th><th>'+money(out)+'</th></tr>';
+}
+
+
+
+async function downloadSummarySection(section,button){
+ renderSummary();
+ const targets={
+  kpis:document.getElementById('summaryKpis')?.closest('.summary-section'),
+  daywise:document.getElementById('dayTable')?.closest('.summary-section'),
+  wingcount:document.getElementById('wingCountVisual'),
+  wingamount:document.getElementById('wingAmountVisual'),
+  paymentstatus:document.getElementById('payTable')?.closest('.summary-section')
+ };
+ const target=targets[section];
+ if(!target){alert('Summary section could not be found.');return;}
+ if(typeof window.html2canvas!=='function'){alert('PNG export library could not be loaded. Please connect to the internet and reopen the tool.');return;}
+ try{
+  const canvas=await window.html2canvas(target,{
+   backgroundColor:'#ffffff',scale:2,useCORS:true,allowTaint:false,logging:false,scrollX:0,scrollY:0,
+   onclone:(doc)=>{
+    const el=doc.getElementById(target.id);
+    if(el){el.style.width=target.scrollWidth+'px';el.style.maxWidth='none';el.style.overflow='visible';}
+    doc.querySelectorAll('.section-download,.report-actions').forEach(x=>x.style.display='none');
+    doc.body.style.background='#ffffff';
+   }
+  });
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+  if(!blob)throw new Error('PNG conversion failed');
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='Stanford_'+section+'_Summary_'+new Date().toISOString().slice(0,10)+'.png';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},3000);
+ }catch(err){console.error(err);alert('PNG export failed. Please try again in Chrome.');}
+}
+function downloadSummaryHTML(){
+ renderSummary();
+ const clone=document.getElementById('summary').cloneNode(true); clone.querySelectorAll('.report-actions').forEach(e=>e.remove());
+ const css=[...document.querySelectorAll('style')].map(s=>s.textContent).join('\n');
+ const html='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Panvelkar Estate Stanford - Payment Summary</title><style>'+css+'body{padding:18px;background:#fff}.wrap{max-width:none}.summary-grid{margin-bottom:10px}.panel{box-shadow:none}</style></head><div class="wrap">'+clone.innerHTML+'</div></body></html>';
+ const blob=new Blob([html],{type:'text/html'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='Stanford_Payment_Summary_'+new Date().toISOString().slice(0,10)+'.html'; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function downloadSummaryExcel(){syncPaymentStatuses();const {flats,shops,wings}=summaryTables();const totalDue=data.reduce((a,r)=>a+(+r.due||0),0),col=data.reduce((a,r)=>a+(+r.received||0),0),out=data.reduce((a,r)=>a+(+r.balance||0),0),full=data.filter(r=>calcPaymentStatus(r)==='Paid'),partial=data.filter(r=>calcPaymentStatus(r)==='Partial'),pending=data.filter(r=>calcPaymentStatus(r)==='Pending');const dates={};data.forEach(r=>(r.transactions||[]).forEach(t=>{if(t.date&&Number(t.amount||0)>0)dates[t.date]=(dates[t.date]||0)+Number(t.amount||0)}));const dayRows=Object.entries(dates).sort().map(([d,v])=>[d,data.reduce((n,r)=>n+(r.transactions||[]).filter(t=>t.date===d&&Number(t.amount||0)>0).length,0),v]);const groups=[['Shops',shops],...wings.map(w=>[w,flats.filter(r=>getWing(r)===w)])];const countRows=groups.map(([w,x])=>[w,x.length,x.filter(r=>calcPaymentStatus(r)==='Paid').length,x.filter(r=>calcPaymentStatus(r)==='Partial').length,x.filter(r=>calcPaymentStatus(r)==='Pending').length,pct(x.filter(r=>['Paid','Partial'].includes(calcPaymentStatus(r))).length,x.length)]);countRows.push(['Grand Total',data.length,full.length,partial.length,pending.length,pct(full.length+partial.length,data.length)]);const amountRows=groups.map(([w,x])=>{const d=x.reduce((a,r)=>a+(+r.due||0),0),c=x.reduce((a,r)=>a+(+r.received||0),0),o=x.reduce((a,r)=>a+(+r.balance||0),0);return[w,d,c,o,pct(c,d)]});amountRows.push(['Grand Total',totalDue,col,out,pct(col,totalDue)]);const sheets=[{name:'Overall',headers:['Metric','Value'],rows:[['Total Units',data.length],['Fully Paid',full.length],['Partially Paid',partial.length],['Pending',pending.length],['Total Demand',totalDue],['Total Collection',col],['Outstanding',out],['Collection %',pct(col,totalDue)]]},{name:'Day-wise',headers:['Date','Payment Transactions','Collection'],rows:dayRows.concat([['Total',data.reduce((n,r)=>n+(r.transactions||[]).length,0),col]])},{name:'Wing Payment Count',headers:['Wing','Total Units','Full','Partial','Pending','% Paid'],rows:countRows},{name:'Wing Amount',headers:['Wing','Total Demand','Received','Outstanding','Collection %'],rows:amountRows},{name:'Payment Status',headers:['Status','Units','Collection','Outstanding'],rows:[['Full Payment',full.length,full.reduce((a,r)=>a+(+r.received||0),0),0],['Partial Payment',partial.length,partial.reduce((a,r)=>a+(+r.received||0),0),partial.reduce((a,r)=>a+(+r.balance||0),0)],['No Payment',pending.length,0,pending.reduce((a,r)=>a+(+r.balance||0),0)],['Total',data.length,col,out]]}];downloadExcelWorkbook('Stanford_Payment_Summary_'+new Date().toISOString().slice(0,10)+'.xls',sheets)}
+function xmlEsc(v){return String(v??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;');}
+function sheetXml(name,headers,rows){const all=[headers,...rows];return `<Worksheet ss:Name="${xmlEsc(name).slice(0,31)}"><Table>${all.map((row,i)=>{const sid=i===0?'Header':(name==='Overall'&&i<=8?'Kpi'+i:(String(row[0]).toLowerCase()==='total'?'Total':'Body'));return `<Row>${row.map(c=>`<Cell ss:StyleID="${sid}"><Data ss:Type="${typeof c==='number'?'Number':'String'}">${xmlEsc(c)}</Data></Cell>`).join('')}</Row>`}).join('')}</Table></Worksheet>`;}
+function downloadExcelWorkbook(filename,sheets){const xml=`<?xml version="1.0"?><Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"><Styles><Style ss:ID="Default" ss:Name="Normal"><Alignment ss:Vertical="Center"/><Font ss:FontName="Inter" ss:Size="10"/></Style><Style ss:ID="Header"><Font ss:FontName="Inter" ss:Bold="1" ss:Color="#FFFFFF"/><Interior ss:Color="#18243A" ss:Pattern="Solid"/><Alignment ss:Vertical="Center"/></Style><Style ss:ID="Body"><Font ss:FontName="Inter" ss:Size="10"/></Style><Style ss:ID="Total"><Font ss:FontName="Inter" ss:Bold="1" ss:Size="10"/><Interior ss:Color="#EEF2F7" ss:Pattern="Solid"/></Style><Style ss:ID="Kpi1"><Interior ss:Color="#EAF2FF" ss:Pattern="Solid"/><Font ss:FontName="Inter" ss:Bold="1"/></Style><Style ss:ID="Kpi2"><Interior ss:Color="#EAF8EF" ss:Pattern="Solid"/><Font ss:FontName="Inter" ss:Bold="1"/></Style><Style ss:ID="Kpi3"><Interior ss:Color="#E8F7EE" ss:Pattern="Solid"/><Font ss:FontName="Inter" ss:Bold="1"/></Style><Style ss:ID="Kpi4"><Interior ss:Color="#FFF4E5" ss:Pattern="Solid"/><Font ss:FontName="Inter" ss:Bold="1"/></Style><Style ss:ID="Kpi5"><Interior ss:Color="#F2EBFF" ss:Pattern="Solid"/><Font ss:FontName="Inter" ss:Bold="1"/></Style><Style ss:ID="Kpi6"><Interior ss:Color="#E8F8F7" ss:Pattern="Solid"/><Font ss:FontName="Inter" ss:Bold="1"/></Style><Style ss:ID="Kpi7"><Interior ss:Color="#FFEBEB" ss:Pattern="Solid"/><Font ss:FontName="Inter" ss:Bold="1"/></Style><Style ss:ID="Kpi8"><Interior ss:Color="#EEF0FF" ss:Pattern="Solid"/><Font ss:FontName="Inter" ss:Bold="1"/></Style></Styles>${sheets.map(x=>sheetXml(x.name,x.headers,x.rows)).join('')}</Workbook>`;const blob=new Blob([xml],{type:'application/vnd.ms-excel;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename;a.style.display='none';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(url);a.remove()},3000);}
+async function refreshPortalSnapshot(){const snap=await PaymentPortalData.loadSnapshot();data=snap.data;templateLibrary=snap.templateLibrary;activeTemplateId=snap.activeTemplateId;renderTemplateLibrary();showSavedTemplate();syncPaymentStatuses();render();renderContacts();if(!document.getElementById('summary').classList.contains('hidden'))renderSummary()}
+async function bootPaymentPortal(){try{await PaymentPortalAuth.requirePaymentAdmin();await refreshPortalSnapshot();document.body.classList.add('portal-authenticated','home-fixed');refreshHomeFilters();refreshContactFilters();document.getElementById('portalLoginError').textContent='';}catch(e){document.body.classList.remove('portal-authenticated');}}
+document.getElementById('portalLoginForm').addEventListener('submit',async e=>{e.preventDefault();const b=document.getElementById('portalLoginButton'),err=document.getElementById('portalLoginError');b.disabled=true;b.textContent='Signing in…';err.textContent='';try{await PaymentPortalAuth.signIn(document.getElementById('portalEmail').value,document.getElementById('portalPassword').value);await bootPaymentPortal();if(!document.body.classList.contains('portal-authenticated'))throw new Error('This account is not authorised for the payment portal.');}catch(x){err.textContent=x.message||'Sign-in failed.';}finally{b.disabled=false;b.textContent='Sign In Securely';}});
+async function paymentPortalLogout(){await PaymentPortalAuth.signOut();data=[];document.body.classList.remove('portal-authenticated');document.getElementById('portalPassword').value='';}
+window.addEventListener('load',()=>bootPaymentPortal());
+
+</script></body></html>
