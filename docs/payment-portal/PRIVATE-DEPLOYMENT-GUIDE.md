@@ -1,40 +1,50 @@
-# Private payment portal deployment
+# Payment portal deployment — Supabase-authenticated staging
 
-## Files
-- `payment-portal.html`: V2.0 portal UI, now uses Supabase login and server-side persistence.
-- `payment-admin.html`: Super Admin-only invitation page.
-- `src/payment-portal-auth.js` and `src/payment-portal-data-v6.js`: browser auth/data modules.
-- Supabase tables and RPCs: migrations 001–007 have been applied to project `zawatmovyrjcpgxkqcqq`.
+## Architecture decision
+Cloudflare Zero Trust checkout is not being used because the owner does not want to add a payment method. Do not activate a paid Cloudflare product or enter card details.
 
-## Hosting target
-Use Cloudflare Pages connected to this GitHub repository and branch `payments-private-staging`. Set the build command to blank and the output directory to the repository root. The portal is served at `/payment-portal.html`; admin invitations at `/payment-admin.html`.
+Use Cloudflare Pages Free for static hosting, with Supabase Auth and database RLS as the security boundary for all payment data. The login page and static HTML/JS assets are publicly reachable; this is not a network-level private site. No resident records or secrets may be placed in static assets or the public GitHub repository.
 
-Add the custom hostname `payments.panvelkar-estate-stanford.in`. Keep the existing main website and other subdomains unchanged.
+## Hosting
+- Repository: `shravanvitthaljadhav-ops/panvelkar-estate`
+- Branch: `payments-private-staging`
+- Build command: none
+- Build output directory: repository root
+- Portal path: `/payment-portal.html`
+- Super Admin invitation path: `/payment-admin.html`
+- Intended custom hostname: `payments.panvelkarestatestanford.in`
 
-## Mandatory outer access layer
-In Cloudflare Zero Trust, create a self-hosted Access application for `payments.panvelkar-estate-stanford.in`. Add an Allow policy containing only the owner and the approved Admin email addresses. Do not use an allow-all policy. The Free Zero Trust plan currently supports up to 50 users; the society's 3–4 Admins fit within that published allowance. Check current terms before changing plans.
+Create a Cloudflare Pages project from the repository and staging branch only. Do not connect the production main branch and do not alter the main website or existing DNS records. Attach only the payment subdomain to the Pages project. The Pages `*.pages.dev` preview URL is also publicly reachable, so treat it as a public login shell, never as a private network boundary.
 
-## Supabase Auth Hook (must be enabled before first login)
-In Supabase Dashboard → Authentication → Hooks, enable the Custom Access Token Hook and select:
-`private.payment_admin_access_token_hook`.
+## Authentication and data security
+- Supabase project: `zawatmovyrjcpgxkqcqq`
+- Supabase URL: `https://zawatmovyrjcpgxkqcqq.supabase.co`
+- Browser code may contain only the Supabase publishable/anon key. Never expose a service-role or secret key.
+- Supabase Custom Access Token Hook must remain enabled and point to `private.payment_admin_access_token_hook`.
+- The browser auth module requires the `payment_admin=true` JWT claim before showing the portal.
+- Database RLS and Admin-gated RPCs are the authoritative security boundary. Verify every payment table has RLS enabled and every write RPC checks the payment-admin claim.
+- Only active Admin allow-list entries should receive the payment-admin claim.
+- Do not rely on hidden UI, an unlisted URL, or the Pages hostname for security.
 
-Add `https://payments.panvelkar-estate-stanford.in/payment-portal.html` to the Auth redirect allow-list. Enable leaked-password protection in Auth security settings.
+## Supabase Auth URL configuration
+After the final custom hostname is attached, add these exact redirect URLs to Supabase Authentication URL Configuration:
+- `https://payments.panvelkarestatestanford.in/payment-portal.html`
+- `https://payments.panvelkarestatestanford.in/payment-admin.html`
 
-The existing active super_admin profile has already been placed in the private payment Admin allow-list. The Hook is not yet enabled, so portal login is intentionally not activated until this setting is completed.
+Do not retain or use the old hyphenated hostname `payments.panvelkar-estate-stanford.in` as the production redirect.
 
-## Inviting the other Admins
-After Cloudflare Access and the Auth Hook are configured, open `/payment-admin.html`, sign in with the existing active Super Admin account, and invite each Admin using their own email address. The invitation Edge Function is deployed as `payment-admin-provision`; it checks the active super_admin profile and adds the invited account to the private allow-list. Do not share passwords.
+Enable leaked-password protection in Supabase Auth security settings before issuing Admin credentials.
 
-For each new Admin, add the same email to the Cloudflare Access Allow policy. Supabase login and database RLS remain a second, independent authorization layer.
+## Admin accounts
+The existing active Super Admin is already present in the private payment Admin allow-list. No invitations have been sent yet. After staging URL and login are tested, use the Super Admin invitation page to invite each approved Admin with their own email address and password setup flow. Never share passwords or tokens in chat.
 
-## Initial V2.0 data
-The one-time importer refuses to run if payment units already exist. Use the generated V2.0 JSON backup from the approved local V2.0 source only after the portal login works. It contains 428 units (414 flats and 14 shops); historical received amounts are preserved as opening receipts because the source seed has no transaction-level history. No payment dates are invented.
+## Initial data
+Do not import resident data until authentication, RLS, RPC permissions, and the full V2.0 workflow pass staging tests. The one-time importer refuses to run if payment units already exist. Use only the approved V2.0 source backup after a separate backup and owner confirmation. Historical receipts without transaction dates must remain opening receipts; do not invent dates.
 
-## Current safety status
-- Migrations 001–007 applied; payment tables have RLS enabled.
-- Two default templates are present.
-- One existing active super_admin is in the private allow-list.
-- No resident units or payment transactions have been imported yet.
-- No existing ERP, RFID, Fancy Dress, main site, or other subdomain was changed.
-- No paid Supabase branch was created.
-- GitHub Pages is not used as the private hosting target.
+## Safety constraints
+- Keep V2.0 as the approved design baseline.
+- Do not deploy to the main branch.
+- Do not modify the main website, existing DNS records, unrelated subdomains, unrelated Supabase tables/functions, or production data.
+- No resident data in GitHub.
+- No card details or paid Cloudflare subscription required for this selected architecture.
+- Before go-live, verify direct `pages.dev` access still shows only the login shell and that unauthenticated or non-Admin users cannot read any payment data through the Supabase API.
