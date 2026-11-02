@@ -37,7 +37,7 @@ begin
       nullif(r#>>'{phones,0}',''),nullif(r#>>'{phones,1}',''),nullif(r->>'email',''),nullif(r->>'otherEmail',''),
       greatest(coalesce(nullif(r->>'due','')::numeric,0),0),v_opening+v_tx_opening,
       case when v_opening+v_tx_opening>0 then 'Legacy opening received amount retained; no payment date fabricated.' else null end,
-      case when coalesce(r->>'wa','Pending') in ('Pending','Sent','Not Required') then r->>'wa' else 'Pending' end,
+      case when coalesce(r->>'wa','Pending') in ('Pending','Sent','Not Required') then coalesce(r->>'wa','Pending') else 'Pending' end,
       case when nullif(r->>'waSentAt','') is not null then to_timestamp((r->>'waSentAt')::numeric/1000.0) else null end,
       nullif(r->>'paymentDate','')::date,nullif(r->>'remarks',''))
     returning id into v_unit_id;
