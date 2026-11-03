@@ -519,7 +519,7 @@ function previewOutstandingUpload(ev){
  const file=ev.target.files?.[0];if(!file)return;
  const readRows=async()=>{
   let rows;
-  if(/\\.csv$/i.test(file.name)){rows=parseCSV(await file.text())}
+  if(/\.csv$/i.test(file.name)){rows=parseCSV(await file.text())}
   else{if(!window.XLSX)throw new Error('Excel reading library could not be loaded. Please refresh and try again.');const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:'array'});if(!wb.SheetNames.length)throw new Error('The workbook has no worksheets.');rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:''})}
   if(rows.length<2)throw new Error('The uploaded file does not contain data rows.');
   const aliasesFlat=['flat','flatno','flatnumber','flatunit','flatunitno','unit','unitno','unitnumber','unitname','masterunit','flatunitnumber','flatnumberunit'];
