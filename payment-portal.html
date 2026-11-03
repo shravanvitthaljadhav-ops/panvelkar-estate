@@ -364,6 +364,18 @@ header{width:100%}
  display:block;
 }
 
+
+/* V2.0.2: tab visibility fix.
+   The responsive layout rules set .tabpage to display:block!important;
+   this explicit state rule ensures inactive tabs are hidden. */
+.tabpage.hidden,
+section.tabpage.hidden,
+#home.tabpage.hidden,
+#summary.tabpage.hidden,
+#contacts.tabpage.hidden,
+#comm.tabpage.hidden{display:none!important}
+.tabpage:not(.hidden){display:block}
+
 </style><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head><body><style>
 #portalLogin{position:fixed;inset:0;z-index:100000;background:#f3f6fb;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Inter,Arial,sans-serif}
