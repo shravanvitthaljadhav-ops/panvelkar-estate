@@ -39,6 +39,7 @@ const api={
  updateTransaction:(id,amount,date,remarks)=>rpc('payment_update_transaction',{p_transaction_id:id,p_amount:Number(amount),p_payment_date:date,p_remarks:remarks||''}),
  deleteTransaction:id=>rpc('payment_delete_transaction',{p_transaction_id:id}),
  clearUnitTransactions:id=>rpc('payment_clear_unit_transactions',{p_unit_id:id}),
+ resetAllUnitsForNewCycle:()=>rpc('payment_reset_all_units_for_new_cycle',{}),
  setOutstanding:(id,outstanding)=>rpc('payment_set_outstanding',{p_unit_id:id,p_outstanding:Number(outstanding)}),
  bulkSetOutstanding:rows=>rpc('payment_bulk_set_outstanding',{p_rows:rows}),
  updateUnitContact:(id,m1,m2,m3,email)=>rpc('payment_update_unit_contact',{p_unit_id:id,p_mobile_1:m1||'',p_mobile_2:m2||'',p_mobile_3:m3||'',p_email:email||''}),
