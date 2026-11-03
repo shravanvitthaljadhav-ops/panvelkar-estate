@@ -352,6 +352,18 @@ header{width:100%}
  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 
+
+/* V2.0.2 NAVIGATION FIX
+   Keep hidden tab pages hidden. Earlier responsive rules set tabpage/section IDs
+   to display:block!important and unintentionally overrode the .hidden class. */
+.tabpage.hidden,
+#home.hidden,#summary.hidden,#contacts.hidden,#comm.hidden{
+ display:none!important;
+}
+.tabpage:not(.hidden){
+ display:block;
+}
+
 </style><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head><body><style>
 #portalLogin{position:fixed;inset:0;z-index:100000;background:#f3f6fb;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Inter,Arial,sans-serif}
