@@ -502,7 +502,8 @@ function renderTemplateLibrary(){const sel=document.getElementById('templateLibr
 function money(n){return '₹'+Number(n||0).toLocaleString('en-IN',{maximumFractionDigits:0})}
 function normFlat(s){const v=String(s||'').toUpperCase().trim().replace(/\\s+/g,' ').replace('R1-A','R1A').replace('R1-B','R1B');const m=v.match(/^(R1A|R1B|R2|R3|R4)[\\s-]*(.*)$/);if(m){const suffix=m[2].replace(/[^A-Z0-9]/g,'');if(/^\\d+$/.test(suffix))return m[1]+String(Number(suffix));return m[1]+suffix;}return v.replace(/[^A-Z0-9]/g,'')}
 function getWing(r){const w=String(r.wing||'').toUpperCase();if(w==='R1A'||w==='R1-A')return 'R1-A';if(w==='R1B'||w==='R1-B')return 'R1-B';return w||String(r.flat||'').split('-')[0]}
-function resetExpiredMessages(){const now=Date.now();data.forEach(r=>{if(r._preserveWaStatus)return;if(Number(r.balance||0)<=0){r.wa='Not Required';r.waSentAt='';}else if(r.wa==='Sent'&&r.waSentAt&&now-Number(r.waSentAt)>=86400000){r.wa='Pending';r.waSentAt='';}});saveData()}
+function istCalendarDate(timestamp){const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date(timestamp));const get=type=>parts.find(p=>p.type===type)?.value||'';return get('year')+'-'+get('month')+'-'+get('day')}
+function resetExpiredMessages(){const todayIST=istCalendarDate(Date.now());data.forEach(r=>{if(r._preserveWaStatus)return;if(Number(r.balance||0)<=0){r.wa='Not Required';r.waSentAt='';}else if(r.wa==='Sent'&&r.waSentAt&&Number.isFinite(Number(r.waSentAt))&&istCalendarDate(Number(r.waSentAt))<todayIST){r.wa='Pending';r.waSentAt='';}});saveData()}
 function saveData(){}
 function createDailySnapshot(){}
 function showTab(id,btn){
